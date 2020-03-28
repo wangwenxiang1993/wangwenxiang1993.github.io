@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+    <title>winx&#39;blog</title>
+</head>
+<body>
+<div class="animated" id="info-min">
+    <div id="guide">
+    <div class="guide-button " _href="/tags/index/">首页</div>
+    <div class="guide-button " _href="/tags/tech/">技术</div>
+    <!--<div class="guide-button " _href="/tags/life/">生活</div>-->
+    <div class="guide-button " _href="/categories/read/">阅读</div>
+    <img src="/img/photo.png">
+</div>
+</div>
+<div id="wrap">
+    
+  
+    
+      <div id="big-title" style="color: #666">
+    
+
+  <div id="title-name">根据上排给出十个数，在其下排填出对应的十个数</div><br>
+  <div id="something">2017/02/16</div>
+</div>
+  <section id="content-specific">
+    <article class="post">
+        <div class="con"><h2 id="题目要求："><a href="#题目要求：" class="headerlink" title="题目要求："></a>题目要求：</h2><h5 id="给你10分钟时间，根据上排给出十个数，在其下排填出对应的十个数-要求下排每个数都是先前上排那十个数在下排出现的次数。"><a href="#给你10分钟时间，根据上排给出十个数，在其下排填出对应的十个数-要求下排每个数都是先前上排那十个数在下排出现的次数。" class="headerlink" title="给你10分钟时间，根据上排给出十个数，在其下排填出对应的十个数,要求下排每个数都是先前上排那十个数在下排出现的次数。"></a>给你10分钟时间，根据上排给出十个数，在其下排填出对应的十个数,要求下排每个数都是先前上排那十个数在下排出现的次数。</h5><h5 id="上排的十个数如下：【0，1，2，3，4，5，6，7，8，9】"><a href="#上排的十个数如下：【0，1，2，3，4，5，6，7，8，9】" class="headerlink" title="上排的十个数如下：【0，1，2，3，4，5，6，7，8，9】"></a>上排的十个数如下：【0，1，2，3，4，5，6，7，8，9】</h5><a id="more"></a>
+<h3 id="举个例子，"><a href="#举个例子，" class="headerlink" title="举个例子，"></a>举个例子，</h3><h5 id="上排数值-0-1-2-3-4-5-6-7-8-9"><a href="#上排数值-0-1-2-3-4-5-6-7-8-9" class="headerlink" title="上排数值: 0,1,2,3,4,5,6,7,8,9"></a>上排数值: 0,1,2,3,4,5,6,7,8,9</h5><h5 id="下排数值-6-2-1-0-0-0-1-0-0-0"><a href="#下排数值-6-2-1-0-0-0-1-0-0-0" class="headerlink" title="下排数值: 6,2,1,0,0,0,1,0,0,0"></a>下排数值: 6,2,1,0,0,0,1,0,0,0</h5><h5 id="0在下排出现了6次，1在下排出现了2次，"><a href="#0在下排出现了6次，1在下排出现了2次，" class="headerlink" title="0在下排出现了6次，1在下排出现了2次，"></a>0在下排出现了6次，1在下排出现了2次，</h5><h5 id="2在下排出现了1次，3在下排出现了0次…"><a href="#2在下排出现了1次，3在下排出现了0次…" class="headerlink" title="2在下排出现了1次，3在下排出现了0次…"></a>2在下排出现了1次，3在下排出现了0次…</h5><h2 id="分析过程："><a href="#分析过程：" class="headerlink" title="分析过程："></a>分析过程：</h2><h5 id="看到题目的时候觉得有一点绕，且没有太理解题目，以为是一直循环输出下排数组，于是有了下面的解题过程。"><a href="#看到题目的时候觉得有一点绕，且没有太理解题目，以为是一直循环输出下排数组，于是有了下面的解题过程。" class="headerlink" title="看到题目的时候觉得有一点绕，且没有太理解题目，以为是一直循环输出下排数组，于是有了下面的解题过程。"></a>看到题目的时候觉得有一点绕，且没有太理解题目，以为是一直循环输出下排数组，于是有了下面的解题过程。</h5><h3 id="根据题目得到的一些条件："><a href="#根据题目得到的一些条件：" class="headerlink" title="根据题目得到的一些条件："></a>根据题目得到的一些条件：</h3><ol>
+<li>10个数，每个数都大于等于0；</li>
+<li>下排的数字为上排数字出现的次数；</li>
+<li>基于条件2，下排数字相加一定等于10；</li>
+<li>基于条件3，下排数字有0，要么下排全等于1，很明显全等于1就不符合条件2，所以下排数字一定有0；</li>
+<li>根据条件4，上排数字也有0；</li>
+</ol>
+<h4 id="基于上面几个条件，做出下面的一些假设："><a href="#基于上面几个条件，做出下面的一些假设：" class="headerlink" title="基于上面几个条件，做出下面的一些假设："></a>基于上面几个条件，做出下面的一些假设：</h4><h5 id="上排的10个数中，有n个数字为0，则非0的数有10-n："><a href="#上排的10个数中，有n个数字为0，则非0的数有10-n：" class="headerlink" title="上排的10个数中，有n个数字为0，则非0的数有10-n："></a>上排的10个数中，有n个数字为0，则非0的数有10-n：</h5><script type="math/tex; mode=display">\underbrace{0...0}_{\text{n个0}},\overbrace{v_1...v_i}^{\text{10-n个非0数字}}</script><h5 id="如果上排为0的下排也为0，显然不符合条件2，所以0的下排数字为非0，切所有0的下排数字相等，假设为非0数x-则上排一定有一个数字为x-对应的下排数字为n："><a href="#如果上排为0的下排也为0，显然不符合条件2，所以0的下排数字为非0，切所有0的下排数字相等，假设为非0数x-则上排一定有一个数字为x-对应的下排数字为n：" class="headerlink" title="如果上排为0的下排也为0，显然不符合条件2，所以0的下排数字为非0，切所有0的下排数字相等，假设为非0数x,则上排一定有一个数字为x,对应的下排数字为n："></a>如果上排为0的下排也为0，显然不符合条件2，所以0的下排数字为非0，切所有0的下排数字相等，假设为非0数x,则上排一定有一个数字为x,对应的下排数字为n：</h5><script type="math/tex; mode=display">上排：0...0,v_1...v_i,x</script><script type="math/tex; mode=display">下排：\underbrace{x...x}_{\text{n个x}},i_1...i_i,n</script><h5 id="上排的0在下排为x，则说明下排有x个0-进一步得出下面的组合："><a href="#上排的0在下排为x，则说明下排有x个0-进一步得出下面的组合：" class="headerlink" title="上排的0在下排为x，则说明下排有x个0,进一步得出下面的组合："></a>上排的0在下排为x，则说明下排有x个0,进一步得出下面的组合：</h5><script type="math/tex; mode=display">上排：0...0,v_1...v_i,v_j...v_k,x</script><script type="math/tex; mode=display">下排：\underbrace{x...x}_{\text{n个x}},\underbrace{0....0}_{\text{x个0}},i_i....i_k,n</script><h5 id="根据条件1，下排一共10个数，所以："><a href="#根据条件1，下排一共10个数，所以：" class="headerlink" title="根据条件1，下排一共10个数，所以："></a>根据条件1，下排一共10个数，所以：</h5><script type="math/tex; mode=display">n+x+1≤10</script><h5 id="根据条件3，下排数字相加等于10，所以："><a href="#根据条件3，下排数字相加等于10，所以：" class="headerlink" title="根据条件3，下排数字相加等于10，所以："></a>根据条件3，下排数字相加等于10，所以：</h5><script type="math/tex; mode=display">nx+n≤10</script><h5 id="当vj到vk不存在，也就是个数为0时，上面两个不等式的等号成立，所以有以下两个函数："><a href="#当vj到vk不存在，也就是个数为0时，上面两个不等式的等号成立，所以有以下两个函数：" class="headerlink" title="当vj到vk不存在，也就是个数为0时，上面两个不等式的等号成立，所以有以下两个函数："></a>当v<sub>j</sub>到v<sub>k</sub>不存在，也就是个数为0时，上面两个不等式的等号成立，所以有以下两个函数：</h5><script type="math/tex; mode=display">\begin{cases}
+n+x+1=10 \\\\
+nx+n=10 \\\\
+x,n 为 正整数
+\end{cases}
+\implies
+\begin{cases}
+n+x+1<10 \\\\
+nx+n<10 \\\\
+x,n 为 正整数
+\end{cases}</script><h5 id="因为x，n均为正整数，所以枚举所有情况如下："><a href="#因为x，n均为正整数，所以枚举所有情况如下：" class="headerlink" title="因为x，n均为正整数，所以枚举所有情况如下："></a>因为x，n均为正整数，所以枚举所有情况如下：</h5><script type="math/tex; mode=display">
+n=\begin{cases}
+[1,2,3,4] &x=1 \\\\
+[1,2,3] &x=2 \\\\
+[1,2,] &x=3 \\\\
+[1] &x=4 \\\\
+[1] &x=5 \\\\
+[1] &x=6 \\\\
+[1] &x=7 \\\\
+[1] &x=8
+\end{cases}</script><h5 id="于是我基于这种组合，将6-2-1-0-0-0-1-0-0-0默认为上排函数，发现n-6-计算不出下排函数。百度以后发现，人家根本不是按照我的这种方式去计算。下面说一下正确的解题思路"><a href="#于是我基于这种组合，将6-2-1-0-0-0-1-0-0-0默认为上排函数，发现n-6-计算不出下排函数。百度以后发现，人家根本不是按照我的这种方式去计算。下面说一下正确的解题思路" class="headerlink" title="于是我基于这种组合，将6,2,1,0,0,0,1,0,0,0默认为上排函数，发现n=6,计算不出下排函数。百度以后发现，人家根本不是按照我的这种方式去计算。下面说一下正确的解题思路."></a>于是我基于这种组合，将6,2,1,0,0,0,1,0,0,0默认为上排函数，发现n=6,计算不出下排函数。百度以后发现，人家根本不是按照我的这种方式去计算。下面说一下正确的解题思路.</h5><h2 id="解题："><a href="#解题：" class="headerlink" title="解题："></a>解题：</h2><h5 id="它的原型跟八皇后有点类似，都是用回溯递归的方法去一次一次尝试，直到找出正确解。"><a href="#它的原型跟八皇后有点类似，都是用回溯递归的方法去一次一次尝试，直到找出正确解。" class="headerlink" title="它的原型跟八皇后有点类似，都是用回溯递归的方法去一次一次尝试，直到找出正确解。"></a>它的原型跟八皇后有点类似，都是用回溯递归的方法去一次一次尝试，直到找出正确解。</h5><h5 id="具体的想法是：不断的去从下排数组中捉取在上排数组中对应位置中出现的个数，如果个数不对就更新下排数组中对应的值，只到找到正确值。（下排数组先初始为任意值）"><a href="#具体的想法是：不断的去从下排数组中捉取在上排数组中对应位置中出现的个数，如果个数不对就更新下排数组中对应的值，只到找到正确值。（下排数组先初始为任意值）" class="headerlink" title="具体的想法是：不断的去从下排数组中捉取在上排数组中对应位置中出现的个数，如果个数不对就更新下排数组中对应的值，只到找到正确值。（下排数组先初始为任意值）"></a>具体的想法是：不断的去从下排数组中捉取在上排数组中对应位置中出现的个数，如果个数不对就更新下排数组中对应的值，只到找到正确值。（下排数组先初始为任意值）</h5><h5 id="如："><a href="#如：" class="headerlink" title="如："></a>如：</h5><h5 id="上排数组A：0-1-2-3-4-5-6-7-8-9"><a href="#上排数组A：0-1-2-3-4-5-6-7-8-9" class="headerlink" title="上排数组A：0,1,2,3,4,5,6,7,8,9"></a>上排数组A：0,1,2,3,4,5,6,7,8,9</h5><h5 id="下排数组B：0-1-2-3-4-5-6-7-8-9"><a href="#下排数组B：0-1-2-3-4-5-6-7-8-9" class="headerlink" title="下排数组B：0,1,2,3,4,5,6,7,8,9"></a>下排数组B：0,1,2,3,4,5,6,7,8,9</h5><h5 id="从上牌数组Index-0开始，A-0-0，0在下排数组中的个数为1，那么下排数组B此时就要更新为：1-1-2-3-4-5-6-7-8-9"><a href="#从上牌数组Index-0开始，A-0-0，0在下排数组中的个数为1，那么下排数组B此时就要更新为：1-1-2-3-4-5-6-7-8-9" class="headerlink" title="从上牌数组Index = 0开始，A[0] = 0，0在下排数组中的个数为1，那么下排数组B此时就要更新为：1,1,2,3,4,5,6,7,8,9"></a>从上牌数组Index = 0开始，A[0] = 0，0在下排数组中的个数为1，那么下排数组B此时就要更新为：1,1,2,3,4,5,6,7,8,9</h5><h5 id="Index-1-A-1-1-1在下排数组中的个数为2，那么下排数组B此时就要更新为：1-2-2-3-4-5-6-7-8-9，从此不断的往下进行，只要找不到正确值就一直往下进行，如果Index-gt-数组长度时，那么重新恢复Index-0再往下进行测试直到找出正确解。"><a href="#Index-1-A-1-1-1在下排数组中的个数为2，那么下排数组B此时就要更新为：1-2-2-3-4-5-6-7-8-9，从此不断的往下进行，只要找不到正确值就一直往下进行，如果Index-gt-数组长度时，那么重新恢复Index-0再往下进行测试直到找出正确解。" class="headerlink" title="Index = 1, A[1] = 1, 1在下排数组中的个数为2，那么下排数组B此时就要更新为：1,2,2,3,4,5,6,7,8,9，从此不断的往下进行，只要找不到正确值就一直往下进行，如果Index &gt;= 数组长度时，那么重新恢复Index = 0再往下进行测试直到找出正确解。"></a>Index = 1, A[1] = 1, 1在下排数组中的个数为2，那么下排数组B此时就要更新为：1,2,2,3,4,5,6,7,8,9，从此不断的往下进行，只要找不到正确值就一直往下进行，如果Index &gt;= 数组长度时，那么重新恢复Index = 0再往下进行测试直到找出正确解。</h5><h2 id="最后再说一些："><a href="#最后再说一些：" class="headerlink" title="最后再说一些："></a>最后再说一些：</h2><h5 id="其实按照上面的这种解题思路，我的解题过程也不能算是错误的，只是排除了大部分的可能性。并且题目也理解有误，所以以后做题一定要看清楚题，理解题目的正真含义。"><a href="#其实按照上面的这种解题思路，我的解题过程也不能算是错误的，只是排除了大部分的可能性。并且题目也理解有误，所以以后做题一定要看清楚题，理解题目的正真含义。" class="headerlink" title="其实按照上面的这种解题思路，我的解题过程也不能算是错误的，只是排除了大部分的可能性。并且题目也理解有误，所以以后做题一定要看清楚题，理解题目的正真含义。"></a>其实按照上面的这种解题思路，我的解题过程也不能算是错误的，只是排除了大部分的可能性。并且题目也理解有误，所以以后做题一定要看清楚题，理解题目的正真含义。</h5></div>
+    </article>
+</section>
+
+<div class="clear"></div>
+
+
+
+    <footer id="footer">
+  <div class="foot">
+    <!-- <a id="gotop">TOP</a> -->
+    <!-- <div id="copyright">Copyright &copy; 2016 <a href="#" target="_blank">WangWenXiang</a><br>
+       Power by <a href="https://github.com/winx402" target="_blank">Github Pages</a> |
+      <a href="https://hexo.io/" target="_blank">HEXO</a></div> -->
+      <div id="copyright">还没想好要写什么</div>
+  </div>
+</footer>
+
+</div>
+<div class="img-view">
+    <span><img src="/img/guide.jpeg"></span>
+</div>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

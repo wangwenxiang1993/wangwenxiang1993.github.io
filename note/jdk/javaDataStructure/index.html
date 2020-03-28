@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+    <title>winx&#39;blog</title>
+</head>
+<body>
+<div class="animated" id="info-min">
+    <div id="guide">
+    <div class="guide-button " _href="/tags/index/">首页</div>
+    <div class="guide-button " _href="/tags/tech/">技术</div>
+    <!--<div class="guide-button " _href="/tags/life/">生活</div>-->
+    <div class="guide-button " _href="/categories/read/">阅读</div>
+    <img src="/img/photo.png">
+</div>
+</div>
+<div id="wrap">
+    
+  
+    
+      <div id="big-title" style="color: #666">
+    
+
+  <div id="title-name">数据结构-Java实现</div><br>
+  <div id="something">2019/11/10</div>
+</div>
+  <section id="content-specific">
+    <article class="post">
+        <div class="con"><h5 id="数据结构是计算机存储、组织数据的方式。数据结构是指相互之间存在一种或多种特定关系的数据元素的集合。通常情况下，精心选择的数据结构可以带来更高的运行或者存储效率。数据结构往往同高效的检索算法和索引技术有关。"><a href="#数据结构是计算机存储、组织数据的方式。数据结构是指相互之间存在一种或多种特定关系的数据元素的集合。通常情况下，精心选择的数据结构可以带来更高的运行或者存储效率。数据结构往往同高效的检索算法和索引技术有关。" class="headerlink" title="数据结构是计算机存储、组织数据的方式。数据结构是指相互之间存在一种或多种特定关系的数据元素的集合。通常情况下，精心选择的数据结构可以带来更高的运行或者存储效率。数据结构往往同高效的检索算法和索引技术有关。"></a>数据结构是计算机存储、组织数据的方式。数据结构是指相互之间存在一种或多种特定关系的数据元素的集合。通常情况下，精心选择的数据结构可以带来更高的运行或者存储效率。数据结构往往同高效的检索算法和索引技术有关。</h5><h4 id="常用的数据结构包括以下几种："><a href="#常用的数据结构包括以下几种：" class="headerlink" title="常用的数据结构包括以下几种："></a>常用的数据结构包括以下几种：</h4><ul>
+<li>数组(Array)</li>
+<li>链表(Linked List)</li>
+<li>散列表(Hash)</li>
+<li>栈( Stack)</li>
+<li>队列(Queue)</li>
+<li>树(Tree)</li>
+<li>堆(Heap)</li>
+<li>图(Graph)</li>
+</ul>
+<a id="more"></a>
+<h5 id="以上几种数据结构都有各自的特点和应用场景，那么他们之间的区别和关系是怎么样的呢？以及在Java语言当中是如何实现的呢？"><a href="#以上几种数据结构都有各自的特点和应用场景，那么他们之间的区别和关系是怎么样的呢？以及在Java语言当中是如何实现的呢？" class="headerlink" title="以上几种数据结构都有各自的特点和应用场景，那么他们之间的区别和关系是怎么样的呢？以及在Java语言当中是如何实现的呢？"></a>以上几种数据结构都有各自的特点和应用场景，那么他们之间的区别和关系是怎么样的呢？以及在Java语言当中是如何实现的呢？</h5><h2 id="数组-Array"><a href="#数组-Array" class="headerlink" title="数组(Array)"></a>数组(Array)</h2><h5 id="所谓数组，是有序的元素序列。若将有限个类型相同的变量的集合命名，那么这个名称为数组名。组成数组的各个变量称为数组的分量，也称为数组的元素，有时也称为下标变量。用于区分数组的各个元素的数字编号称为下标。数组是在程序设计中，为了处理方便，-把具有相同类型的若干元素按无序的形式组织起来的一种形式。这些无序排列的同类数据元素的集合称为数组。"><a href="#所谓数组，是有序的元素序列。若将有限个类型相同的变量的集合命名，那么这个名称为数组名。组成数组的各个变量称为数组的分量，也称为数组的元素，有时也称为下标变量。用于区分数组的各个元素的数字编号称为下标。数组是在程序设计中，为了处理方便，-把具有相同类型的若干元素按无序的形式组织起来的一种形式。这些无序排列的同类数据元素的集合称为数组。" class="headerlink" title="所谓数组，是有序的元素序列。若将有限个类型相同的变量的集合命名，那么这个名称为数组名。组成数组的各个变量称为数组的分量，也称为数组的元素，有时也称为下标变量。用于区分数组的各个元素的数字编号称为下标。数组是在程序设计中，为了处理方便， 把具有相同类型的若干元素按无序的形式组织起来的一种形式。这些无序排列的同类数据元素的集合称为数组。"></a>所谓数组，是有序的元素序列。若将有限个类型相同的变量的集合命名，那么这个名称为数组名。组成数组的各个变量称为数组的分量，也称为数组的元素，有时也称为下标变量。用于区分数组的各个元素的数字编号称为下标。数组是在程序设计中，为了处理方便， 把具有相同类型的若干元素按无序的形式组织起来的一种形式。这些无序排列的同类数据元素的集合称为数组。</h5><h5 id="数组是用于储存多个相同类型数据的集合。该数据类型比较基础简单，这里不做过多的解释和介绍。"><a href="#数组是用于储存多个相同类型数据的集合。该数据类型比较基础简单，这里不做过多的解释和介绍。" class="headerlink" title="数组是用于储存多个相同类型数据的集合。该数据类型比较基础简单，这里不做过多的解释和介绍。"></a>数组是用于储存多个相同类型数据的集合。该数据类型比较基础简单，这里不做过多的解释和介绍。</h5><p><img src="/img/note/jdk/array.jpg" alt="array"><div class="img-note">数组结构图</div></p>
+<h3 id="java当中的数组"><a href="#java当中的数组" class="headerlink" title="java当中的数组"></a>java当中的数组</h3><h4 id="一、数组声明"><a href="#一、数组声明" class="headerlink" title="一、数组声明"></a>一、数组声明</h4><h5 id="数组的声明有两种方式："><a href="#数组的声明有两种方式：" class="headerlink" title="数组的声明有两种方式："></a>数组的声明有两种方式：</h5><pre><code class="lang-java">//一维数组
+type arrayName[];
+type[] arrayName;
+//多维数组
+type arrayName[][];
+type[][] arrayName;
+</code></pre>
+<h4 id="二、数组初始化"><a href="#二、数组初始化" class="headerlink" title="二、数组初始化"></a>二、数组初始化</h4><h5 id="方式一："><a href="#方式一：" class="headerlink" title="方式一："></a>方式一：</h5><pre><code class="lang-java">//分配长度为 4 个 int 型的内存空间，并分别赋初始值1，2，3，4
+int[] array = new int[]{1, 2, 3, 4};
+//多维数组
+int [][] array = new int[][]{{1,2}, {3,4}};
+</code></pre>
+<h5 id="方式二："><a href="#方式二：" class="headerlink" title="方式二："></a>方式二：</h5><pre><code class="lang-java">//方式一的简写
+int[] array = {1, 2, 3, 4};
+//多维数组
+int [][] array = {{1,2}, {3,4}};
+//非均匀数组，array[1][0] = 3, 但是array[1][0]会报指针溢出异常（ArrayIndexOutOfBoundsException）
+int [][] array = {{1,2}, {3}};
+</code></pre>
+<h5 id="方式三："><a href="#方式三：" class="headerlink" title="方式三："></a>方式三：</h5><pre><code class="lang-java">//分配长度为 4 的内存空间，并全部赋为默认值 0
+//相当于 int[] array = new int[4]{0, 0, 0, 0} 的简写
+int[] array = new int[4];
+//多维数组
+int [][] array = new int[2][2];
+</code></pre>
+<h4 id="需要注意的是："><a href="#需要注意的是：" class="headerlink" title="需要注意的是："></a>需要注意的是：</h4><ol>
+<li>数组的创建必须申明数组长度，这是因为在jvm中分配内存的时候，数组的内存块是连续的，这样的内存结构能够保证数组的下标访问时间复杂度是O(1)，这也是数组和链表的最大区别。</li>
+<li>对于返回值类型为数组类型的函数来说，我们可以return new int[3];，我们也可以return new int[]{1, 2, 3};，但我们不可以return {1, 2, 3};。即方式二仅是方式一的简写，其不能脱离数组的声明，{1, 2, 3}并不能返回一个数组对象。</li>
+</ol>
+<h2 id="链表-Linked-List"><a href="#链表-Linked-List" class="headerlink" title="链表(Linked List)"></a>链表(Linked List)</h2><h5 id="链表是一种物理存储单元上非连续、非顺序的存储结构，数据元素的逻辑顺序是通过链表中的指针链接次序实现的。链表由一系列结点（链表中每一个元素称为结点）组成，结点可以在运行时动态生成。每个结点包括两个部分：一个是存储数据元素的数据域，另一个是存储下一个结点地址的指针域。-相比于线性表顺序结构，操作复杂。由于不必须按顺序存储，链表在插入的时候可以达到O-1-的复杂度，比另一种线性表顺序表快得多，但是查找一个节点或者访问特定编号的节点则需要O-n-的时间，而线性表和顺序表相应的时间复杂度分别是O-logn-和O-1-。"><a href="#链表是一种物理存储单元上非连续、非顺序的存储结构，数据元素的逻辑顺序是通过链表中的指针链接次序实现的。链表由一系列结点（链表中每一个元素称为结点）组成，结点可以在运行时动态生成。每个结点包括两个部分：一个是存储数据元素的数据域，另一个是存储下一个结点地址的指针域。-相比于线性表顺序结构，操作复杂。由于不必须按顺序存储，链表在插入的时候可以达到O-1-的复杂度，比另一种线性表顺序表快得多，但是查找一个节点或者访问特定编号的节点则需要O-n-的时间，而线性表和顺序表相应的时间复杂度分别是O-logn-和O-1-。" class="headerlink" title="链表是一种物理存储单元上非连续、非顺序的存储结构，数据元素的逻辑顺序是通过链表中的指针链接次序实现的。链表由一系列结点（链表中每一个元素称为结点）组成，结点可以在运行时动态生成。每个结点包括两个部分：一个是存储数据元素的数据域，另一个是存储下一个结点地址的指针域。 相比于线性表顺序结构，操作复杂。由于不必须按顺序存储，链表在插入的时候可以达到O(1)的复杂度，比另一种线性表顺序表快得多，但是查找一个节点或者访问特定编号的节点则需要O(n)的时间，而线性表和顺序表相应的时间复杂度分别是O(logn)和O(1)。"></a>链表是一种物理存储单元上非连续、非顺序的存储结构，数据元素的逻辑顺序是通过链表中的指针链接次序实现的。链表由一系列结点（链表中每一个元素称为结点）组成，结点可以在运行时动态生成。每个结点包括两个部分：一个是存储数据元素的数据域，另一个是存储下一个结点地址的指针域。 相比于线性表顺序结构，操作复杂。由于不必须按顺序存储，链表在插入的时候可以达到O(1)的复杂度，比另一种线性表顺序表快得多，但是查找一个节点或者访问特定编号的节点则需要O(n)的时间，而线性表和顺序表相应的时间复杂度分别是O(logn)和O(1)。</h5><p><img src="/img/note/jdk/list.png" alt="list"><div class="img-note">链表</div></p>
+<h3 id="java当中的链表"><a href="#java当中的链表" class="headerlink" title="java当中的链表"></a>java当中的链表</h3><h5 id="在List集合中，我们常用到ArrayList和LinkedList这两个类："><a href="#在List集合中，我们常用到ArrayList和LinkedList这两个类：" class="headerlink" title="在List集合中，我们常用到ArrayList和LinkedList这两个类："></a>在List集合中，我们常用到ArrayList和LinkedList这两个类：</h5><p><img src="/img/note/jdk/javaList.png" alt="list"><div class="img-note">Java List类继承关系</div></p>
+<h4 id="List常用方法："><a href="#List常用方法：" class="headerlink" title="List常用方法："></a>List常用方法：</h4><pre><code class="lang-java">//添加功能
+boolean add(E e):向集合中添加一个元素
+void add(int index, E element):在指定位置添加元素
+boolean addAll(Collection&lt;? extends E&gt; c)：向集合中添加一个集合的元素。
+
+//删除功能
+void clear()：删除集合中的所有元素
+E remove(int index)：根据指定索引删除元素，并把删除的元素返回
+boolean remove(Object o)：从集合中删除指定的元素
+boolean removeAll(Collection&lt;?&gt; c):从集合中删除一个指定的集合元素。
+
+//修改功能
+E set(int index, E element):把指定索引位置的元素修改为指定的值，返回修改前的值。
+
+//获取功能
+E get(int index)：获取指定位置的元素
+Iterator iterator():就是用来获取集合中每一个元素。
+
+//判断功能
+boolean isEmpty()：判断集合是否为空。
+boolean contains(Object o)：判断集合中是否存在指定的元素。
+boolean containsAll(Collection&lt;?&gt; c)：判断集合中是否存在指定的一个集合中的元素。
+
+//长度功能
+int size():获取集合中的元素个数
+
+//把集合转换成数组
+Object[] toArray():把集合变成数组。
+</code></pre>
+<h4 id="List集合相对于数组Array来说，主要有以下区别："><a href="#List集合相对于数组Array来说，主要有以下区别：" class="headerlink" title="List集合相对于数组Array来说，主要有以下区别："></a>List集合相对于数组Array来说，主要有以下区别：</h4><ul>
+<li>动态扩容：容量不固定，随着容量的增加而动态扩容</li>
+<li>有序集合（插入的顺序==输出的顺序）</li>
+<li>插入的元素可以为null</li>
+</ul>
+<h3 id="ArrayList和LinkedList比较"><a href="#ArrayList和LinkedList比较" class="headerlink" title="ArrayList和LinkedList比较"></a>ArrayList和LinkedList比较</h3><h5 id="两种list的区别主要在于他们之间的底层数据结构不同，ArrayList使用数组作为基础数据结构，LinkedList使用链表最为基础数据结构。因此他们之间的差别，也主要体现在两种数据结构之上。"><a href="#两种list的区别主要在于他们之间的底层数据结构不同，ArrayList使用数组作为基础数据结构，LinkedList使用链表最为基础数据结构。因此他们之间的差别，也主要体现在两种数据结构之上。" class="headerlink" title="两种list的区别主要在于他们之间的底层数据结构不同，ArrayList使用数组作为基础数据结构，LinkedList使用链表最为基础数据结构。因此他们之间的差别，也主要体现在两种数据结构之上。"></a>两种list的区别主要在于他们之间的底层数据结构不同，ArrayList使用数组作为基础数据结构，LinkedList使用链表最为基础数据结构。因此他们之间的差别，也主要体现在两种数据结构之上。</h5><h4 id="元素新增"><a href="#元素新增" class="headerlink" title="元素新增"></a>元素新增</h4><h5 id="ArrayList底层是数组实现，在数组的基础结构之上进行了封装，实现了List最重要的特点之一：动态扩容。因为数组有固定长度，所以当元素数量超过数组长度时，ArrayList需要重新申请新的数组对象（容量翻倍），然后将原数组数据copy至新申请的数组中，之后再进行插入操作。"><a href="#ArrayList底层是数组实现，在数组的基础结构之上进行了封装，实现了List最重要的特点之一：动态扩容。因为数组有固定长度，所以当元素数量超过数组长度时，ArrayList需要重新申请新的数组对象（容量翻倍），然后将原数组数据copy至新申请的数组中，之后再进行插入操作。" class="headerlink" title="ArrayList底层是数组实现，在数组的基础结构之上进行了封装，实现了List最重要的特点之一：动态扩容。因为数组有固定长度，所以当元素数量超过数组长度时，ArrayList需要重新申请新的数组对象（容量翻倍），然后将原数组数据copy至新申请的数组中，之后再进行插入操作。"></a>ArrayList底层是数组实现，在数组的基础结构之上进行了封装，实现了List最重要的特点之一：动态扩容。因为数组有固定长度，所以当元素数量超过数组长度时，ArrayList需要重新申请新的数组对象（容量翻倍），然后将原数组数据copy至新申请的数组中，之后再进行插入操作。</h5><p><img src="/img/note/jdk/ArrayInsert.png" alt="ArrayInsert"></p>
+<h5 id="LinkedList使用指针进行元素关联，不存在连续内存分配和数组扩容机制。新增元素时只需要分配新元素的内存空间，然后和原最后节点进行指针关联。"><a href="#LinkedList使用指针进行元素关联，不存在连续内存分配和数组扩容机制。新增元素时只需要分配新元素的内存空间，然后和原最后节点进行指针关联。" class="headerlink" title="LinkedList使用指针进行元素关联，不存在连续内存分配和数组扩容机制。新增元素时只需要分配新元素的内存空间，然后和原最后节点进行指针关联。"></a>LinkedList使用指针进行元素关联，不存在连续内存分配和数组扩容机制。新增元素时只需要分配新元素的内存空间，然后和原最后节点进行指针关联。</h5><h4 id="元素删除"><a href="#元素删除" class="headerlink" title="元素删除"></a>元素删除</h4><h5 id="ArrayList在删除除最后元素之外，需要将该元素之后的所有数据往前位移一位。"><a href="#ArrayList在删除除最后元素之外，需要将该元素之后的所有数据往前位移一位。" class="headerlink" title="ArrayList在删除除最后元素之外，需要将该元素之后的所有数据往前位移一位。"></a>ArrayList在删除除最后元素之外，需要将该元素之后的所有数据往前位移一位。</h5><h5 id="LinkedList只需要将删除节点前的节点重新指向删除后的节点。"><a href="#LinkedList只需要将删除节点前的节点重新指向删除后的节点。" class="headerlink" title="LinkedList只需要将删除节点前的节点重新指向删除后的节点。"></a>LinkedList只需要将删除节点前的节点重新指向删除后的节点。</h5><h5 id="在元素增加和元素删除的操作逻辑上来看，ArrayList相比LinkedList更加复杂。但是因为JDK近几年的更新发展，对于数组复制的实现进行了优化，以至于ArrayList的性能也得到了提高。"><a href="#在元素增加和元素删除的操作逻辑上来看，ArrayList相比LinkedList更加复杂。但是因为JDK近几年的更新发展，对于数组复制的实现进行了优化，以至于ArrayList的性能也得到了提高。" class="headerlink" title="在元素增加和元素删除的操作逻辑上来看，ArrayList相比LinkedList更加复杂。但是因为JDK近几年的更新发展，对于数组复制的实现进行了优化，以至于ArrayList的性能也得到了提高。"></a>在元素增加和元素删除的操作逻辑上来看，ArrayList相比LinkedList更加复杂。但是因为JDK近几年的更新发展，对于数组复制的实现进行了优化，以至于ArrayList的性能也得到了提高。</h5><h4 id="元素获取"><a href="#元素获取" class="headerlink" title="元素获取"></a>元素获取</h4><h5 id="ArrayList因为内存连续，各个数据存在相应的下标，因此随机访问只需要计算内存偏移量，然后直接访问，因此时间复杂度为O-1"><a href="#ArrayList因为内存连续，各个数据存在相应的下标，因此随机访问只需要计算内存偏移量，然后直接访问，因此时间复杂度为O-1" class="headerlink" title="ArrayList因为内存连续，各个数据存在相应的下标，因此随机访问只需要计算内存偏移量，然后直接访问，因此时间复杂度为O(1);"></a>ArrayList因为内存连续，各个数据存在相应的下标，因此随机访问只需要计算内存偏移量，然后直接访问，因此时间复杂度为O(1);</h5><h5 id="LinkedList为链表结构，随机访问需要从头元素进行遍历访问，因此事件复杂度为O-n"><a href="#LinkedList为链表结构，随机访问需要从头元素进行遍历访问，因此事件复杂度为O-n" class="headerlink" title="LinkedList为链表结构，随机访问需要从头元素进行遍历访问，因此事件复杂度为O(n);"></a>LinkedList为链表结构，随机访问需要从头元素进行遍历访问，因此事件复杂度为O(n);</h5><h2 id="散列表-Hash"><a href="#散列表-Hash" class="headerlink" title="散列表(Hash)"></a>散列表(Hash)</h2><h5 id="散列表（Hash-table，也叫哈希表），是根据关键码值-Key-value-而直接进行访问的数据结构。也就是说，它通过把关键码值映射到表中一个位置来访问记录，以加快查找的速度。这个映射函数叫做散列函数，存放记录的数组叫做散列表。"><a href="#散列表（Hash-table，也叫哈希表），是根据关键码值-Key-value-而直接进行访问的数据结构。也就是说，它通过把关键码值映射到表中一个位置来访问记录，以加快查找的速度。这个映射函数叫做散列函数，存放记录的数组叫做散列表。" class="headerlink" title="散列表（Hash table，也叫哈希表），是根据关键码值(Key value)而直接进行访问的数据结构。也就是说，它通过把关键码值映射到表中一个位置来访问记录，以加快查找的速度。这个映射函数叫做散列函数，存放记录的数组叫做散列表。"></a>散列表（Hash table，也叫哈希表），是根据关键码值(Key value)而直接进行访问的数据结构。也就是说，它通过把关键码值映射到表中一个位置来访问记录，以加快查找的速度。这个映射函数叫做散列函数，存放记录的数组叫做散列表。</h5><p><img src="/img/note/jdk/hash.png" alt="hash"></p>
+<h3 id="Java当中的散列表"><a href="#Java当中的散列表" class="headerlink" title="Java当中的散列表"></a>Java当中的散列表</h3><p><img src="/img/note/jdk/JavaMap.png" alt="javaMap"><div class="img-note">Java Map类继承关系</div></p>
+<h4 id="Map常用方法："><a href="#Map常用方法：" class="headerlink" title="Map常用方法："></a>Map常用方法：</h4><pre><code class="lang-java">//添加功能
+V put(K key, V value):向Map中添加一个键值对，并返回该value
+void putAll(Map&lt;? extends K, ? extends V&gt; m)：向Map中添加一系列元素。
+
+//删除功能
+void clear()：删除Map中的所有元素
+V remove(Object key)：从Map中删除指定的元素
+
+//修改功能
+boolean replace(K key, V oldValue, V newValue):如果oldValue和原来的值相同，替换成新值
+
+//获取功能
+V get(Object key)：根据Key获取对应value
+Set&lt;K&gt; keySet()：返回key集合
+Collection&lt;V&gt; values()：返回value集合
+Set&lt;Map.Entry&lt;K, V&gt;&gt; entrySet()：获取键值对集合
+
+//判断功能
+boolean isEmpty()：判断Map是否为空。
+boolean containsKey(Object key)：判断Map中是否存在指定的Key元素。
+boolean containsValue(Object value)：判断Map中是否存在指定的Value元素。
+
+//长度功能
+int size():获取Map中的元素个数
+</code></pre>
+<h3 id="HashTable、HashMap和TreeMap比较"><a href="#HashTable、HashMap和TreeMap比较" class="headerlink" title="HashTable、HashMap和TreeMap比较"></a>HashTable、HashMap和TreeMap比较</h3><h4 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h4><ul>
+<li>HashTable：采用数组+单向链表的方式实现</li>
+<li>HashMap：在Java6中HashMap中采用table数组+链表的方式来实现（Java8中采用数组+链表+红黑树）。</li>
+<li>TreeMap：基于红黑树的NavigableMap实现</li>
+</ul>
+<h4 id="并发访问安全"><a href="#并发访问安全" class="headerlink" title="并发访问安全"></a>并发访问安全</h4><ul>
+<li>HashTable采用synchronized关键字保证线程安全，因此对map的操作都会导致整个对象的锁定，锁的粒度相对于ConcurrentHashMap来说会大一些。</li>
+<li>HashMap和TreeMap则不保证线程安全</li>
+</ul>
+</div>
+    </article>
+</section>
+
+<div class="clear"></div>
+
+
+
+    <footer id="footer">
+  <div class="foot">
+    <!-- <a id="gotop">TOP</a> -->
+    <!-- <div id="copyright">Copyright &copy; 2016 <a href="#" target="_blank">WangWenXiang</a><br>
+       Power by <a href="https://github.com/winx402" target="_blank">Github Pages</a> |
+      <a href="https://hexo.io/" target="_blank">HEXO</a></div> -->
+      <div id="copyright">还没想好要写什么</div>
+  </div>
+</footer>
+
+</div>
+<div class="img-view">
+    <span><img src="/img/guide.jpeg"></span>
+</div>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

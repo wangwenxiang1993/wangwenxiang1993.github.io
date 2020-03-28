@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+    <title>winx&#39;blog</title>
+</head>
+<body>
+<div class="animated" id="info-min">
+    <div id="guide">
+    <div class="guide-button " _href="/tags/index/">首页</div>
+    <div class="guide-button " _href="/tags/tech/">技术</div>
+    <!--<div class="guide-button " _href="/tags/life/">生活</div>-->
+    <div class="guide-button " _href="/categories/read/">阅读</div>
+    <img src="/img/photo.png">
+</div>
+</div>
+<div id="wrap">
+    
+  
+    
+      <div id="big-title" style="color: #666">
+    
+
+  <div id="title-name">左旋转字符串</div><br>
+  <div id="something">2017/03/06</div>
+</div>
+  <section id="content-specific">
+    <article class="post">
+        <div class="con"><h2 id="题目要求："><a href="#题目要求：" class="headerlink" title="题目要求："></a>题目要求：</h2><h5 id="定义字符串的左旋转操作：把字符串前面的若干个字符移动到字符串的尾部。"><a href="#定义字符串的左旋转操作：把字符串前面的若干个字符移动到字符串的尾部。" class="headerlink" title="定义字符串的左旋转操作：把字符串前面的若干个字符移动到字符串的尾部。"></a>定义字符串的左旋转操作：把字符串前面的若干个字符移动到字符串的尾部。</h5><h5 id="如把字符串abcdef左旋转2位得到字符串cdefab。请实现字符串左旋转的函数。"><a href="#如把字符串abcdef左旋转2位得到字符串cdefab。请实现字符串左旋转的函数。" class="headerlink" title="如把字符串abcdef左旋转2位得到字符串cdefab。请实现字符串左旋转的函数。"></a>如把字符串abcdef左旋转2位得到字符串cdefab。请实现字符串左旋转的函数。</h5><h5 id="要求时间对长度为n的字符串操作的复杂度为O-n-，辅助内存为O-1-。"><a href="#要求时间对长度为n的字符串操作的复杂度为O-n-，辅助内存为O-1-。" class="headerlink" title="要求时间对长度为n的字符串操作的复杂度为O(n)，辅助内存为O(1)。"></a>要求时间对长度为n的字符串操作的复杂度为O(n)，辅助内存为O(1)。</h5><a id="more"></a>
+<h2 id="分析过程："><a href="#分析过程：" class="headerlink" title="分析过程："></a>分析过程：</h2><h5 id="题目要求很简单，其实就是字符串的位置交换，一个长度为n的字符串，将字符串的前面m个字符的子串和后面的字符进行位置交换。如果用普通的java代码进行编写的话，会非常简单"><a href="#题目要求很简单，其实就是字符串的位置交换，一个长度为n的字符串，将字符串的前面m个字符的子串和后面的字符进行位置交换。如果用普通的java代码进行编写的话，会非常简单" class="headerlink" title="题目要求很简单，其实就是字符串的位置交换，一个长度为n的字符串，将字符串的前面m个字符的子串和后面的字符进行位置交换。如果用普通的java代码进行编写的话，会非常简单"></a>题目要求很简单，其实就是字符串的位置交换，一个长度为n的字符串，将字符串的前面m个字符的子串和后面的字符进行位置交换。如果用普通的java代码进行编写的话，会非常简单</h5><pre><code class="lang-JAVA">String result = start.substring(m,n) + start.substring(0, m);
+</code></pre>
+<h5 id="java对数组的复制使用System-arraycopy的本地方法，-以这种方式实现的话，时间复杂度是符合O-n-要求的，但是空间复杂度却要大于O-1-。这明显是不符合题意的。"><a href="#java对数组的复制使用System-arraycopy的本地方法，-以这种方式实现的话，时间复杂度是符合O-n-要求的，但是空间复杂度却要大于O-1-。这明显是不符合题意的。" class="headerlink" title="java对数组的复制使用System.arraycopy的本地方法， 以这种方式实现的话，时间复杂度是符合O(n)要求的，但是空间复杂度却要大于O(1)。这明显是不符合题意的。"></a>java对数组的复制使用System.arraycopy的本地方法， 以这种方式实现的话，时间复杂度是符合O(n)要求的，但是空间复杂度却要大于O(1)。这明显是不符合题意的。</h5><h5 id="首先，能够想到的是，字符串的左旋转，其实就是对字符数组的左旋转。既然是对数组的位置交换，则数组的每个位置的字符在交换之后的位置是已经确定的，并且能够找到一定的规律的。比如题目中的例子，把字符串abcdef左旋转2位得到字符串cdefab；"><a href="#首先，能够想到的是，字符串的左旋转，其实就是对字符数组的左旋转。既然是对数组的位置交换，则数组的每个位置的字符在交换之后的位置是已经确定的，并且能够找到一定的规律的。比如题目中的例子，把字符串abcdef左旋转2位得到字符串cdefab；" class="headerlink" title="首先，能够想到的是，字符串的左旋转，其实就是对字符数组的左旋转。既然是对数组的位置交换，则数组的每个位置的字符在交换之后的位置是已经确定的，并且能够找到一定的规律的。比如题目中的例子，把字符串abcdef左旋转2位得到字符串cdefab；"></a>首先，能够想到的是，字符串的左旋转，其实就是对字符数组的左旋转。既然是对数组的位置交换，则数组的每个位置的字符在交换之后的位置是已经确定的，并且能够找到一定的规律的。比如题目中的例子，把字符串abcdef左旋转2位得到字符串cdefab；</h5><h5 id="假设字符串的数组为arry-字符串的长度为6（n-6），左旋转2位（m-2），则数组中每一位的位置相应的转换为"><a href="#假设字符串的数组为arry-字符串的长度为6（n-6），左旋转2位（m-2），则数组中每一位的位置相应的转换为" class="headerlink" title="假设字符串的数组为arry,字符串的长度为6（n=6），左旋转2位（m=2），则数组中每一位的位置相应的转换为"></a>假设字符串的数组为arry,字符串的长度为6（n=6），左旋转2位（m=2），则数组中每一位的位置相应的转换为</h5><h6 id="a-array-0-gt-array-0-4-gt-array-4"><a href="#a-array-0-gt-array-0-4-gt-array-4" class="headerlink" title="a:array[0] -&gt; array[0+4] -&gt; array[4]"></a>a:array[0] -&gt; array[0+4] -&gt; array[4]</h6><h6 id="b-array-1-gt-array-1-4-gt-array-5"><a href="#b-array-1-gt-array-1-4-gt-array-5" class="headerlink" title="b:array[1] -&gt; array[1+4] -&gt; array[5]"></a>b:array[1] -&gt; array[1+4] -&gt; array[5]</h6><h6 id="c-array-2-gt-array-2-2-gt-array-0"><a href="#c-array-2-gt-array-2-2-gt-array-0" class="headerlink" title="c:array[2] -&gt; array[2-2] -&gt; array[0]"></a>c:array[2] -&gt; array[2-2] -&gt; array[0]</h6><h6 id="d-array-3-gt-array-3-2-gt-array-1"><a href="#d-array-3-gt-array-3-2-gt-array-1" class="headerlink" title="d:array[3] -&gt; array[3-2] -&gt; array[1]"></a>d:array[3] -&gt; array[3-2] -&gt; array[1]</h6><h6 id="e-array-4-gt-array-4-2-gt-array-2"><a href="#e-array-4-gt-array-4-2-gt-array-2" class="headerlink" title="e:array[4] -&gt; array[4-2] -&gt; array[2]"></a>e:array[4] -&gt; array[4-2] -&gt; array[2]</h6><h6 id="f-array-5-gt-array-5-2-gt-array-3"><a href="#f-array-5-gt-array-5-2-gt-array-3" class="headerlink" title="f:array[5] -&gt; array[5-2] -&gt; array[3]"></a>f:array[5] -&gt; array[5-2] -&gt; array[3]</h6><h5 id="可以看出，字符位置的交换是很有规律的，对于字符长度为n，左旋m位的数组"><a href="#可以看出，字符位置的交换是很有规律的，对于字符长度为n，左旋m位的数组" class="headerlink" title="可以看出，字符位置的交换是很有规律的，对于字符长度为n，左旋m位的数组"></a>可以看出，字符位置的交换是很有规律的，对于字符长度为n，左旋m位的数组</h5><ol>
+<li>前面m个字符，左旋后的位置为i+(n-m)</li>
+<li>后面n-m个字符，左旋后的位置为j-m</li>
+</ol>
+<h4 id="基于这套交换逻辑，想要实现如下算法，却发现不符合题目要求："><a href="#基于这套交换逻辑，想要实现如下算法，却发现不符合题目要求：" class="headerlink" title="基于这套交换逻辑，想要实现如下算法，却发现不符合题目要求："></a>基于这套交换逻辑，想要实现如下算法，却发现不符合题目要求：</h4><h5 id="1-初始字符串为abcdef，左旋转2位得到字符串cdefab"><a href="#1-初始字符串为abcdef，左旋转2位得到字符串cdefab" class="headerlink" title="1. 初始字符串为abcdef，左旋转2位得到字符串cdefab"></a>1. 初始字符串为abcdef，左旋转2位得到字符串cdefab</h5><table><tr>
+<td>&nbsp;a&nbsp;</td>
+<td>&nbsp;b&nbsp;</td>
+<td>&nbsp;c&nbsp;</td>
+<td>&nbsp;d&nbsp;</td>
+<td>&nbsp;e&nbsp;</td>
+<td>&nbsp;f&nbsp;</td>
+</tr></table>
+
+<h5 id="2-将array-0-写入到到array-4-，-用tmp记录array-4"><a href="#2-将array-0-写入到到array-4-，-用tmp记录array-4" class="headerlink" title="2. 将array[0]写入到到array[4]， 用tmp记录array[4]"></a>2. 将array[0]写入到到array[4]， 用tmp记录array[4]</h5><table><tr>
+<td>&nbsp;a&nbsp;</td>
+<td>&nbsp;b&nbsp;</td>
+<td>&nbsp;c&nbsp;</td>
+<td>&nbsp;d&nbsp;</td>
+<td>&nbsp;<font color="red">a</font>&nbsp;</td>
+<td>&nbsp;f&nbsp;</td>
+</tr></table>
+
+<p>　　　tmp = e</p>
+<h5 id="3-将array-4-写入到到array-2-，-用tmp记录array-2"><a href="#3-将array-4-写入到到array-2-，-用tmp记录array-2" class="headerlink" title="3. 将array[4]写入到到array[2]， 用tmp记录array[2]"></a>3. 将array[4]写入到到array[2]， 用tmp记录array[2]</h5><table><tr>
+<td>&nbsp;a&nbsp;</td>
+<td>&nbsp;b&nbsp;</td>
+<td>&nbsp;<font color="red">e</font>&nbsp;</td>
+<td>&nbsp;d&nbsp;</td>
+<td>&nbsp;a&nbsp;</td>
+<td>&nbsp;f&nbsp;</td>
+</tr></table>
+
+<p>　　　tmp = c</p>
+<h5 id="4-将array-2-写入到到array-0-，-用tmp记录array-0"><a href="#4-将array-2-写入到到array-0-，-用tmp记录array-0" class="headerlink" title="4. 将array[2]写入到到array[0]， 用tmp记录array[0]"></a>4. 将array[2]写入到到array[0]， 用tmp记录array[0]</h5><table><tr>
+<td>&nbsp;<font color="red">c</font>&nbsp;</td>
+<td>&nbsp;b&nbsp;</td>
+<td>&nbsp;e&nbsp;</td>
+<td>&nbsp;d&nbsp;</td>
+<td>&nbsp;a&nbsp;</td>
+<td>&nbsp;f&nbsp;</td>
+</tr></table>
+
+<p>　　　tmp = a</p>
+<h5 id="问题就出在第四步，回到起点后，继续交换显然是错误的，这就需要额外的空间去记录那些位置是已经交换的，并且需要的额外空间随着原始字符串长度的增加而线性增长，所以这种方式的空间复杂度为O-n-不符合O-1-的要求。"><a href="#问题就出在第四步，回到起点后，继续交换显然是错误的，这就需要额外的空间去记录那些位置是已经交换的，并且需要的额外空间随着原始字符串长度的增加而线性增长，所以这种方式的空间复杂度为O-n-不符合O-1-的要求。" class="headerlink" title="问题就出在第四步，回到起点后，继续交换显然是错误的，这就需要额外的空间去记录那些位置是已经交换的，并且需要的额外空间随着原始字符串长度的增加而线性增长，所以这种方式的空间复杂度为O(n),不符合O(1)的要求。"></a>问题就出在第四步，回到起点后，继续交换显然是错误的，这就需要额外的空间去记录那些位置是已经交换的，并且需要的额外空间随着原始字符串长度的增加而线性增长，所以这种方式的空间复杂度为O(n),不符合O(1)的要求。</h5><h4 id="于是想到的另外一种解题方式，依次将数组元素与之后的第m位交换："><a href="#于是想到的另外一种解题方式，依次将数组元素与之后的第m位交换：" class="headerlink" title="于是想到的另外一种解题方式，依次将数组元素与之后的第m位交换："></a>于是想到的另外一种解题方式，依次将数组元素与之后的第m位交换：</h4><h5 id="1-初始字符串为abcdef，"><a href="#1-初始字符串为abcdef，" class="headerlink" title="1. 初始字符串为abcdef，"></a>1. 初始字符串为abcdef，</h5><table><tr>
+<td>&nbsp;a&nbsp;</td>
+<td>&nbsp;b&nbsp;</td>
+<td>&nbsp;c&nbsp;</td>
+<td>&nbsp;d&nbsp;</td>
+<td>&nbsp;e&nbsp;</td>
+<td>&nbsp;f&nbsp;</td>
+</tr></table>
+
+<h5 id="2-将array-0-与array-2-交换"><a href="#2-将array-0-与array-2-交换" class="headerlink" title="2. 将array[0]与array[2]交换"></a>2. 将array[0]与array[2]交换</h5><table><tr>
+<td>&nbsp;<font color="red">c</font>&nbsp;</td>
+<td>&nbsp;b&nbsp;</td>
+<td>&nbsp;<font color="red">a</font>&nbsp;</td>
+<td>&nbsp;d&nbsp;</td>
+<td>&nbsp;e&nbsp;</td>
+<td>&nbsp;f&nbsp;</td>
+</tr></table>
+
+<h5 id="3-将array-1-与array-3-交换"><a href="#3-将array-1-与array-3-交换" class="headerlink" title="3.  将array[1]与array[3]交换"></a>3.  将array[1]与array[3]交换</h5><table><tr>
+<td>&nbsp;c&nbsp;</td>
+<td>&nbsp;<font color="red">d</font>&nbsp;</td>
+<td>&nbsp;a&nbsp;</td>
+<td>&nbsp;<font color="red">b</font>&nbsp;</td>
+<td>&nbsp;e&nbsp;</td>
+<td>&nbsp;f&nbsp;</td>
+</tr></table>
+
+<h5 id="4-将array-2-与array-4-交换"><a href="#4-将array-2-与array-4-交换" class="headerlink" title="4. 将array[2]与array[4]交换"></a>4. 将array[2]与array[4]交换</h5><table><tr>
+<td>&nbsp;c&nbsp;</td>
+<td>&nbsp;d&nbsp;</td>
+<td>&nbsp;<font color="red">e</font>&nbsp;</td>
+<td>&nbsp;b&nbsp;</td>
+<td>&nbsp;<font color="red">a</font>&nbsp;</td>
+<td>&nbsp;f&nbsp;</td>
+</tr></table>
+
+<h5 id="5-将array-3-与array-5-交换"><a href="#5-将array-3-与array-5-交换" class="headerlink" title="5. 将array[3]与array[5]交换"></a>5. 将array[3]与array[5]交换</h5><table><tr>
+<td>&nbsp;c&nbsp;</td>
+<td>&nbsp;d&nbsp;</td>
+<td>&nbsp;e&nbsp;</td>
+<td>&nbsp;<font color="red">f</font>&nbsp;</td>
+<td>&nbsp;a&nbsp;</td>
+<td>&nbsp;<font color="red">b</font>&nbsp;</td>
+</tr></table>
+
+<h5 id="这种实现方式需要进行n-m次交换，时间复杂度为O-n-需要两个额外空间，分别是交换数组元素的tmp指针，和记录当前交换位置的指针，这也符合常数空间复杂度O-1-。"><a href="#这种实现方式需要进行n-m次交换，时间复杂度为O-n-需要两个额外空间，分别是交换数组元素的tmp指针，和记录当前交换位置的指针，这也符合常数空间复杂度O-1-。" class="headerlink" title="这种实现方式需要进行n-m次交换，时间复杂度为O(n),需要两个额外空间，分别是交换数组元素的tmp指针，和记录当前交换位置的指针，这也符合常数空间复杂度O(1)。"></a>这种实现方式需要进行n-m次交换，时间复杂度为O(n),需要两个额外空间，分别是交换数组元素的tmp指针，和记录当前交换位置的指针，这也符合常数空间复杂度O(1)。</h5><h2 id="解题："><a href="#解题：" class="headerlink" title="解题："></a>解题：</h2><h4 id="看了网络上的一些其他解法，也比较巧妙"><a href="#看了网络上的一些其他解法，也比较巧妙" class="headerlink" title="看了网络上的一些其他解法，也比较巧妙:"></a>看了网络上的一些其他解法，也比较巧妙:</h4><ol>
+<li>首先将原字符串分为两个部分，即X:ab，Y:cdef；</li>
+<li>将X反转，X-&gt;X^T，即得：ab-&gt;ba；将Y反转，Y-&gt;Y^T，即得：cdef-&gt;fedc。</li>
+<li>反转上述步骤得到的结果字符串X^TY^T，即反转字符串bafedc的两部分（ba和fedc）给予反转，bafedc得到cdefab，形式化表示为(X^TY^T)^T=YX，这就实现了整个反转。</li>
+</ol>
+<pre><code class="lang-C">void ReverseString(char* s,int from,int to)
+{
+    while (from &lt; to)
+    {
+        char t = s[from];
+        s[from++] = s[to];
+        s[to--] = t;
+    }
+}
+
+void LeftRotateString(char* s,int n,int m)
+{
+    m %= n;               //若要左移动大于n位，那么和%n 是等价的
+    ReverseString(s, 0, m - 1); //反转[0..m - 1]，套用到上面举的例子中，就是X-&gt;X^T，即 abc-&gt;cba
+    ReverseString(s, m, n - 1); //反转[m..n - 1]，例如Y-&gt;Y^T，即 def-&gt;fed
+    ReverseString(s, 0, n - 1); //反转[0..n - 1]，即如整个反转，(X^TY^T)^T=YX，即 cbafed-&gt;defabc。
+}
+</code></pre>
+<h5 id="调用3次此方法即可左旋字符串"><a href="#调用3次此方法即可左旋字符串" class="headerlink" title="调用3次此方法即可左旋字符串"></a>调用3次此方法即可左旋字符串</h5><h2 id="最后再说一些："><a href="#最后再说一些：" class="headerlink" title="最后再说一些："></a>最后再说一些：</h2><h5 id="对于时间复杂度和空间复杂度的计算，需要去低阶项，去掉常数项，去掉高阶项，T-n-2n2-n-1-O-n2-若执行时间是一个与问题规模n无关的常数，算法的时间复杂度为常数阶，记作T-n-O-1-。"><a href="#对于时间复杂度和空间复杂度的计算，需要去低阶项，去掉常数项，去掉高阶项，T-n-2n2-n-1-O-n2-若执行时间是一个与问题规模n无关的常数，算法的时间复杂度为常数阶，记作T-n-O-1-。" class="headerlink" title="对于时间复杂度和空间复杂度的计算，需要去低阶项，去掉常数项，去掉高阶项，T(n)=(2n2+n+1)=O(n2);若执行时间是一个与问题规模n无关的常数，算法的时间复杂度为常数阶，记作T(n)=O(1)。"></a>对于时间复杂度和空间复杂度的计算，需要去低阶项，去掉常数项，去掉高阶项，T(n)=(2n<sup>2</sup>+n+1)=O(n<sup>2</sup>);若执行时间是一个与问题规模n无关的常数，算法的时间复杂度为常数阶，记作T(n)=O(1)。</h5><h3 id="参考链接："><a href="#参考链接：" class="headerlink" title="参考链接："></a>参考链接：</h3><p><a href="http://taop.marchtea.com/01.01.html" target="_blank" rel="external">http://taop.marchtea.com/01.01.html</a></p>
+</div>
+    </article>
+</section>
+
+<div class="clear"></div>
+
+
+
+    <footer id="footer">
+  <div class="foot">
+    <!-- <a id="gotop">TOP</a> -->
+    <!-- <div id="copyright">Copyright &copy; 2016 <a href="#" target="_blank">WangWenXiang</a><br>
+       Power by <a href="https://github.com/winx402" target="_blank">Github Pages</a> |
+      <a href="https://hexo.io/" target="_blank">HEXO</a></div> -->
+      <div id="copyright">还没想好要写什么</div>
+  </div>
+</footer>
+
+</div>
+<div class="img-view">
+    <span><img src="/img/guide.jpeg"></span>
+</div>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

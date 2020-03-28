@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+    <title>winx&#39;blog</title>
+</head>
+<body>
+<div class="animated" id="info-min">
+    <div id="guide">
+    <div class="guide-button " _href="/tags/index/">首页</div>
+    <div class="guide-button " _href="/tags/tech/">技术</div>
+    <!--<div class="guide-button " _href="/tags/life/">生活</div>-->
+    <div class="guide-button " _href="/categories/read/">阅读</div>
+    <img src="/img/photo.png">
+</div>
+</div>
+<div id="wrap">
+    
+  
+    
+      <div id="big-title" style="color: #666">
+    
+
+  <div id="title-name">redis字符串数据结构</div><br>
+  <div id="something">2017/07/05</div>
+</div>
+  <section id="content-specific">
+    <article class="post">
+        <div class="con"><h5 id="redis是基于C语言的，但是redis没有直接使用C语言的传统字符串，而是自己构建了一种简单动态字符串的抽象类型。简称SDS；"><a href="#redis是基于C语言的，但是redis没有直接使用C语言的传统字符串，而是自己构建了一种简单动态字符串的抽象类型。简称SDS；" class="headerlink" title="redis是基于C语言的，但是redis没有直接使用C语言的传统字符串，而是自己构建了一种简单动态字符串的抽象类型。简称SDS；"></a>redis是基于C语言的，但是redis没有直接使用C语言的传统字符串，而是自己构建了一种简单动态字符串的抽象类型。简称SDS；</h5><a id="more"></a>
+<h3 id="SDS数据结构"><a href="#SDS数据结构" class="headerlink" title="SDS数据结构"></a>SDS数据结构</h3><h5 id="每个sds-h-sdshdr结构表示一个SDS值："><a href="#每个sds-h-sdshdr结构表示一个SDS值：" class="headerlink" title="每个sds.h/sdshdr结构表示一个SDS值："></a>每个sds.h/sdshdr结构表示一个SDS值：</h5><pre><code class="lang-C">struct sdshdr{
+
+    //记录buf数组汇总已使用字节的数量，等于SDS所保存字符串的长度
+    int len;
+
+    //记录buf数组中未使用字节的数量
+    int free;
+
+    //字节数组，用于保存字符串
+    char buf[];
+}
+</code></pre>
+<h5 id="SDS结构实例："><a href="#SDS结构实例：" class="headerlink" title="SDS结构实例："></a>SDS结构实例：</h5><p><img src="/img/note/redisString.png" alt="SDS实例"> <div class="img-note">SDS实例</div></p>
+<ol>
+<li>free属性的值为0，表示SDS没有未使用空间。</li>
+<li>len的属性值为5，表示这个SDS保存了一个5字节长的字符串。</li>
+<li>buf属性是一个char数组，保存了redis五个字符</li>
+</ol>
+<h5 id="SDS遵循C字符串以空字符结尾的惯例，该空字符的1字节空间不计算在SDS的len属性里面。并且添加空字符到字符串末尾的操作，是由SDS函数自动完成的。之所以保留这空字符结尾的好处是，SDS可以重用一部分C字符串函数库里面的函数。"><a href="#SDS遵循C字符串以空字符结尾的惯例，该空字符的1字节空间不计算在SDS的len属性里面。并且添加空字符到字符串末尾的操作，是由SDS函数自动完成的。之所以保留这空字符结尾的好处是，SDS可以重用一部分C字符串函数库里面的函数。" class="headerlink" title="SDS遵循C字符串以空字符结尾的惯例，该空字符的1字节空间不计算在SDS的len属性里面。并且添加空字符到字符串末尾的操作，是由SDS函数自动完成的。之所以保留这空字符结尾的好处是，SDS可以重用一部分C字符串函数库里面的函数。"></a>SDS遵循C字符串以空字符结尾的惯例，该空字符的1字节空间不计算在SDS的len属性里面。并且添加空字符到字符串末尾的操作，是由SDS函数自动完成的。之所以保留这空字符结尾的好处是，SDS可以重用一部分C字符串函数库里面的函数。</h5><h3 id="SDS与C字符串的区别"><a href="#SDS与C字符串的区别" class="headerlink" title="SDS与C字符串的区别"></a>SDS与C字符串的区别</h3><h4 id="常数复杂度获取字符串长度"><a href="#常数复杂度获取字符串长度" class="headerlink" title="常数复杂度获取字符串长度"></a>常数复杂度获取字符串长度</h4><h5 id="因为C字符串不记录自身的长度，所以获取一个C字符串的长度，需要遍历整个字符串，直到遇到空字符为止，复杂度为O-N-。而redis的SDS只需要读取len字段就可以知道其字符串长度，复杂度为O-1-。更新和设置SDS的长度是API自动完成的。"><a href="#因为C字符串不记录自身的长度，所以获取一个C字符串的长度，需要遍历整个字符串，直到遇到空字符为止，复杂度为O-N-。而redis的SDS只需要读取len字段就可以知道其字符串长度，复杂度为O-1-。更新和设置SDS的长度是API自动完成的。" class="headerlink" title="因为C字符串不记录自身的长度，所以获取一个C字符串的长度，需要遍历整个字符串，直到遇到空字符为止，复杂度为O(N)。而redis的SDS只需要读取len字段就可以知道其字符串长度，复杂度为O(1)。更新和设置SDS的长度是API自动完成的。"></a>因为C字符串不记录自身的长度，所以获取一个C字符串的长度，需要遍历整个字符串，直到遇到空字符为止，复杂度为O(N)。而redis的SDS只需要读取len字段就可以知道其字符串长度，复杂度为O(1)。更新和设置SDS的长度是API自动完成的。</h5><h5 id="虽然这种操作SDS的数据结构能够很好的提高效率，但是作为代价，SDS维护这些信息的时候也是需要成本的。只是这种代价所带来的好处是值得的。"><a href="#虽然这种操作SDS的数据结构能够很好的提高效率，但是作为代价，SDS维护这些信息的时候也是需要成本的。只是这种代价所带来的好处是值得的。" class="headerlink" title="虽然这种操作SDS的数据结构能够很好的提高效率，但是作为代价，SDS维护这些信息的时候也是需要成本的。只是这种代价所带来的好处是值得的。"></a>虽然这种操作SDS的数据结构能够很好的提高效率，但是作为代价，SDS维护这些信息的时候也是需要成本的。只是这种代价所带来的好处是值得的。</h5></div>
+    </article>
+</section>
+
+<div class="clear"></div>
+
+
+
+    <footer id="footer">
+  <div class="foot">
+    <!-- <a id="gotop">TOP</a> -->
+    <!-- <div id="copyright">Copyright &copy; 2016 <a href="#" target="_blank">WangWenXiang</a><br>
+       Power by <a href="https://github.com/winx402" target="_blank">Github Pages</a> |
+      <a href="https://hexo.io/" target="_blank">HEXO</a></div> -->
+      <div id="copyright">还没想好要写什么</div>
+  </div>
+</footer>
+
+</div>
+<div class="img-view">
+    <span><img src="/img/guide.jpeg"></span>
+</div>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

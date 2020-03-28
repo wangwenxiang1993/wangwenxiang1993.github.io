@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+    <title>winx&#39;blog</title>
+</head>
+<body>
+<div class="animated" id="info-min">
+    <div id="guide">
+    <div class="guide-button " _href="/tags/index/">首页</div>
+    <div class="guide-button " _href="/tags/tech/">技术</div>
+    <!--<div class="guide-button " _href="/tags/life/">生活</div>-->
+    <div class="guide-button " _href="/categories/read/">阅读</div>
+    <img src="/img/photo.png">
+</div>
+</div>
+<div id="wrap">
+    
+  
+    
+      <div id="big-title" style="color: #666">
+    
+
+  <div id="title-name">redis持久化</div><br>
+  <div id="something">2018/04/05</div>
+</div>
+  <section id="content-specific">
+    <article class="post">
+        <div class="con"><h5 id="Redis提供了两种不同的持久化方式。一种叫做快照（snapshotting），另一种叫做只追加文件（append-only-file，AOF）。这两种方式可以同时使用，也可以单独使用。"><a href="#Redis提供了两种不同的持久化方式。一种叫做快照（snapshotting），另一种叫做只追加文件（append-only-file，AOF）。这两种方式可以同时使用，也可以单独使用。" class="headerlink" title="Redis提供了两种不同的持久化方式。一种叫做快照（snapshotting），另一种叫做只追加文件（append-only file，AOF）。这两种方式可以同时使用，也可以单独使用。"></a>Redis提供了两种不同的持久化方式。一种叫做快照（snapshotting），另一种叫做只追加文件（append-only file，AOF）。这两种方式可以同时使用，也可以单独使用。</h5><h2 id="快照持久化"><a href="#快照持久化" class="headerlink" title="快照持久化"></a>快照持久化</h2><h5 id="redis可以通过创建快照来获得存储在内存里面的数据在某个时间点上的副本。在创建快照之后，用户可以对快照进行备份。"><a href="#redis可以通过创建快照来获得存储在内存里面的数据在某个时间点上的副本。在创建快照之后，用户可以对快照进行备份。" class="headerlink" title="redis可以通过创建快照来获得存储在内存里面的数据在某个时间点上的副本。在创建快照之后，用户可以对快照进行备份。"></a>redis可以通过创建快照来获得存储在内存里面的数据在某个时间点上的副本。在创建快照之后，用户可以对快照进行备份。</h5><h4 id="创建快照的办法有以下几种："><a href="#创建快照的办法有以下几种：" class="headerlink" title="创建快照的办法有以下几种："></a>创建快照的办法有以下几种：</h4><ol>
+<li>客户端通过向redis发送<strong>BGSAVE</strong>命令来创建一个快照。redis会调用fork来创建一个子进程，然后子进程负责将快照写入硬盘，而父进程则继续处理命令请求。</li>
+<li>客户端向redis发送<strong>SAVE</strong>命令，接受到该命令的redis服务器在创建快照完毕之前不再响应任何其他命令。SAVE命令并不常用，通常只在没有足够内存去执行BGSAVE命令的情况下，或者可以忍受SAVE命令执行完毕的等待情况下。才使用这个命令</li>
+<li>设置save配置选项，比如save 60 1000。那么redis当”60秒内有1000次写入”这个条件满足是，会自动触发BGSAVE。save配置可以有多个，只要触发其中一个就会触发BGSAVE</li>
+<li>当redis收到SHUTDOWN命令关闭服务器时，会执行一个SAVE命令，并且不在处理任何客户端请求。SAVE命令之后关闭服务器。</li>
+<li>当redis服务器连接另一个reids服务器，通过向对方发送SYNC命令来开始复制操作，这时候主服务器会执行BGSAVE命令。</li>
+</ol>
+<h5 id="当只使用快照来持久化保存数据时，系统发生崩溃时，将丢失最近一次生成快照之后更改的所有数据。"><a href="#当只使用快照来持久化保存数据时，系统发生崩溃时，将丢失最近一次生成快照之后更改的所有数据。" class="headerlink" title="当只使用快照来持久化保存数据时，系统发生崩溃时，将丢失最近一次生成快照之后更改的所有数据。"></a>当只使用快照来持久化保存数据时，系统发生崩溃时，将丢失最近一次生成快照之后更改的所有数据。</h5><h5 id="为了防止reids因为创建子进程而出现停顿，我们可以考虑关闭自动保存，转而通过手动发送BGSAVE或者SAVE来进行持久化。手动BGSAVE一样会引起停顿，唯一不同的是用户可以通过手动控制停顿出现的时间。另外，虽然SAVE会一直阻塞redis直到快照生成完毕，但是因为不需要创建子进程，所以就不会像BGSAVE一样导致reis停顿。没有子进程争抢资源，SAVE操作会比BGSAVE创建快照的速度快一些。"><a href="#为了防止reids因为创建子进程而出现停顿，我们可以考虑关闭自动保存，转而通过手动发送BGSAVE或者SAVE来进行持久化。手动BGSAVE一样会引起停顿，唯一不同的是用户可以通过手动控制停顿出现的时间。另外，虽然SAVE会一直阻塞redis直到快照生成完毕，但是因为不需要创建子进程，所以就不会像BGSAVE一样导致reis停顿。没有子进程争抢资源，SAVE操作会比BGSAVE创建快照的速度快一些。" class="headerlink" title="为了防止reids因为创建子进程而出现停顿，我们可以考虑关闭自动保存，转而通过手动发送BGSAVE或者SAVE来进行持久化。手动BGSAVE一样会引起停顿，唯一不同的是用户可以通过手动控制停顿出现的时间。另外，虽然SAVE会一直阻塞redis直到快照生成完毕，但是因为不需要创建子进程，所以就不会像BGSAVE一样导致reis停顿。没有子进程争抢资源，SAVE操作会比BGSAVE创建快照的速度快一些。"></a>为了防止reids因为创建子进程而出现停顿，我们可以考虑关闭自动保存，转而通过手动发送BGSAVE或者SAVE来进行持久化。手动BGSAVE一样会引起停顿，唯一不同的是用户可以通过手动控制停顿出现的时间。另外，虽然SAVE会一直阻塞redis直到快照生成完毕，但是因为不需要创建子进程，所以就不会像BGSAVE一样导致reis停顿。没有子进程争抢资源，SAVE操作会比BGSAVE创建快照的速度快一些。</h5><h2 id="AOF持久化"><a href="#AOF持久化" class="headerlink" title="AOF持久化"></a>AOF持久化</h2><h5 id="AOF持久化将写命令写到文件的末尾，以此来记录数据的变化。所以redis只要从头到尾执行一次AOF文件的命令，就可以恢复数据集。该持久化可以通过设置appendonly-yes选项来打开。而appendfsync配置将影响AOF文件的同步频率："><a href="#AOF持久化将写命令写到文件的末尾，以此来记录数据的变化。所以redis只要从头到尾执行一次AOF文件的命令，就可以恢复数据集。该持久化可以通过设置appendonly-yes选项来打开。而appendfsync配置将影响AOF文件的同步频率：" class="headerlink" title="AOF持久化将写命令写到文件的末尾，以此来记录数据的变化。所以redis只要从头到尾执行一次AOF文件的命令，就可以恢复数据集。该持久化可以通过设置appendonly yes选项来打开。而appendfsync配置将影响AOF文件的同步频率："></a>AOF持久化将写命令写到文件的末尾，以此来记录数据的变化。所以redis只要从头到尾执行一次AOF文件的命令，就可以恢复数据集。该持久化可以通过设置appendonly yes选项来打开。而appendfsync配置将影响AOF文件的同步频率：</h5><ul>
+<li><strong>always</strong> 每个redis写命令都要同步些人硬盘，严重降低redis速度</li>
+<li><strong>everysec</strong> 每秒执行一次同步，将多个写命令同步到硬盘</li>
+<li><strong>no</strong> 让操作系统来决定何时进行同步</li>
+</ul>
+<h5 id="如果使用appendfsyne-always选项的话，每个写命令都会被写入硬盘，这样可以将系统崩溃时出现的数据丢失减少到最小。但是这种同步策略要对硬盘进行大量的写入，导致redis的处理速度受到限制。"><a href="#如果使用appendfsyne-always选项的话，每个写命令都会被写入硬盘，这样可以将系统崩溃时出现的数据丢失减少到最小。但是这种同步策略要对硬盘进行大量的写入，导致redis的处理速度受到限制。" class="headerlink" title="如果使用appendfsyne always选项的话，每个写命令都会被写入硬盘，这样可以将系统崩溃时出现的数据丢失减少到最小。但是这种同步策略要对硬盘进行大量的写入，导致redis的处理速度受到限制。"></a>如果使用appendfsyne always选项的话，每个写命令都会被写入硬盘，这样可以将系统崩溃时出现的数据丢失减少到最小。但是这种同步策略要对硬盘进行大量的写入，导致redis的处理速度受到限制。</h5><h5 id="为了兼顾安全和性能，可以考虑使用everysec选项。redis每秒同步一次AOF对redis的性能不会有大的影响。即使系统崩溃，也只是丢失了一秒内的数据。"><a href="#为了兼顾安全和性能，可以考虑使用everysec选项。redis每秒同步一次AOF对redis的性能不会有大的影响。即使系统崩溃，也只是丢失了一秒内的数据。" class="headerlink" title="为了兼顾安全和性能，可以考虑使用everysec选项。redis每秒同步一次AOF对redis的性能不会有大的影响。即使系统崩溃，也只是丢失了一秒内的数据。"></a>为了兼顾安全和性能，可以考虑使用everysec选项。redis每秒同步一次AOF对redis的性能不会有大的影响。即使系统崩溃，也只是丢失了一秒内的数据。</h5><h5 id="如果用户使用appendfsync-no选项，那么reids不对AOF文件执行显示的同步操作，而是由操作系统来决定什么时候进行同步。一般情况下不建议使用。因为可能导致缓冲区被等待写入数据填满，redis将会阻塞之后的写入请求。"><a href="#如果用户使用appendfsync-no选项，那么reids不对AOF文件执行显示的同步操作，而是由操作系统来决定什么时候进行同步。一般情况下不建议使用。因为可能导致缓冲区被等待写入数据填满，redis将会阻塞之后的写入请求。" class="headerlink" title="如果用户使用appendfsync no选项，那么reids不对AOF文件执行显示的同步操作，而是由操作系统来决定什么时候进行同步。一般情况下不建议使用。因为可能导致缓冲区被等待写入数据填满，redis将会阻塞之后的写入请求。"></a>如果用户使用appendfsync no选项，那么reids不对AOF文件执行显示的同步操作，而是由操作系统来决定什么时候进行同步。一般情况下不建议使用。因为可能导致缓冲区被等待写入数据填满，redis将会阻塞之后的写入请求。</h5></div>
+    </article>
+</section>
+
+<div class="clear"></div>
+
+
+
+    <footer id="footer">
+  <div class="foot">
+    <!-- <a id="gotop">TOP</a> -->
+    <!-- <div id="copyright">Copyright &copy; 2016 <a href="#" target="_blank">WangWenXiang</a><br>
+       Power by <a href="https://github.com/winx402" target="_blank">Github Pages</a> |
+      <a href="https://hexo.io/" target="_blank">HEXO</a></div> -->
+      <div id="copyright">还没想好要写什么</div>
+  </div>
+</footer>
+
+</div>
+<div class="img-view">
+    <span><img src="/img/guide.jpeg"></span>
+</div>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

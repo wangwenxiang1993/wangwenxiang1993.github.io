@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+    <title>winx&#39;blog</title>
+</head>
+<body>
+<div class="animated" id="info-min">
+    <div id="guide">
+    <div class="guide-button " _href="/tags/index/">首页</div>
+    <div class="guide-button " _href="/tags/tech/">技术</div>
+    <!--<div class="guide-button " _href="/tags/life/">生活</div>-->
+    <div class="guide-button " _href="/categories/read/">阅读</div>
+    <img src="/img/photo.png">
+</div>
+</div>
+<div id="wrap">
+    
+  
+    
+      <div id="big-title" style="color: #666">
+    
+
+  <div id="title-name">密钥和数字证书</div><br>
+  <div id="something">2017/09/01</div>
+</div>
+  <section id="content-specific">
+    <article class="post">
+        <div class="con"><h5 id="最近因为项目要求，需要在本地环境为项目部署https服务。之前对https的密钥和证书过程都不是很清楚，所以最近恶补了一些基础知识。这是一篇对数字证书很形象的解释，所以决定记录下来，加深记忆。"><a href="#最近因为项目要求，需要在本地环境为项目部署https服务。之前对https的密钥和证书过程都不是很清楚，所以最近恶补了一些基础知识。这是一篇对数字证书很形象的解释，所以决定记录下来，加深记忆。" class="headerlink" title="最近因为项目要求，需要在本地环境为项目部署https服务。之前对https的密钥和证书过程都不是很清楚，所以最近恶补了一些基础知识。这是一篇对数字证书很形象的解释，所以决定记录下来，加深记忆。"></a>最近因为项目要求，需要在本地环境为项目部署https服务。之前对https的密钥和证书过程都不是很清楚，所以最近恶补了一些基础知识。这是一篇对数字证书很形象的解释，所以决定记录下来，加深记忆。</h5><a id="more"></a>
+<h4 id="1-鲍勃有两把钥匙，一把是公钥，另一把是私钥。"><a href="#1-鲍勃有两把钥匙，一把是公钥，另一把是私钥。" class="headerlink" title="1.鲍勃有两把钥匙，一把是公钥，另一把是私钥。"></a>1.鲍勃有两把钥匙，一把是公钥，另一把是私钥。</h4><p><img src="/img/note/secretkey1.png" alt=""></p>
+<h4 id="2-鲍勃把公钥送给他的朋友们—-帕蒂、道格、苏珊—-每人一把。"><a href="#2-鲍勃把公钥送给他的朋友们—-帕蒂、道格、苏珊—-每人一把。" class="headerlink" title="2.鲍勃把公钥送给他的朋友们—-帕蒂、道格、苏珊—-每人一把。"></a>2.鲍勃把公钥送给他的朋友们—-帕蒂、道格、苏珊—-每人一把。</h4><p><img src="/img/note/secretkey2.png" alt=""></p>
+<h4 id="3-苏珊给鲍勃写信，写完后用鲍勃的公钥加密，达到保密的效果。"><a href="#3-苏珊给鲍勃写信，写完后用鲍勃的公钥加密，达到保密的效果。" class="headerlink" title="3.苏珊给鲍勃写信，写完后用鲍勃的公钥加密，达到保密的效果。"></a>3.苏珊给鲍勃写信，写完后用鲍勃的公钥加密，达到保密的效果。</h4><p><img src="/img/note/secretkey3.png" alt=""></p>
+<h4 id="4-鲍勃收信后，用私钥解密，看到信件内容。"><a href="#4-鲍勃收信后，用私钥解密，看到信件内容。" class="headerlink" title="4.鲍勃收信后，用私钥解密，看到信件内容。"></a>4.鲍勃收信后，用私钥解密，看到信件内容。</h4><p><img src="/img/note/secretkey4.png" alt=""></p>
+<h4 id="5-鲍勃给苏珊回信，写完后用Hash函数，生成信件的摘要（digest）。"><a href="#5-鲍勃给苏珊回信，写完后用Hash函数，生成信件的摘要（digest）。" class="headerlink" title="5.鲍勃给苏珊回信，写完后用Hash函数，生成信件的摘要（digest）。"></a>5.鲍勃给苏珊回信，写完后用Hash函数，生成信件的摘要（digest）。</h4><p><img src="/img/note/secretkey5.png" alt=""></p>
+<h4 id="6-然后，鲍勃使用私钥，对这个摘要加密，生成”数字签名”（signature）。"><a href="#6-然后，鲍勃使用私钥，对这个摘要加密，生成”数字签名”（signature）。" class="headerlink" title="6.然后，鲍勃使用私钥，对这个摘要加密，生成”数字签名”（signature）。"></a>6.然后，鲍勃使用私钥，对这个摘要加密，生成”数字签名”（signature）。</h4><p><img src="/img/note/secretkey6.png" alt=""></p>
+<h4 id="7-鲍勃将这个签名，附在信件下面，一起发给苏珊。"><a href="#7-鲍勃将这个签名，附在信件下面，一起发给苏珊。" class="headerlink" title="7.鲍勃将这个签名，附在信件下面，一起发给苏珊。"></a>7.鲍勃将这个签名，附在信件下面，一起发给苏珊。</h4><p><img src="/img/note/secretkey7.png" alt=""></p>
+<h4 id="8-苏珊收信后，取下数字签名，用鲍勃的公钥解密，得到信件的摘要。由此证明，这封信确实是鲍勃发出的。"><a href="#8-苏珊收信后，取下数字签名，用鲍勃的公钥解密，得到信件的摘要。由此证明，这封信确实是鲍勃发出的。" class="headerlink" title="8.苏珊收信后，取下数字签名，用鲍勃的公钥解密，得到信件的摘要。由此证明，这封信确实是鲍勃发出的。"></a>8.苏珊收信后，取下数字签名，用鲍勃的公钥解密，得到信件的摘要。由此证明，这封信确实是鲍勃发出的。</h4><p><img src="/img/note/secretkey8.png" alt=""></p>
+<h4 id="9-苏珊再对信件本身使用Hash函数，将得到的结果，与上一步得到的摘要进行对比。如果两者一致，就证明这封信未被修改过。"><a href="#9-苏珊再对信件本身使用Hash函数，将得到的结果，与上一步得到的摘要进行对比。如果两者一致，就证明这封信未被修改过。" class="headerlink" title="9.苏珊再对信件本身使用Hash函数，将得到的结果，与上一步得到的摘要进行对比。如果两者一致，就证明这封信未被修改过。"></a>9.苏珊再对信件本身使用Hash函数，将得到的结果，与上一步得到的摘要进行对比。如果两者一致，就证明这封信未被修改过。</h4><p><img src="/img/note/secretkey9.png" alt=""></p>
+<h4 id="10-复杂的情况出现了。道格想欺骗苏珊，他偷偷使用了苏珊的电脑，用自己的公钥换走了鲍勃的公钥。因此，他就可以冒充鲍勃，写信给苏珊。"><a href="#10-复杂的情况出现了。道格想欺骗苏珊，他偷偷使用了苏珊的电脑，用自己的公钥换走了鲍勃的公钥。因此，他就可以冒充鲍勃，写信给苏珊。" class="headerlink" title="10.复杂的情况出现了。道格想欺骗苏珊，他偷偷使用了苏珊的电脑，用自己的公钥换走了鲍勃的公钥。因此，他就可以冒充鲍勃，写信给苏珊。"></a>10.复杂的情况出现了。道格想欺骗苏珊，他偷偷使用了苏珊的电脑，用自己的公钥换走了鲍勃的公钥。因此，他就可以冒充鲍勃，写信给苏珊。</h4><p><img src="/img/note/secretkey10.png" alt=""></p>
+<h4 id="11-苏珊发现，自己无法确定公钥是否真的属于鲍勃。她想到了一个办法，要求鲍勃去找”证书中心”（certificate-authority，简称CA），为公钥做认证。证书中心用自己的私钥，对鲍勃的公钥和一些相关信息一起加密，生成”数字证书”（Digital-Certificate）。"><a href="#11-苏珊发现，自己无法确定公钥是否真的属于鲍勃。她想到了一个办法，要求鲍勃去找”证书中心”（certificate-authority，简称CA），为公钥做认证。证书中心用自己的私钥，对鲍勃的公钥和一些相关信息一起加密，生成”数字证书”（Digital-Certificate）。" class="headerlink" title="11.苏珊发现，自己无法确定公钥是否真的属于鲍勃。她想到了一个办法，要求鲍勃去找”证书中心”（certificate authority，简称CA），为公钥做认证。证书中心用自己的私钥，对鲍勃的公钥和一些相关信息一起加密，生成”数字证书”（Digital Certificate）。"></a>11.苏珊发现，自己无法确定公钥是否真的属于鲍勃。她想到了一个办法，要求鲍勃去找”证书中心”（certificate authority，简称CA），为公钥做认证。证书中心用自己的私钥，对鲍勃的公钥和一些相关信息一起加密，生成”数字证书”（Digital Certificate）。</h4><p><img src="/img/note/secretkey11.png" alt=""></p>
+<h4 id="12-鲍勃拿到数字证书以后，就可以放心了。以后再给苏珊写信，只要在签名的同时，再附上数字证书就行了。"><a href="#12-鲍勃拿到数字证书以后，就可以放心了。以后再给苏珊写信，只要在签名的同时，再附上数字证书就行了。" class="headerlink" title="12.鲍勃拿到数字证书以后，就可以放心了。以后再给苏珊写信，只要在签名的同时，再附上数字证书就行了。"></a>12.鲍勃拿到数字证书以后，就可以放心了。以后再给苏珊写信，只要在签名的同时，再附上数字证书就行了。</h4><p><img src="/img/note/secretkey12.png" alt=""></p>
+<h4 id="13-苏珊收信后，用CA的公钥解开数字证书，就可以拿到鲍勃真实的公钥了，然后就能证明”数字签名”是否真的是鲍勃签的。"><a href="#13-苏珊收信后，用CA的公钥解开数字证书，就可以拿到鲍勃真实的公钥了，然后就能证明”数字签名”是否真的是鲍勃签的。" class="headerlink" title="13.苏珊收信后，用CA的公钥解开数字证书，就可以拿到鲍勃真实的公钥了，然后就能证明”数字签名”是否真的是鲍勃签的。"></a>13.苏珊收信后，用CA的公钥解开数字证书，就可以拿到鲍勃真实的公钥了，然后就能证明”数字签名”是否真的是鲍勃签的。</h4><p><img src="/img/note/secretkey13.png" alt=""></p>
+<h4 id="14-下面，我们看一个应用”数字证书”的实例：https协议。这个协议主要用于网页加密。"><a href="#14-下面，我们看一个应用”数字证书”的实例：https协议。这个协议主要用于网页加密。" class="headerlink" title="14.下面，我们看一个应用”数字证书”的实例：https协议。这个协议主要用于网页加密。"></a>14.下面，我们看一个应用”数字证书”的实例：https协议。这个协议主要用于网页加密。</h4><p><img src="/img/note/secretkey14.jpg" alt=""></p>
+<h4 id="15-首先，客户端向服务器发出加密请求。"><a href="#15-首先，客户端向服务器发出加密请求。" class="headerlink" title="15.首先，客户端向服务器发出加密请求。"></a>15.首先，客户端向服务器发出加密请求。</h4><p><img src="/img/note/secretkey15.png" alt=""></p>
+<h4 id="16-服务器用自己的私钥加密网页以后，连同本身的数字证书，一起发送给客户端。"><a href="#16-服务器用自己的私钥加密网页以后，连同本身的数字证书，一起发送给客户端。" class="headerlink" title="16.服务器用自己的私钥加密网页以后，连同本身的数字证书，一起发送给客户端。"></a>16.服务器用自己的私钥加密网页以后，连同本身的数字证书，一起发送给客户端。</h4><p><img src="/img/note/secretkey16.png" alt=""></p>
+<h4 id="17-客户端（浏览器）的”证书管理器”，有”受信任的根证书颁发机构”列表。客户端会根据这张列表，查看解开数字证书的公钥是否在列表之内。"><a href="#17-客户端（浏览器）的”证书管理器”，有”受信任的根证书颁发机构”列表。客户端会根据这张列表，查看解开数字证书的公钥是否在列表之内。" class="headerlink" title="17.客户端（浏览器）的”证书管理器”，有”受信任的根证书颁发机构”列表。客户端会根据这张列表，查看解开数字证书的公钥是否在列表之内。"></a>17.客户端（浏览器）的”证书管理器”，有”受信任的根证书颁发机构”列表。客户端会根据这张列表，查看解开数字证书的公钥是否在列表之内。</h4><p><img src="/img/note/secretkey17.png" alt=""></p>
+<h4 id="18-如果数字证书记载的网址，与你正在浏览的网址不一致，就说明这张证书可能被冒用，浏览器会发出警告。"><a href="#18-如果数字证书记载的网址，与你正在浏览的网址不一致，就说明这张证书可能被冒用，浏览器会发出警告。" class="headerlink" title="18.如果数字证书记载的网址，与你正在浏览的网址不一致，就说明这张证书可能被冒用，浏览器会发出警告。"></a>18.如果数字证书记载的网址，与你正在浏览的网址不一致，就说明这张证书可能被冒用，浏览器会发出警告。</h4><p><img src="/img/note/secretkey18.png" alt=""></p>
+<h4 id="19-如果这张数字证书不是由受信任的机构颁发的，浏览器会发出另一种警告。"><a href="#19-如果这张数字证书不是由受信任的机构颁发的，浏览器会发出另一种警告。" class="headerlink" title="19.如果这张数字证书不是由受信任的机构颁发的，浏览器会发出另一种警告。"></a>19.如果这张数字证书不是由受信任的机构颁发的，浏览器会发出另一种警告。</h4><p><img src="/img/note/secretkey19.jpg" alt=""></p>
+<h4 id="20-如果数字证书是可靠的，客户端就可以使用证书中的服务器公钥，对信息进行加密，然后与服务器交换加密信息。"><a href="#20-如果数字证书是可靠的，客户端就可以使用证书中的服务器公钥，对信息进行加密，然后与服务器交换加密信息。" class="headerlink" title="20.如果数字证书是可靠的，客户端就可以使用证书中的服务器公钥，对信息进行加密，然后与服务器交换加密信息。"></a>20.如果数字证书是可靠的，客户端就可以使用证书中的服务器公钥，对信息进行加密，然后与服务器交换加密信息。</h4><p><img src="/img/note/secretkey20.png" alt=""></p>
+<h3 id="想更好地理解上面这篇形象生动的技术文章，你还需要理解一些概念和术语"><a href="#想更好地理解上面这篇形象生动的技术文章，你还需要理解一些概念和术语" class="headerlink" title="想更好地理解上面这篇形象生动的技术文章，你还需要理解一些概念和术语"></a>想更好地理解上面这篇形象生动的技术文章，你还需要理解一些概念和术语</h3><h4 id="公钥密码体制-public-key-cryptography"><a href="#公钥密码体制-public-key-cryptography" class="headerlink" title="公钥密码体制(public-key cryptography)"></a>公钥密码体制(public-key cryptography)</h4><h5 id="公钥密码体制分为三个部分，公钥、私钥、加密解密算法，它的加密解密过程如下："><a href="#公钥密码体制分为三个部分，公钥、私钥、加密解密算法，它的加密解密过程如下：" class="headerlink" title="公钥密码体制分为三个部分，公钥、私钥、加密解密算法，它的加密解密过程如下："></a>公钥密码体制分为三个部分，公钥、私钥、加密解密算法，它的加密解密过程如下：</h5><ul>
+<li>加密：通过加密算法和公钥对内容(或者说明文)进行加密，得到密文。加密过程需要用到公钥。</li>
+<li>解密：通过解密算法和私钥对密文进行解密，得到明文。解密过程需要用到解密算法和私钥。注意，由公钥加密的内容，只能由私钥进行解密，也就是说，由公钥加密的内容，如果不知道私钥，是无法解密的。<h5 id="公钥密码体制的公钥和算法都是公开的-这是为什么叫公钥密码体制的原因-，私钥是保密的。大家都以使用公钥进行加密，但是只有私钥的持有者才能解密。在实际的使用中，有需要的人会生成一对公钥和私钥，把公钥发布出去给别人使用，自己保留私钥。"><a href="#公钥密码体制的公钥和算法都是公开的-这是为什么叫公钥密码体制的原因-，私钥是保密的。大家都以使用公钥进行加密，但是只有私钥的持有者才能解密。在实际的使用中，有需要的人会生成一对公钥和私钥，把公钥发布出去给别人使用，自己保留私钥。" class="headerlink" title="公钥密码体制的公钥和算法都是公开的(这是为什么叫公钥密码体制的原因)，私钥是保密的。大家都以使用公钥进行加密，但是只有私钥的持有者才能解密。在实际的使用中，有需要的人会生成一对公钥和私钥，把公钥发布出去给别人使用，自己保留私钥。"></a>公钥密码体制的公钥和算法都是公开的(这是为什么叫公钥密码体制的原因)，私钥是保密的。大家都以使用公钥进行加密，但是只有私钥的持有者才能解密。在实际的使用中，有需要的人会生成一对公钥和私钥，把公钥发布出去给别人使用，自己保留私钥。</h5></li>
+</ul>
+<h4 id="对称加密算法-symmetric-key-algorithms"><a href="#对称加密算法-symmetric-key-algorithms" class="headerlink" title="对称加密算法(symmetric key algorithms)"></a>对称加密算法(symmetric key algorithms)</h4><h5 id="在对称加密算法中，加密使用的密钥和解密使用的密钥是相同的。也就是说，加密和解密都是使用的同一个密钥。因此对称加密算法要保证安全性的话，密钥要做好保密，只能让使用的人知道，不能对外公开。这个和上面的公钥密码体制有所不同，公钥密码体制中加密是用公钥，解密使用私钥，而对称加密算法中，加密和解密都是使用同一个密钥，不区分公钥和私钥。"><a href="#在对称加密算法中，加密使用的密钥和解密使用的密钥是相同的。也就是说，加密和解密都是使用的同一个密钥。因此对称加密算法要保证安全性的话，密钥要做好保密，只能让使用的人知道，不能对外公开。这个和上面的公钥密码体制有所不同，公钥密码体制中加密是用公钥，解密使用私钥，而对称加密算法中，加密和解密都是使用同一个密钥，不区分公钥和私钥。" class="headerlink" title="在对称加密算法中，加密使用的密钥和解密使用的密钥是相同的。也就是说，加密和解密都是使用的同一个密钥。因此对称加密算法要保证安全性的话，密钥要做好保密，只能让使用的人知道，不能对外公开。这个和上面的公钥密码体制有所不同，公钥密码体制中加密是用公钥，解密使用私钥，而对称加密算法中，加密和解密都是使用同一个密钥，不区分公钥和私钥。"></a>在对称加密算法中，加密使用的密钥和解密使用的密钥是相同的。也就是说，加密和解密都是使用的同一个密钥。因此对称加密算法要保证安全性的话，密钥要做好保密，只能让使用的人知道，不能对外公开。这个和上面的公钥密码体制有所不同，公钥密码体制中加密是用公钥，解密使用私钥，而对称加密算法中，加密和解密都是使用同一个密钥，不区分公钥和私钥。</h5><h5 id="密钥，一般就是一个字符串或数字，在加密或者解密时传递给加密-解密算法。前面在公钥密码体制中说到的公钥、私钥就是密钥，公钥是加密使用的密钥，私钥是解密使用的密钥"><a href="#密钥，一般就是一个字符串或数字，在加密或者解密时传递给加密-解密算法。前面在公钥密码体制中说到的公钥、私钥就是密钥，公钥是加密使用的密钥，私钥是解密使用的密钥" class="headerlink" title="密钥，一般就是一个字符串或数字，在加密或者解密时传递给加密/解密算法。前面在公钥密码体制中说到的公钥、私钥就是密钥，公钥是加密使用的密钥，私钥是解密使用的密钥"></a>密钥，一般就是一个字符串或数字，在加密或者解密时传递给加密/解密算法。前面在公钥密码体制中说到的公钥、私钥就是密钥，公钥是加密使用的密钥，私钥是解密使用的密钥</h5><p><a href="http://www.youdzone.com/signature.html" target="_blank" rel="external">原文连接</a></p>
+</div>
+    </article>
+</section>
+
+<div class="clear"></div>
+
+
+
+    <footer id="footer">
+  <div class="foot">
+    <!-- <a id="gotop">TOP</a> -->
+    <!-- <div id="copyright">Copyright &copy; 2016 <a href="#" target="_blank">WangWenXiang</a><br>
+       Power by <a href="https://github.com/winx402" target="_blank">Github Pages</a> |
+      <a href="https://hexo.io/" target="_blank">HEXO</a></div> -->
+      <div id="copyright">还没想好要写什么</div>
+  </div>
+</footer>
+
+</div>
+<div class="img-view">
+    <span><img src="/img/guide.jpeg"></span>
+</div>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

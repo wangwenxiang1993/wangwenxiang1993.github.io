@@ -1,0 +1,260 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+    <title>winx&#39;blog</title>
+</head>
+<body>
+<div class="animated" id="info-min">
+    <div id="guide">
+    <div class="guide-button " _href="/tags/index/">首页</div>
+    <div class="guide-button " _href="/tags/tech/">技术</div>
+    <!--<div class="guide-button " _href="/tags/life/">生活</div>-->
+    <div class="guide-button " _href="/categories/read/">阅读</div>
+    <img src="/img/photo.png">
+</div>
+</div>
+<div id="wrap">
+    
+  
+    
+      <div id="big-title" style="color: #666">
+    
+
+  <div id="title-name">spring ioc容器初始化流程</div><br>
+  <div id="something">2018/04/15</div>
+</div>
+  <section id="content-specific">
+    <article class="post">
+        <div class="con"><h5 id="IOC容器是Spring的核心之一，就是具有依赖注入功能的容器，IOC容器负责实例化、定位、配置应用程序中的对象及建立这些对象间的依赖。应用程序无需在代码中new相关的对象，应用程序由IOC容器进行组装。具体的Spring和IOC的功能要点这里不做详细介绍，本文的重点将是围绕IOC的创建流程去发现和学习Spring的核心原理。"><a href="#IOC容器是Spring的核心之一，就是具有依赖注入功能的容器，IOC容器负责实例化、定位、配置应用程序中的对象及建立这些对象间的依赖。应用程序无需在代码中new相关的对象，应用程序由IOC容器进行组装。具体的Spring和IOC的功能要点这里不做详细介绍，本文的重点将是围绕IOC的创建流程去发现和学习Spring的核心原理。" class="headerlink" title="IOC容器是Spring的核心之一，就是具有依赖注入功能的容器，IOC容器负责实例化、定位、配置应用程序中的对象及建立这些对象间的依赖。应用程序无需在代码中new相关的对象，应用程序由IOC容器进行组装。具体的Spring和IOC的功能要点这里不做详细介绍，本文的重点将是围绕IOC的创建流程去发现和学习Spring的核心原理。"></a>IOC容器是Spring的核心之一，就是具有依赖注入功能的容器，IOC容器负责实例化、定位、配置应用程序中的对象及建立这些对象间的依赖。应用程序无需在代码中new相关的对象，应用程序由IOC容器进行组装。具体的Spring和IOC的功能要点这里不做详细介绍，本文的重点将是围绕IOC的创建流程去发现和学习Spring的核心原理。</h5><a id="more"></a>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><h5 id="Ioc容器的初始化是由refresh（）方法来启动的，这个方法标志着Ioc容器的正式启动。具体来说这个启动过程包括三个基本过程："><a href="#Ioc容器的初始化是由refresh（）方法来启动的，这个方法标志着Ioc容器的正式启动。具体来说这个启动过程包括三个基本过程：" class="headerlink" title="Ioc容器的初始化是由refresh（）方法来启动的，这个方法标志着Ioc容器的正式启动。具体来说这个启动过程包括三个基本过程："></a>Ioc容器的初始化是由refresh（）方法来启动的，这个方法标志着Ioc容器的正式启动。具体来说这个启动过程包括三个基本过程：</h5><ol>
+<li>BeanDifinition的Resource定位</li>
+<li>BeanDifinition的载入与解析</li>
+<li>BeanDifinition在Ioc容器中的注册</li>
+</ol>
+<h5 id="需要注意的是，Spring把这三个过程分开，并使用不同的模块来完成，如使用相应的ResourceLoader、BeanDifinitionReader等模块，通过这样的实际方式，可以让用户更加灵活的对这三个过程进行剪裁和扩展。"><a href="#需要注意的是，Spring把这三个过程分开，并使用不同的模块来完成，如使用相应的ResourceLoader、BeanDifinitionReader等模块，通过这样的实际方式，可以让用户更加灵活的对这三个过程进行剪裁和扩展。" class="headerlink" title="需要注意的是，Spring把这三个过程分开，并使用不同的模块来完成，如使用相应的ResourceLoader、BeanDifinitionReader等模块，通过这样的实际方式，可以让用户更加灵活的对这三个过程进行剪裁和扩展。"></a>需要注意的是，Spring把这三个过程分开，并使用不同的模块来完成，如使用相应的ResourceLoader、BeanDifinitionReader等模块，通过这样的实际方式，可以让用户更加灵活的对这三个过程进行剪裁和扩展。</h5><h5 id="这些过程都是在AbstractApplicationContext中的refresh-方法中完成的"><a href="#这些过程都是在AbstractApplicationContext中的refresh-方法中完成的" class="headerlink" title="这些过程都是在AbstractApplicationContext中的refresh()方法中完成的"></a>这些过程都是在AbstractApplicationContext中的refresh()方法中完成的</h5><pre><code class="lang-java">public void refresh() throws BeansException, IllegalStateException {
+        synchronized (this.startupShutdownMonitor) {
+            // 准备工作
+            prepareRefresh();
+
+            // 通过子类创建beanFactory
+            ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
+
+            // beanFactory的准备工作
+            prepareBeanFactory(beanFactory);
+
+            try {
+                // 设置beanFactory的后置处理
+                postProcessBeanFactory(beanFactory);
+
+                // 调用beanFactory的后处理器，这些后处理器是在Bean定义中向容器注册的
+                invokeBeanFactoryPostProcessors(beanFactory);
+
+                // 注册Bean的后处理器，在Bean创建过程中调用
+                registerBeanPostProcessors(beanFactory);
+
+                // 初始化上下文中的消息源
+                initMessageSource();
+
+                // 初始化时间机制
+                initApplicationEventMulticaster();
+
+                // 初始化其他特殊Bean
+                onRefresh();
+
+                // 检查监听Bean并且将这些Bean向容器注册
+                registerListeners();
+
+                // 实例化所有non-lazy-init组件
+                finishBeanFactoryInitialization(beanFactory);
+
+                // 发布容器事件，结束初始化流程
+                finishRefresh();
+            }
+
+            catch (BeansException ex) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn(&quot;Exception encountered during context initialization - &quot; +
+                            &quot;cancelling refresh attempt: &quot; + ex);
+                }
+
+                // 为防止Bean资源占用，如果出现异常，销毁已经在前面过程中生成的单元Bean
+                destroyBeans();
+
+                // 重置 &#39;active&#39; 标志.
+                cancelRefresh(ex);
+
+                throw ex;
+            }
+
+            finally {
+                resetCommonCaches();
+            }
+        }
+    }
+</code></pre>
+<h2 id="源码解析"><a href="#源码解析" class="headerlink" title="源码解析"></a>源码解析</h2><h5 id="首先来看下BeanFactory的创建"><a href="#首先来看下BeanFactory的创建" class="headerlink" title="首先来看下BeanFactory的创建"></a>首先来看下BeanFactory的创建</h5><h3 id="创建beanFactory：obtainFreshBeanFactory"><a href="#创建beanFactory：obtainFreshBeanFactory" class="headerlink" title="创建beanFactory：obtainFreshBeanFactory()"></a>创建beanFactory：obtainFreshBeanFactory()</h3><pre><code class="lang-java">protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
+    refreshBeanFactory();
+    ConfigurableListableBeanFactory beanFactory = getBeanFactory();
+    if (logger.isDebugEnabled()) {
+        logger.debug(&quot;Bean factory for &quot; + getDisplayName() + &quot;: &quot; + beanFactory);
+    }
+    return beanFactory;
+}
+</code></pre>
+<h5 id="obtainFreshBeanFactory-方法获取的是ConfigurableListableBeanFactory，这里的操作很简单，refreshBeanFactory创建BeanFactory，然后获取并返回。让我们继续看下refreshBeanFactory"><a href="#obtainFreshBeanFactory-方法获取的是ConfigurableListableBeanFactory，这里的操作很简单，refreshBeanFactory创建BeanFactory，然后获取并返回。让我们继续看下refreshBeanFactory" class="headerlink" title="obtainFreshBeanFactory()方法获取的是ConfigurableListableBeanFactory，这里的操作很简单，refreshBeanFactory创建BeanFactory，然后获取并返回。让我们继续看下refreshBeanFactory():"></a>obtainFreshBeanFactory()方法获取的是ConfigurableListableBeanFactory，这里的操作很简单，refreshBeanFactory创建BeanFactory，然后获取并返回。让我们继续看下refreshBeanFactory():</h5><pre><code class="lang-java">protected abstract void refreshBeanFactory() throws BeansException, IllegalStateException;
+</code></pre>
+<h5 id="抽象方法，看下AbstractRefreshableApplicationContext中的实现："><a href="#抽象方法，看下AbstractRefreshableApplicationContext中的实现：" class="headerlink" title="抽象方法，看下AbstractRefreshableApplicationContext中的实现："></a>抽象方法，看下AbstractRefreshableApplicationContext中的实现：</h5><pre><code class="lang-java">protected final void refreshBeanFactory() throws BeansException {
+    if (hasBeanFactory()) {
+        //如果BeanFactory已经被创建，则销毁并关闭它
+        destroyBeans();
+        closeBeanFactory();
+    }
+    try {
+        //创建DefaultListableBeanFactory
+        DefaultListableBeanFactory beanFactory = createBeanFactory(); 
+        beanFactory.setSerializationId(getId());
+        //属性继承
+        customizeBeanFactory(beanFactory);
+        //载入BeanDefinitions
+        loadBeanDefinitions(beanFactory);
+        synchronized (this.beanFactoryMonitor) {
+            this.beanFactory = beanFactory;
+        }
+    }
+    catch (IOException ex) {
+        throw new ApplicationContextException(&quot;I/O error parsing bean definition source for &quot; + getDisplayName(), ex);
+    }
+}
+</code></pre>
+<h4 id="createBeanFactory"><a href="#createBeanFactory" class="headerlink" title="createBeanFactory():"></a>createBeanFactory():</h4><pre><code class="lang-java">protected DefaultListableBeanFactory createBeanFactory() {
+    return new DefaultListableBeanFactory(getInternalParentBeanFactory());
+}
+</code></pre>
+<h5 id="实例化一个DefaultListableBeanFactory并设置其父BeanFactory，看下getInternalParentBeanFactory"><a href="#实例化一个DefaultListableBeanFactory并设置其父BeanFactory，看下getInternalParentBeanFactory" class="headerlink" title="实例化一个DefaultListableBeanFactory并设置其父BeanFactory，看下getInternalParentBeanFactory():"></a>实例化一个DefaultListableBeanFactory并设置其父BeanFactory，看下getInternalParentBeanFactory():</h5><pre><code class="lang-java">protected BeanFactory getInternalParentBeanFactory() {
+    return (getParent() instanceof ConfigurableApplicationContext) ?
+            ((ConfigurableApplicationContext) getParent()).getBeanFactory() : getParent();
+}
+</code></pre>
+<h4 id="customizeBeanFactory-beanFactory"><a href="#customizeBeanFactory-beanFactory" class="headerlink" title="customizeBeanFactory(beanFactory)"></a>customizeBeanFactory(beanFactory)</h4><pre><code class="lang-java">protected void customizeBeanFactory(DefaultListableBeanFactory beanFactory) {
+    if (this.allowBeanDefinitionOverriding != null) {
+        beanFactory.setAllowBeanDefinitionOverriding(this.allowBeanDefinitionOverriding);
+    }
+    if (this.allowCircularReferences != null) {
+        beanFactory.setAllowCircularReferences(this.allowCircularReferences);
+    }
+}
+</code></pre>
+<h5 id="继承容器的属性设置："><a href="#继承容器的属性设置：" class="headerlink" title="继承容器的属性设置："></a>继承容器的属性设置：</h5><ol>
+<li>allowBeanDefinitionOverriding：当不同文件中配置了相同id或者name的同一类型的两个bean时，是否允许覆盖</li>
+<li>allowCircularReferences：是否允许循环引用</li>
+</ol>
+<h4 id="loadBeanDefinitions-DefaultListableBeanFactory"><a href="#loadBeanDefinitions-DefaultListableBeanFactory" class="headerlink" title="loadBeanDefinitions(DefaultListableBeanFactory):"></a>loadBeanDefinitions(DefaultListableBeanFactory):</h4><pre><code class="lang-java">protected abstract void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException, IOException;
+</code></pre>
+<h5 id="抽象方法，我们以XmlWebApplicationContext作为例子看下实现的过程"><a href="#抽象方法，我们以XmlWebApplicationContext作为例子看下实现的过程" class="headerlink" title="抽象方法，我们以XmlWebApplicationContext作为例子看下实现的过程"></a>抽象方法，我们以XmlWebApplicationContext作为例子看下实现的过程</h5><pre><code class="lang-java">protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException, IOException {
+    // 根据beanFactory创建新的XmlBeanDefinitionReader
+    XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
+    beanDefinitionReader.setEnvironment(this.getEnvironment());
+    beanDefinitionReader.setResourceLoader(this);
+    beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(this));
+    initBeanDefinitionReader(beanDefinitionReader);
+    loadBeanDefinitions(beanDefinitionReader);
+}
+</code></pre>
+<h5 id="直接看最后的loadBeanDefinitions-XmlBeanDefinitionReader"><a href="#直接看最后的loadBeanDefinitions-XmlBeanDefinitionReader" class="headerlink" title="直接看最后的loadBeanDefinitions(XmlBeanDefinitionReader):"></a>直接看最后的loadBeanDefinitions(XmlBeanDefinitionReader):</h5><pre><code class="lang-java">protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws IOException {
+    //加载配置地址
+    String[] configLocations = getConfigLocations();
+    if (configLocations != null) {
+        for (String configLocation : configLocations) {
+            reader.loadBeanDefinitions(configLocation);
+        }
+    }
+}
+</code></pre>
+<h5 id="根据地址循环载入BeanDefinition："><a href="#根据地址循环载入BeanDefinition：" class="headerlink" title="根据地址循环载入BeanDefinition："></a>根据地址循环载入BeanDefinition：</h5><pre><code class="lang-java">public int loadBeanDefinitions(String location) throws BeanDefinitionStoreException {
+    return loadBeanDefinitions(location, null);
+}
+</code></pre>
+<h5 id="真正的执行过程："><a href="#真正的执行过程：" class="headerlink" title="真正的执行过程："></a>真正的执行过程：</h5><pre><code class="lang-java">public int loadBeanDefinitions(String location, Set&lt;Resource&gt; actualResources) throws BeanDefinitionStoreException {
+    //获取resourceLoader
+    ResourceLoader resourceLoader = getResourceLoader();
+    if (resourceLoader == null) {
+        throw new BeanDefinitionStoreException(
+                &quot;Cannot import bean definitions from location [&quot; + location + &quot;]: no ResourceLoader available&quot;);
+    }
+    if (resourceLoader instanceof ResourcePatternResolver) {
+        // Resource pattern matching available.
+        try {
+            //定位资源
+            Resource[] resources = ((ResourcePatternResolver) resourceLoader).getResources(location);
+            int loadCount = loadBeanDefinitions(resources);
+            if (actualResources != null) {
+                for (Resource resource : resources) {
+                    actualResources.add(resource);
+                }
+            }
+            if (logger.isDebugEnabled()) {
+                logger.debug(&quot;Loaded &quot; + loadCount + &quot; bean definitions from location pattern [&quot; + location + &quot;]&quot;);
+            }
+            return loadCount;
+        }
+        catch (IOException ex) {
+            throw new BeanDefinitionStoreException(
+                    &quot;Could not resolve bean definition resource pattern [&quot; + location + &quot;]&quot;, ex);
+        }
+    }
+    else {
+        // Can only load single resources by absolute URL.
+        Resource resource = resourceLoader.getResource(location);
+        int loadCount = loadBeanDefinitions(resource);
+        if (actualResources != null) {
+            actualResources.add(resource);
+        }
+        if (logger.isDebugEnabled()) {
+            logger.debug(&quot;Loaded &quot; + loadCount + &quot; bean definitions from location [&quot; + location + &quot;]&quot;);
+        }
+        return loadCount;
+    }
+}
+</code></pre>
+<h5 id="具体的执行流程这里不做结束，总之Spring在加载BeanFactory之后，通过factory去载入了BeanDefinition"><a href="#具体的执行流程这里不做结束，总之Spring在加载BeanFactory之后，通过factory去载入了BeanDefinition" class="headerlink" title="具体的执行流程这里不做结束，总之Spring在加载BeanFactory之后，通过factory去载入了BeanDefinition"></a>具体的执行流程这里不做结束，总之Spring在加载BeanFactory之后，通过factory去载入了BeanDefinition</h5><h1 id=""><a href="#" class="headerlink" title="#"></a>#</h1></div>
+    </article>
+</section>
+
+<div class="clear"></div>
+
+
+
+    <footer id="footer">
+  <div class="foot">
+    <!-- <a id="gotop">TOP</a> -->
+    <!-- <div id="copyright">Copyright &copy; 2016 <a href="#" target="_blank">WangWenXiang</a><br>
+       Power by <a href="https://github.com/winx402" target="_blank">Github Pages</a> |
+      <a href="https://hexo.io/" target="_blank">HEXO</a></div> -->
+      <div id="copyright">还没想好要写什么</div>
+  </div>
+</footer>
+
+</div>
+<div class="img-view">
+    <span><img src="/img/guide.jpeg"></span>
+</div>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

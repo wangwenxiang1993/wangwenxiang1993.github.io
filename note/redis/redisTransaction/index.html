@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+    <title>winx&#39;blog</title>
+</head>
+<body>
+<div class="animated" id="info-min">
+    <div id="guide">
+    <div class="guide-button " _href="/tags/index/">首页</div>
+    <div class="guide-button " _href="/tags/tech/">技术</div>
+    <!--<div class="guide-button " _href="/tags/life/">生活</div>-->
+    <div class="guide-button " _href="/categories/read/">阅读</div>
+    <img src="/img/photo.png">
+</div>
+</div>
+<div id="wrap">
+    
+  
+    
+      <div id="big-title" style="color: #666">
+    
+
+  <div id="title-name">redis事务</div><br>
+  <div id="something">2018/04/08</div>
+</div>
+  <section id="content-specific">
+    <article class="post">
+        <div class="con"><h5 id="MULTI-、-EXEC-、-DISCARD-和-WATCH-是-Redis-事务相关的命令。事务可以一次执行多个命令，-并且带有以下两个重要的保证："><a href="#MULTI-、-EXEC-、-DISCARD-和-WATCH-是-Redis-事务相关的命令。事务可以一次执行多个命令，-并且带有以下两个重要的保证：" class="headerlink" title="MULTI 、 EXEC 、 DISCARD 和 WATCH 是 Redis 事务相关的命令。事务可以一次执行多个命令， 并且带有以下两个重要的保证："></a>MULTI 、 EXEC 、 DISCARD 和 WATCH 是 Redis 事务相关的命令。事务可以一次执行多个命令， 并且带有以下两个重要的保证：</h5><ul>
+<li>事务是一个单独的隔离操作：事务中的所有命令都会序列化、按顺序地执行。事务在执行的过程中，不会被其他客户端发送来的命令请求所打断。</li>
+<li>事务是一个原子操作：事务中的命令要么全部被执行，要么全部都不执行。<a id="more"></a>
+</li>
+</ul>
+<h2 id="相关命令"><a href="#相关命令" class="headerlink" title="相关命令"></a>相关命令</h2><h3 id="MULTI"><a href="#MULTI" class="headerlink" title="MULTI"></a>MULTI</h3><h5 id="用于标记事务块的开始。Redis会将后续的命令逐个放入队列中，然后才能使用EXEC命令原子化地执行这个命令序列。"><a href="#用于标记事务块的开始。Redis会将后续的命令逐个放入队列中，然后才能使用EXEC命令原子化地执行这个命令序列。" class="headerlink" title="用于标记事务块的开始。Redis会将后续的命令逐个放入队列中，然后才能使用EXEC命令原子化地执行这个命令序列。"></a>用于标记事务块的开始。Redis会将后续的命令逐个放入队列中，然后才能使用EXEC命令原子化地执行这个命令序列。</h5><pre><code class="lang-redis">127.0.0.1:6379&gt; multi
+OK
+</code></pre>
+<h3 id="EXEC"><a href="#EXEC" class="headerlink" title="EXEC"></a>EXEC</h3><h5 id="当客户端处于事务状态时，所有传入的命令都会返回一个内容为-QUEUED-的状态回复（status-reply），-这些被入队的命令将在-EXEC-命令被调用时执行。然后恢复正常的连接状态。"><a href="#当客户端处于事务状态时，所有传入的命令都会返回一个内容为-QUEUED-的状态回复（status-reply），-这些被入队的命令将在-EXEC-命令被调用时执行。然后恢复正常的连接状态。" class="headerlink" title="当客户端处于事务状态时，所有传入的命令都会返回一个内容为 QUEUED 的状态回复（status reply）， 这些被入队的命令将在 EXEC 命令被调用时执行。然后恢复正常的连接状态。"></a>当客户端处于事务状态时，所有传入的命令都会返回一个内容为 QUEUED 的状态回复（status reply）， 这些被入队的命令将在 EXEC 命令被调用时执行。然后恢复正常的连接状态。</h5><h5 id="当使用WATCH命令时，只有当受监控的键没有被修改时，EXEC命令才会执行事务中的命令，这种方式利用了检查再设置（CAS）的机制。"><a href="#当使用WATCH命令时，只有当受监控的键没有被修改时，EXEC命令才会执行事务中的命令，这种方式利用了检查再设置（CAS）的机制。" class="headerlink" title="当使用WATCH命令时，只有当受监控的键没有被修改时，EXEC命令才会执行事务中的命令，这种方式利用了检查再设置（CAS）的机制。"></a>当使用WATCH命令时，只有当受监控的键没有被修改时，EXEC命令才会执行事务中的命令，这种方式利用了检查再设置（CAS）的机制。</h5><pre><code class="lang-redis">127.0.0.1:6379&gt; multi
+OK
+127.0.0.1:6379&gt; set name winx
+QUEUED
+127.0.0.1:6379&gt; get name
+QUEUED
+127.0.0.1:6379&gt; exec
+1) OK
+2) &quot;winx&quot;
+</code></pre>
+<h3 id="DISCARD"><a href="#DISCARD" class="headerlink" title="DISCARD"></a>DISCARD</h3><h5 id="清除所有先前在一个事务中放入队列的命令，然后恢复正常的连接状态。"><a href="#清除所有先前在一个事务中放入队列的命令，然后恢复正常的连接状态。" class="headerlink" title="清除所有先前在一个事务中放入队列的命令，然后恢复正常的连接状态。"></a>清除所有先前在一个事务中放入队列的命令，然后恢复正常的连接状态。</h5><h5 id="如果使用了WATCH命令，那么DISCARD命令就会将当前连接监控的所有键取消监控。"><a href="#如果使用了WATCH命令，那么DISCARD命令就会将当前连接监控的所有键取消监控。" class="headerlink" title="如果使用了WATCH命令，那么DISCARD命令就会将当前连接监控的所有键取消监控。"></a>如果使用了WATCH命令，那么DISCARD命令就会将当前连接监控的所有键取消监控。</h5><pre><code class="lang-redis">127.0.0.1:6379&gt; multi
+OK
+127.0.0.1:6379&gt; set name winx1
+QUEUED
+127.0.0.1:6379&gt; DISCARD
+OK
+127.0.0.1:6379&gt; get name
+&quot;winx&quot;
+</code></pre>
+<h3 id="WATCH"><a href="#WATCH" class="headerlink" title="WATCH"></a>WATCH</h3><h5 id="WATCH-使得-EXEC-命令需要有条件地执行：事务只能在所有被监视键都没有被修改的前提下执行，-如果这个前提不能满足的话，事务就不会被执行。"><a href="#WATCH-使得-EXEC-命令需要有条件地执行：事务只能在所有被监视键都没有被修改的前提下执行，-如果这个前提不能满足的话，事务就不会被执行。" class="headerlink" title="WATCH 使得 EXEC 命令需要有条件地执行：事务只能在所有被监视键都没有被修改的前提下执行， 如果这个前提不能满足的话，事务就不会被执行。"></a>WATCH 使得 EXEC 命令需要有条件地执行：事务只能在所有被监视键都没有被修改的前提下执行， 如果这个前提不能满足的话，事务就不会被执行。</h5><h4 id="客户端1"><a href="#客户端1" class="headerlink" title="客户端1"></a>客户端1</h4><pre><code class="lang-redis">127.0.0.1:6379&gt; watch name
+OK
+127.0.0.1:6379&gt; set name winx1
+OK
+127.0.0.1:6379&gt; multi
+OK
+127.0.0.1:6379&gt; set name winx
+QUEUED
+</code></pre>
+<h4 id="客户端2"><a href="#客户端2" class="headerlink" title="客户端2"></a>客户端2</h4><pre><code class="lang-redis">127.0.0.1:6379&gt; get name
+&quot;winx1&quot;
+127.0.0.1:6379&gt; set name winx2
+OK
+</code></pre>
+<h4 id="客户端1-1"><a href="#客户端1-1" class="headerlink" title="客户端1"></a>客户端1</h4><pre><code class="lang-redis">127.0.0.1:6379&gt; get name
+QUEUED
+127.0.0.1:6379&gt; exec
+(nil)
+</code></pre>
+<h5 id="可以看到客户端1监听了name，然后执行事务，在事务提交之前客户端2修改了name值，结果客户端1提交事务后返回-nil-结果。"><a href="#可以看到客户端1监听了name，然后执行事务，在事务提交之前客户端2修改了name值，结果客户端1提交事务后返回-nil-结果。" class="headerlink" title="可以看到客户端1监听了name，然后执行事务，在事务提交之前客户端2修改了name值，结果客户端1提交事务后返回(nil)结果。"></a>可以看到客户端1监听了name，然后执行事务，在事务提交之前客户端2修改了name值，结果客户端1提交事务后返回<code>(nil)</code>结果。</h5><h3 id="UNWATCH"><a href="#UNWATCH" class="headerlink" title="UNWATCH"></a>UNWATCH</h3><h5 id="清除所有先前为一个事务监控的键。如果你调用了EXEC或DISCARD命令，那么就不需要手动调用UNWATCH命令。"><a href="#清除所有先前为一个事务监控的键。如果你调用了EXEC或DISCARD命令，那么就不需要手动调用UNWATCH命令。" class="headerlink" title="清除所有先前为一个事务监控的键。如果你调用了EXEC或DISCARD命令，那么就不需要手动调用UNWATCH命令。"></a>清除所有先前为一个事务监控的键。如果你调用了EXEC或DISCARD命令，那么就不需要手动调用UNWATCH命令。</h5><h5 id="如果客户端在使用-MULTI-开启了一个事务之后，却因为断线而没有成功执行-EXEC-，那么事务中的所有命令都不会被执行。另一方面，如果客户端成功在开启事务之后执行-EXEC-，那么事务中的所有命令都会被执行。当使用-AOF-方式做持久化的时候，-Redis-会使用单个-write-2-命令将事务写入到磁盘中。然而，如果-Redis-服务器因为某些原因被管理员杀死，或者遇上某种硬件故障，那么可能只有部分事务命令会被成功写入到磁盘中。如果-Redis-在重新启动时发现-AOF-文件出了这样的问题，那么它会退出，并汇报一个错误。使用redis-check-aof程序可以修复这一问题：它会移除-AOF-文件中不完整事务的信息，确保服务器可以顺利启动。"><a href="#如果客户端在使用-MULTI-开启了一个事务之后，却因为断线而没有成功执行-EXEC-，那么事务中的所有命令都不会被执行。另一方面，如果客户端成功在开启事务之后执行-EXEC-，那么事务中的所有命令都会被执行。当使用-AOF-方式做持久化的时候，-Redis-会使用单个-write-2-命令将事务写入到磁盘中。然而，如果-Redis-服务器因为某些原因被管理员杀死，或者遇上某种硬件故障，那么可能只有部分事务命令会被成功写入到磁盘中。如果-Redis-在重新启动时发现-AOF-文件出了这样的问题，那么它会退出，并汇报一个错误。使用redis-check-aof程序可以修复这一问题：它会移除-AOF-文件中不完整事务的信息，确保服务器可以顺利启动。" class="headerlink" title="如果客户端在使用 MULTI 开启了一个事务之后，却因为断线而没有成功执行 EXEC ，那么事务中的所有命令都不会被执行。另一方面，如果客户端成功在开启事务之后执行 EXEC ，那么事务中的所有命令都会被执行。当使用 AOF 方式做持久化的时候， Redis 会使用单个 write(2) 命令将事务写入到磁盘中。然而，如果 Redis 服务器因为某些原因被管理员杀死，或者遇上某种硬件故障，那么可能只有部分事务命令会被成功写入到磁盘中。如果 Redis 在重新启动时发现 AOF 文件出了这样的问题，那么它会退出，并汇报一个错误。使用redis-check-aof程序可以修复这一问题：它会移除 AOF 文件中不完整事务的信息，确保服务器可以顺利启动。"></a>如果客户端在使用 MULTI 开启了一个事务之后，却因为断线而没有成功执行 EXEC ，那么事务中的所有命令都不会被执行。另一方面，如果客户端成功在开启事务之后执行 EXEC ，那么事务中的所有命令都会被执行。当使用 AOF 方式做持久化的时候， Redis 会使用单个 write(2) 命令将事务写入到磁盘中。然而，如果 Redis 服务器因为某些原因被管理员杀死，或者遇上某种硬件故障，那么可能只有部分事务命令会被成功写入到磁盘中。如果 Redis 在重新启动时发现 AOF 文件出了这样的问题，那么它会退出，并汇报一个错误。使用redis-check-aof程序可以修复这一问题：它会移除 AOF 文件中不完整事务的信息，确保服务器可以顺利启动。</h5><h2 id="事务中的错误"><a href="#事务中的错误" class="headerlink" title="事务中的错误"></a>事务中的错误</h2><h5 id="使用事务时可能会遇上以下两种错误："><a href="#使用事务时可能会遇上以下两种错误：" class="headerlink" title="使用事务时可能会遇上以下两种错误："></a>使用事务时可能会遇上以下两种错误：</h5><ul>
+<li>事务在执行 EXEC 之前，入队的命令可能会出错。比如说，命令可能会产生语法错误（参数数量错误，参数名错误，等等），或者其他更严重的错误，比如内存不足（如果服务器使用 maxmemory 设置了最大内存限制的话）。</li>
+<li>命令可能在 EXEC 调用之后失败。举个例子，事务中的命令可能处理了错误类型的键，比如将列表命令用在了字符串键上面，诸如此类。<br>对于发生在 EXEC 执行之前的错误，客户端以前的做法是检查命令入队所得的返回值：如果命令入队时返回 QUEUED ，那么入队成功；否则，就是入队失败。如果有命令在入队时失败，那么大部分客户端都会停止并取消这个事务。</li>
+</ul>
+<h5 id="从-Redis-2-6-5-开始，服务器会对命令入队失败的情况进行记录，并在客户端调用-EXEC-命令时，拒绝执行并自动放弃这个事务。"><a href="#从-Redis-2-6-5-开始，服务器会对命令入队失败的情况进行记录，并在客户端调用-EXEC-命令时，拒绝执行并自动放弃这个事务。" class="headerlink" title="从 Redis 2.6.5 开始，服务器会对命令入队失败的情况进行记录，并在客户端调用 EXEC 命令时，拒绝执行并自动放弃这个事务。"></a>从 Redis 2.6.5 开始，服务器会对命令入队失败的情况进行记录，并在客户端调用 EXEC 命令时，拒绝执行并自动放弃这个事务。</h5><h5 id="在-Redis-2-6-5-以前，-Redis-只执行事务中那些入队成功的命令，而忽略那些入队失败的命令。-而新的处理方式则使得在流水线（pipeline）中包含事务变得简单，因为发送事务和读取事务的回复都只需要和服务器进行一次通讯。"><a href="#在-Redis-2-6-5-以前，-Redis-只执行事务中那些入队成功的命令，而忽略那些入队失败的命令。-而新的处理方式则使得在流水线（pipeline）中包含事务变得简单，因为发送事务和读取事务的回复都只需要和服务器进行一次通讯。" class="headerlink" title="在 Redis 2.6.5 以前， Redis 只执行事务中那些入队成功的命令，而忽略那些入队失败的命令。 而新的处理方式则使得在流水线（pipeline）中包含事务变得简单，因为发送事务和读取事务的回复都只需要和服务器进行一次通讯。"></a>在 Redis 2.6.5 以前， Redis 只执行事务中那些入队成功的命令，而忽略那些入队失败的命令。 而新的处理方式则使得在流水线（pipeline）中包含事务变得简单，因为发送事务和读取事务的回复都只需要和服务器进行一次通讯。</h5><h5 id="至于那些在-EXEC-命令执行之后所产生的错误，-并没有对它们进行特别处理：-即使事务中有某个-某些命令在执行时产生了错误，-事务中的其他命令仍然会继续执行。"><a href="#至于那些在-EXEC-命令执行之后所产生的错误，-并没有对它们进行特别处理：-即使事务中有某个-某些命令在执行时产生了错误，-事务中的其他命令仍然会继续执行。" class="headerlink" title="至于那些在 EXEC 命令执行之后所产生的错误， 并没有对它们进行特别处理： 即使事务中有某个/某些命令在执行时产生了错误， 事务中的其他命令仍然会继续执行。"></a>至于那些在 EXEC 命令执行之后所产生的错误， 并没有对它们进行特别处理： 即使事务中有某个/某些命令在执行时产生了错误， 事务中的其他命令仍然会继续执行。</h5><h5 id="从协议的角度来看这个问题，会更容易理解一些。-以下例子中，-LPOP-命令的执行将出错，-尽管调用它的语法是正确的："><a href="#从协议的角度来看这个问题，会更容易理解一些。-以下例子中，-LPOP-命令的执行将出错，-尽管调用它的语法是正确的：" class="headerlink" title="从协议的角度来看这个问题，会更容易理解一些。 以下例子中， LPOP 命令的执行将出错， 尽管调用它的语法是正确的："></a>从协议的角度来看这个问题，会更容易理解一些。 以下例子中， LPOP 命令的执行将出错， 尽管调用它的语法是正确的：</h5><pre><code class="lang-redis">127.0.0.1:6379&gt; multi
+OK
+127.0.0.1:6379&gt; set name winx
+QUEUED
+127.0.0.1:6379&gt; lpop name
+QUEUED
+127.0.0.1:6379&gt; exec
+1) OK
+2) (error) WRONGTYPE Operation against a key holding the wrong kind of value
+</code></pre>
+<h5 id="最重要的是记住这样一条，-即使事务中有某条-某些命令执行失败了，-事务队列中的其他命令仍然会继续执行-——-Redis-不会停止执行事务中的命令。"><a href="#最重要的是记住这样一条，-即使事务中有某条-某些命令执行失败了，-事务队列中的其他命令仍然会继续执行-——-Redis-不会停止执行事务中的命令。" class="headerlink" title="最重要的是记住这样一条， 即使事务中有某条/某些命令执行失败了， 事务队列中的其他命令仍然会继续执行 —— Redis 不会停止执行事务中的命令。"></a>最重要的是记住这样一条， 即使事务中有某条/某些命令执行失败了， 事务队列中的其他命令仍然会继续执行 —— Redis 不会停止执行事务中的命令。</h5><h5 id="以下例子展示的是另一种情况，-当命令在入队时产生错误，-错误会立即被返回给客户端："><a href="#以下例子展示的是另一种情况，-当命令在入队时产生错误，-错误会立即被返回给客户端：" class="headerlink" title="以下例子展示的是另一种情况， 当命令在入队时产生错误， 错误会立即被返回给客户端："></a>以下例子展示的是另一种情况， 当命令在入队时产生错误， 错误会立即被返回给客户端：</h5><pre><code class="lang-reids">127.0.0.1:6379&gt; multi
+OK
+127.0.0.1:6379&gt; INCR name name1
+(error) ERR wrong number of arguments for &#39;incr&#39; command
+127.0.0.1:6379&gt; get name
+QUEUED
+127.0.0.1:6379&gt; exec
+(error) EXECABORT Transaction discarded because of previous errors.
+</code></pre>
+<h5 id="因为调用-INCR-命令的参数格式不正确，-所以这个-INCR-命令入队失败。"><a href="#因为调用-INCR-命令的参数格式不正确，-所以这个-INCR-命令入队失败。" class="headerlink" title="因为调用 INCR 命令的参数格式不正确， 所以这个 INCR 命令入队失败。"></a>因为调用 INCR 命令的参数格式不正确， 所以这个 INCR 命令入队失败。</h5><h3 id="为什么-Redis-不支持回滚（roll-back）"><a href="#为什么-Redis-不支持回滚（roll-back）" class="headerlink" title="为什么 Redis 不支持回滚（roll back）"></a>为什么 Redis 不支持回滚（roll back）</h3><h5 id="如果你有使用关系式数据库的经验，-那么-“Redis-在事务失败时不进行回滚，而是继续执行余下的命令”这种做法可能会让你觉得有点奇怪。"><a href="#如果你有使用关系式数据库的经验，-那么-“Redis-在事务失败时不进行回滚，而是继续执行余下的命令”这种做法可能会让你觉得有点奇怪。" class="headerlink" title="如果你有使用关系式数据库的经验， 那么 “Redis 在事务失败时不进行回滚，而是继续执行余下的命令”这种做法可能会让你觉得有点奇怪。"></a>如果你有使用关系式数据库的经验， 那么 “Redis 在事务失败时不进行回滚，而是继续执行余下的命令”这种做法可能会让你觉得有点奇怪。</h5><h4 id="以下是这种做法的优点："><a href="#以下是这种做法的优点：" class="headerlink" title="以下是这种做法的优点："></a>以下是这种做法的优点：</h4><ol>
+<li>Redis 命令只会因为错误的语法而失败（并且这些问题不能在入队时发现），或是命令用在了错误类型的键上面：这也就是说，从实用性的角度来说，失败的命令是由编程错误造成的，而这些错误应该在开发的过程中被发现，而不应该出现在生产环境中。</li>
+<li>因为不需要对回滚进行支持，所以 Redis 的内部可以保持简单且快速。</li>
+</ol>
+<h2 id="使用-check-and-set-cas-操作实现乐观锁"><a href="#使用-check-and-set-cas-操作实现乐观锁" class="headerlink" title="使用 check-and-set(cas)操作实现乐观锁"></a>使用 check-and-set(cas)操作实现乐观锁</h2><h5 id="WATCH-命令可以为-Redis-事务提供-check-and-set-（CAS）行为。"><a href="#WATCH-命令可以为-Redis-事务提供-check-and-set-（CAS）行为。" class="headerlink" title="WATCH 命令可以为 Redis 事务提供 check-and-set （CAS）行为。"></a>WATCH 命令可以为 Redis 事务提供 check-and-set （CAS）行为。</h5><h5 id="被-WATCH-的键会被监视，并会发觉这些键是否被改动过了。-如果有至少一个被监视的键在-EXEC-执行之前被修改了，-那么整个事务都会被取消，-EXEC-返回nil-reply来表示事务已经失败。"><a href="#被-WATCH-的键会被监视，并会发觉这些键是否被改动过了。-如果有至少一个被监视的键在-EXEC-执行之前被修改了，-那么整个事务都会被取消，-EXEC-返回nil-reply来表示事务已经失败。" class="headerlink" title="被 WATCH 的键会被监视，并会发觉这些键是否被改动过了。 如果有至少一个被监视的键在 EXEC 执行之前被修改了， 那么整个事务都会被取消， EXEC 返回nil-reply来表示事务已经失败。"></a>被 WATCH 的键会被监视，并会发觉这些键是否被改动过了。 如果有至少一个被监视的键在 EXEC 执行之前被修改了， 那么整个事务都会被取消， EXEC 返回nil-reply来表示事务已经失败。</h5><h5 id="举个例子，-假设我们需要原子性地为某个值进行增-1-操作（假设-INCR-不存在）。"><a href="#举个例子，-假设我们需要原子性地为某个值进行增-1-操作（假设-INCR-不存在）。" class="headerlink" title="举个例子， 假设我们需要原子性地为某个值进行增 1 操作（假设 INCR 不存在）。"></a>举个例子， 假设我们需要原子性地为某个值进行增 1 操作（假设 INCR 不存在）。</h5><h4 id="首先我们可能会这样做："><a href="#首先我们可能会这样做：" class="headerlink" title="首先我们可能会这样做："></a>首先我们可能会这样做：</h4><pre><code>val = GET mykey
+val = val + 1
+SET mykey $val
+</code></pre><h5 id="上面的这个实现在只有一个客户端的时候可以执行得很好。但是，当多个客户端同时对同一个键进行这样的操作时，就会产生竞争条件。举个例子，-如果客户端-A-和-B-都读取了键原来的值，比如10，那么两个客户端都会将键的值设为11，但正确的结果应该是12才对。"><a href="#上面的这个实现在只有一个客户端的时候可以执行得很好。但是，当多个客户端同时对同一个键进行这样的操作时，就会产生竞争条件。举个例子，-如果客户端-A-和-B-都读取了键原来的值，比如10，那么两个客户端都会将键的值设为11，但正确的结果应该是12才对。" class="headerlink" title="上面的这个实现在只有一个客户端的时候可以执行得很好。但是，当多个客户端同时对同一个键进行这样的操作时，就会产生竞争条件。举个例子， 如果客户端 A 和 B 都读取了键原来的值，比如10，那么两个客户端都会将键的值设为11，但正确的结果应该是12才对。"></a>上面的这个实现在只有一个客户端的时候可以执行得很好。但是，当多个客户端同时对同一个键进行这样的操作时，就会产生竞争条件。举个例子， 如果客户端 A 和 B 都读取了键原来的值，比如10，那么两个客户端都会将键的值设为11，但正确的结果应该是12才对。</h5><h4 id="有了-WATCH-，-我们就可以轻松地解决这类问题了："><a href="#有了-WATCH-，-我们就可以轻松地解决这类问题了：" class="headerlink" title="有了 WATCH ， 我们就可以轻松地解决这类问题了："></a>有了 WATCH ， 我们就可以轻松地解决这类问题了：</h4><pre><code>WATCH mykey
+val = GET mykey
+val = val + 1
+MULTI
+SET mykey $val
+EXEC
+</code></pre><h5 id="使用上面的代码，-如果在-WATCH-执行之后，-EXEC-执行之前，-有其他客户端修改了-mykey-的值，-那么当前客户端的事务就会失败。-程序需要做的，-就是不断重试这个操作，-直到没有发生碰撞为止。"><a href="#使用上面的代码，-如果在-WATCH-执行之后，-EXEC-执行之前，-有其他客户端修改了-mykey-的值，-那么当前客户端的事务就会失败。-程序需要做的，-就是不断重试这个操作，-直到没有发生碰撞为止。" class="headerlink" title="使用上面的代码， 如果在 WATCH 执行之后， EXEC 执行之前， 有其他客户端修改了 mykey 的值， 那么当前客户端的事务就会失败。 程序需要做的， 就是不断重试这个操作， 直到没有发生碰撞为止。"></a>使用上面的代码， 如果在 WATCH 执行之后， EXEC 执行之前， 有其他客户端修改了 mykey 的值， 那么当前客户端的事务就会失败。 程序需要做的， 就是不断重试这个操作， 直到没有发生碰撞为止。</h5><h5 id="这种形式的锁被称作乐观锁，-它是一种非常强大的锁机制。并且因为大多数情况下，不同的客户端会访问不同的键，碰撞的情况一般都很少，-所以通常并不需要进行重试。"><a href="#这种形式的锁被称作乐观锁，-它是一种非常强大的锁机制。并且因为大多数情况下，不同的客户端会访问不同的键，碰撞的情况一般都很少，-所以通常并不需要进行重试。" class="headerlink" title="这种形式的锁被称作乐观锁， 它是一种非常强大的锁机制。并且因为大多数情况下，不同的客户端会访问不同的键，碰撞的情况一般都很少， 所以通常并不需要进行重试。"></a>这种形式的锁被称作乐观锁， 它是一种非常强大的锁机制。并且因为大多数情况下，不同的客户端会访问不同的键，碰撞的情况一般都很少， 所以通常并不需要进行重试。</h5><h3 id="了解-WATCH"><a href="#了解-WATCH" class="headerlink" title="了解 WATCH"></a>了解 WATCH</h3><h5 id="WATCH-命令可以被调用多次。-对键的监视从-WATCH-执行之后开始生效，-直到调用-EXEC-为止。"><a href="#WATCH-命令可以被调用多次。-对键的监视从-WATCH-执行之后开始生效，-直到调用-EXEC-为止。" class="headerlink" title="WATCH 命令可以被调用多次。 对键的监视从 WATCH 执行之后开始生效， 直到调用 EXEC 为止。"></a>WATCH 命令可以被调用多次。 对键的监视从 WATCH 执行之后开始生效， 直到调用 EXEC 为止。</h5><h5 id="用户还可以在单个-WATCH-命令中监视任意多个键，-就像这样："><a href="#用户还可以在单个-WATCH-命令中监视任意多个键，-就像这样：" class="headerlink" title="用户还可以在单个 WATCH 命令中监视任意多个键， 就像这样："></a>用户还可以在单个 WATCH 命令中监视任意多个键， 就像这样：</h5><pre><code class="lang-redis">127.0.0.1:6379&gt; WATCH key1 key2 key3
+OK
+</code></pre>
+<h5 id="当-EXEC-被调用时，-不管事务是否成功执行，-对所有键的监视都会被取消。"><a href="#当-EXEC-被调用时，-不管事务是否成功执行，-对所有键的监视都会被取消。" class="headerlink" title="当 EXEC 被调用时， 不管事务是否成功执行， 对所有键的监视都会被取消。"></a>当 EXEC 被调用时， 不管事务是否成功执行， 对所有键的监视都会被取消。</h5><h5 id="另外，-当客户端断开连接时，-该客户端对键的监视也会被取消。"><a href="#另外，-当客户端断开连接时，-该客户端对键的监视也会被取消。" class="headerlink" title="另外， 当客户端断开连接时， 该客户端对键的监视也会被取消。"></a>另外， 当客户端断开连接时， 该客户端对键的监视也会被取消。</h5><h5 id="使用无参数的-UNWATCH-命令可以手动取消对所有键的监视。-对于一些需要改动多个键的事务，-有时候程序需要同时对多个键进行加锁，-然后检查这些键的当前值是否符合程序的要求。-当值达不到要求时，-就可以使用-UNWATCH-命令来取消目前对键的监视，-中途放弃这个事务，-并等待事务的下次尝试。"><a href="#使用无参数的-UNWATCH-命令可以手动取消对所有键的监视。-对于一些需要改动多个键的事务，-有时候程序需要同时对多个键进行加锁，-然后检查这些键的当前值是否符合程序的要求。-当值达不到要求时，-就可以使用-UNWATCH-命令来取消目前对键的监视，-中途放弃这个事务，-并等待事务的下次尝试。" class="headerlink" title="使用无参数的 UNWATCH 命令可以手动取消对所有键的监视。 对于一些需要改动多个键的事务， 有时候程序需要同时对多个键进行加锁， 然后检查这些键的当前值是否符合程序的要求。 当值达不到要求时， 就可以使用 UNWATCH 命令来取消目前对键的监视， 中途放弃这个事务， 并等待事务的下次尝试。"></a>使用无参数的 UNWATCH 命令可以手动取消对所有键的监视。 对于一些需要改动多个键的事务， 有时候程序需要同时对多个键进行加锁， 然后检查这些键的当前值是否符合程序的要求。 当值达不到要求时， 就可以使用 UNWATCH 命令来取消目前对键的监视， 中途放弃这个事务， 并等待事务的下次尝试。</h5><h2 id="Redis-脚本和事务"><a href="#Redis-脚本和事务" class="headerlink" title="Redis 脚本和事务"></a>Redis 脚本和事务</h2><h5 id="从定义上来说，-Redis-中的脚本本身就是一种事务，-所以任何在事务里可以完成的事，-在脚本里面也能完成。-并且一般来说，-使用脚本要来得更简单，并且速度更快。"><a href="#从定义上来说，-Redis-中的脚本本身就是一种事务，-所以任何在事务里可以完成的事，-在脚本里面也能完成。-并且一般来说，-使用脚本要来得更简单，并且速度更快。" class="headerlink" title="从定义上来说， Redis 中的脚本本身就是一种事务， 所以任何在事务里可以完成的事， 在脚本里面也能完成。 并且一般来说， 使用脚本要来得更简单，并且速度更快。"></a>从定义上来说， Redis 中的脚本本身就是一种事务， 所以任何在事务里可以完成的事， 在脚本里面也能完成。 并且一般来说， 使用脚本要来得更简单，并且速度更快。</h5></div>
+    </article>
+</section>
+
+<div class="clear"></div>
+
+
+
+    <footer id="footer">
+  <div class="foot">
+    <!-- <a id="gotop">TOP</a> -->
+    <!-- <div id="copyright">Copyright &copy; 2016 <a href="#" target="_blank">WangWenXiang</a><br>
+       Power by <a href="https://github.com/winx402" target="_blank">Github Pages</a> |
+      <a href="https://hexo.io/" target="_blank">HEXO</a></div> -->
+      <div id="copyright">还没想好要写什么</div>
+  </div>
+</footer>
+
+</div>
+<div class="img-view">
+    <span><img src="/img/guide.jpeg"></span>
+</div>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

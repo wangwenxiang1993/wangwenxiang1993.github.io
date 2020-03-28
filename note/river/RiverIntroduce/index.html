@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+    <title>winx&#39;blog</title>
+</head>
+<body>
+<div class="animated" id="info-min">
+    <div id="guide">
+    <div class="guide-button " _href="/tags/index/">首页</div>
+    <div class="guide-button " _href="/tags/tech/">技术</div>
+    <!--<div class="guide-button " _href="/tags/life/">生活</div>-->
+    <div class="guide-button " _href="/categories/read/">阅读</div>
+    <img src="/img/photo.png">
+</div>
+</div>
+<div id="wrap">
+    
+  
+    
+      <div id="big-title" style="color: #666">
+    
+
+  <div id="title-name">river工具介绍</div><br>
+  <div id="something">2017/06/02</div>
+</div>
+  <section id="content-specific">
+    <article class="post">
+        <div class="con"><h5 id="river是一个java工具包，是对java的method的增强。在原有的method调用流程不变的情况下，尽可能用注解去增强目标方法的灵活性。river希望做的是解耦java-method-之间的调用关系。实现代码无侵入或者少侵入的流程控制。"><a href="#river是一个java工具包，是对java的method的增强。在原有的method调用流程不变的情况下，尽可能用注解去增强目标方法的灵活性。river希望做的是解耦java-method-之间的调用关系。实现代码无侵入或者少侵入的流程控制。" class="headerlink" title="river是一个java工具包，是对java的method的增强。在原有的method调用流程不变的情况下，尽可能用注解去增强目标方法的灵活性。river希望做的是解耦java method 之间的调用关系。实现代码无侵入或者少侵入的流程控制。"></a>river是一个java工具包，是对java的method的增强。在原有的method调用流程不变的情况下，尽可能用注解去增强目标方法的灵活性。river希望做的是解耦java method 之间的调用关系。实现代码无侵入或者少侵入的流程控制。</h5><a id="more"></a>
+<h4 id="github地址：river"><a href="#github地址：river" class="headerlink" title="github地址：river"></a>github地址：<a href="https://github.com/winx402/river">river</a></h4><h2 id="river基础"><a href="#river基础" class="headerlink" title="river基础"></a>river基础</h2><h5 id="river是基于cglib动态代理以及guava作为基础来实现的，这里并没有使用jdk自带的代理方式实现。部分功能的实现是依靠guava或者在guava之上封装来完成的。"><a href="#river是基于cglib动态代理以及guava作为基础来实现的，这里并没有使用jdk自带的代理方式实现。部分功能的实现是依靠guava或者在guava之上封装来完成的。" class="headerlink" title="river是基于cglib动态代理以及guava作为基础来实现的，这里并没有使用jdk自带的代理方式实现。部分功能的实现是依靠guava或者在guava之上封装来完成的。"></a>river是基于cglib动态代理以及guava作为基础来实现的，这里并没有使用jdk自带的代理方式实现。部分功能的实现是依靠guava或者在guava之上封装来完成的。</h5><h2 id="river现有功能"><a href="#river现有功能" class="headerlink" title="river现有功能"></a>river现有功能</h2><h3 id="aop"><a href="#aop" class="headerlink" title="aop"></a>aop</h3><h5 id="aop是一个比较典型的例子，aop实现在目标方法之前、之后、异常等情况下的代码插入。这些插入的代码可以做类似于日志记录，流量统计等工作。也可以在before代码中修改目标方法参数，在after中修改目标方法返回值。但是没有办法控制目标方法是否继续（除非抛出异常）。"><a href="#aop是一个比较典型的例子，aop实现在目标方法之前、之后、异常等情况下的代码插入。这些插入的代码可以做类似于日志记录，流量统计等工作。也可以在before代码中修改目标方法参数，在after中修改目标方法返回值。但是没有办法控制目标方法是否继续（除非抛出异常）。" class="headerlink" title="aop是一个比较典型的例子，aop实现在目标方法之前、之后、异常等情况下的代码插入。这些插入的代码可以做类似于日志记录，流量统计等工作。也可以在before代码中修改目标方法参数，在after中修改目标方法返回值。但是没有办法控制目标方法是否继续（除非抛出异常）。"></a>aop是一个比较典型的例子，aop实现在目标方法之前、之后、异常等情况下的代码插入。这些插入的代码可以做类似于日志记录，流量统计等工作。也可以在before代码中修改目标方法参数，在after中修改目标方法返回值。但是没有办法控制目标方法是否继续（除非抛出异常）。</h5><h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><h5 id="cache显而易见，是对目标方法结果的缓存，在缓存结果有效期内，新的调用并不会去执行目标方法，而是直接拿缓存结果。并且用户可以自定义缓存的key（从入参中选取一部分参数，或者是某个对象中的某些属性来作为缓存的key）。"><a href="#cache显而易见，是对目标方法结果的缓存，在缓存结果有效期内，新的调用并不会去执行目标方法，而是直接拿缓存结果。并且用户可以自定义缓存的key（从入参中选取一部分参数，或者是某个对象中的某些属性来作为缓存的key）。" class="headerlink" title="cache显而易见，是对目标方法结果的缓存，在缓存结果有效期内，新的调用并不会去执行目标方法，而是直接拿缓存结果。并且用户可以自定义缓存的key（从入参中选取一部分参数，或者是某个对象中的某些属性来作为缓存的key）。"></a>cache显而易见，是对目标方法结果的缓存，在缓存结果有效期内，新的调用并不会去执行目标方法，而是直接拿缓存结果。并且用户可以自定义缓存的key（从入参中选取一部分参数，或者是某个对象中的某些属性来作为缓存的key）。</h5><h3 id="限流"><a href="#限流" class="headerlink" title="限流"></a>限流</h3><h5 id="rate-limit是对目标方法每秒的调用频率的限制。在限制的流量内，调用会非常顺畅。在超出的流量之外，调用会阻塞，直到新的调用机会。此外，也可以设置超时时间，如果有超时时间设置，在调用之前会先检查在超时时间内能否拿到调用的机会，如果不能，直接返回超时异常。"><a href="#rate-limit是对目标方法每秒的调用频率的限制。在限制的流量内，调用会非常顺畅。在超出的流量之外，调用会阻塞，直到新的调用机会。此外，也可以设置超时时间，如果有超时时间设置，在调用之前会先检查在超时时间内能否拿到调用的机会，如果不能，直接返回超时异常。" class="headerlink" title="rate limit是对目标方法每秒的调用频率的限制。在限制的流量内，调用会非常顺畅。在超出的流量之外，调用会阻塞，直到新的调用机会。此外，也可以设置超时时间，如果有超时时间设置，在调用之前会先检查在超时时间内能否拿到调用的机会，如果不能，直接返回超时异常。"></a>rate limit是对目标方法每秒的调用频率的限制。在限制的流量内，调用会非常顺畅。在超出的流量之外，调用会阻塞，直到新的调用机会。此外，也可以设置超时时间，如果有超时时间设置，在调用之前会先检查在超时时间内能否拿到调用的机会，如果不能，直接返回超时异常。</h5><h3 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h3><h5 id="目标方法会用新的线程去执行。可以理解成方法之间的异步执行，如果返回值是void或者是指定的类型。其他的返回值类型，虽然启用的新的线程去执行，但是会等待线程执行完成后拿到返回值再返回。"><a href="#目标方法会用新的线程去执行。可以理解成方法之间的异步执行，如果返回值是void或者是指定的类型。其他的返回值类型，虽然启用的新的线程去执行，但是会等待线程执行完成后拿到返回值再返回。" class="headerlink" title="目标方法会用新的线程去执行。可以理解成方法之间的异步执行，如果返回值是void或者是指定的类型。其他的返回值类型，虽然启用的新的线程去执行，但是会等待线程执行完成后拿到返回值再返回。"></a>目标方法会用新的线程去执行。可以理解成方法之间的异步执行，如果返回值是void或者是指定的类型。其他的返回值类型，虽然启用的新的线程去执行，但是会等待线程执行完成后拿到返回值再返回。</h5><h3 id="around"><a href="#around" class="headerlink" title="around"></a>around</h3><h5 id="around是最灵活的，around是现在river的功能的核心，around可以在A方法调用B方法之间插入C方法。C方法就叫做对B的around，C可以拿到B的入参、返回、method对象等，也可以控制调用B方法的时机，甚至是不调用。实际上，上面的各种功能的实现都可以用around自己实现，但是实现以上功能的成本对于普通使用者来说成本太高也没有必要。因此一些核心且重要的功能都已经单独实现，只需要使用相应的注解就可以了"><a href="#around是最灵活的，around是现在river的功能的核心，around可以在A方法调用B方法之间插入C方法。C方法就叫做对B的around，C可以拿到B的入参、返回、method对象等，也可以控制调用B方法的时机，甚至是不调用。实际上，上面的各种功能的实现都可以用around自己实现，但是实现以上功能的成本对于普通使用者来说成本太高也没有必要。因此一些核心且重要的功能都已经单独实现，只需要使用相应的注解就可以了" class="headerlink" title="around是最灵活的，around是现在river的功能的核心，around可以在A方法调用B方法之间插入C方法。C方法就叫做对B的around，C可以拿到B的入参、返回、method对象等，也可以控制调用B方法的时机，甚至是不调用。实际上，上面的各种功能的实现都可以用around自己实现，但是实现以上功能的成本对于普通使用者来说成本太高也没有必要。因此一些核心且重要的功能都已经单独实现，只需要使用相应的注解就可以了"></a>around是最灵活的，around是现在river的功能的核心，around可以在A方法调用B方法之间插入C方法。C方法就叫做对B的around，C可以拿到B的入参、返回、method对象等，也可以控制调用B方法的时机，甚至是不调用。实际上，上面的各种功能的实现都可以用around自己实现，但是实现以上功能的成本对于普通使用者来说成本太高也没有必要。因此一些核心且重要的功能都已经单独实现，只需要使用相应的注解就可以了</h5></div>
+    </article>
+</section>
+
+<div class="clear"></div>
+
+
+
+    <footer id="footer">
+  <div class="foot">
+    <!-- <a id="gotop">TOP</a> -->
+    <!-- <div id="copyright">Copyright &copy; 2016 <a href="#" target="_blank">WangWenXiang</a><br>
+       Power by <a href="https://github.com/winx402" target="_blank">Github Pages</a> |
+      <a href="https://hexo.io/" target="_blank">HEXO</a></div> -->
+      <div id="copyright">还没想好要写什么</div>
+  </div>
+</footer>
+
+</div>
+<div class="img-view">
+    <span><img src="/img/guide.jpeg"></span>
+</div>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

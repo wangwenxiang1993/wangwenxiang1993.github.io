@@ -1,0 +1,224 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+    <title>winx&#39;blog</title>
+</head>
+<body>
+<div class="animated" id="info-min">
+    <div id="guide">
+    <div class="guide-button " _href="/tags/index/">首页</div>
+    <div class="guide-button " _href="/tags/tech/">技术</div>
+    <!--<div class="guide-button " _href="/tags/life/">生活</div>-->
+    <div class="guide-button " _href="/categories/read/">阅读</div>
+    <img src="/img/photo.png">
+</div>
+</div>
+<div id="wrap">
+    
+  
+    
+      <div id="big-title" style="color: #666">
+    
+
+  <div id="title-name">资产体系设计</div><br>
+  <div id="something">2019/12/16</div>
+</div>
+  <section id="content-specific">
+    <article class="post">
+        <div class="con"><h3 id="资产平台"><a href="#资产平台" class="headerlink" title="资产平台"></a>资产平台</h3><h5 id="资产平台是由滴滴两轮车B端各资产管理、运营系统沉淀出来的一套业务中台系统。正如名字所表示的，该平台主要服务与资产管理，包括但不限于资产模型定义、资产接入、资产关系管理、资产生命周期定义与管理。资产平台的目的是能够通过配置化或者少量的代码开发，快速得承接各种类型的资产业务。"><a href="#资产平台是由滴滴两轮车B端各资产管理、运营系统沉淀出来的一套业务中台系统。正如名字所表示的，该平台主要服务与资产管理，包括但不限于资产模型定义、资产接入、资产关系管理、资产生命周期定义与管理。资产平台的目的是能够通过配置化或者少量的代码开发，快速得承接各种类型的资产业务。" class="headerlink" title="资产平台是由滴滴两轮车B端各资产管理、运营系统沉淀出来的一套业务中台系统。正如名字所表示的，该平台主要服务与资产管理，包括但不限于资产模型定义、资产接入、资产关系管理、资产生命周期定义与管理。资产平台的目的是能够通过配置化或者少量的代码开发，快速得承接各种类型的资产业务。"></a>资产平台是由滴滴两轮车B端各资产管理、运营系统沉淀出来的一套业务中台系统。正如名字所表示的，该平台主要服务与资产管理，包括但不限于资产模型定义、资产接入、资产关系管理、资产生命周期定义与管理。资产平台的目的是能够通过配置化或者少量的代码开发，快速得承接各种类型的资产业务。</h5><p><img src="/img/note/design/assetSystemDesign.png" alt="资产平台结构设计"></p>
+<h3 id="资产档案中心"><a href="#资产档案中心" class="headerlink" title="资产档案中心"></a>资产档案中心</h3><h5 id="资产档案中心是资产平台的下游服务，记录资产平台（不限于）业务操作日志，以及档案视角的全量资产信息。同时具备资产指标定义和指标处理能力，帮助业务更方便、快速、清晰的看清资产现状。"><a href="#资产档案中心是资产平台的下游服务，记录资产平台（不限于）业务操作日志，以及档案视角的全量资产信息。同时具备资产指标定义和指标处理能力，帮助业务更方便、快速、清晰的看清资产现状。" class="headerlink" title="资产档案中心是资产平台的下游服务，记录资产平台（不限于）业务操作日志，以及档案视角的全量资产信息。同时具备资产指标定义和指标处理能力，帮助业务更方便、快速、清晰的看清资产现状。"></a>资产档案中心是资产平台的下游服务，记录资产平台（不限于）业务操作日志，以及档案视角的全量资产信息。同时具备资产指标定义和指标处理能力，帮助业务更方便、快速、清晰的看清资产现状。</h5><p><img src="/img/note/design/assetSystemDesign6.png" alt="资产平台结构设计"><br><a id="more"></a></p>
+<h2 id="资产平台-1"><a href="#资产平台-1" class="headerlink" title="资产平台"></a>资产平台</h2><h3 id="模块说明"><a href="#模块说明" class="headerlink" title="模块说明"></a>模块说明</h3><h4 id="1、资产描述"><a href="#1、资产描述" class="headerlink" title="1、资产描述"></a>1、资产描述</h4><h5 id="资产平台接入新资产时创建，由mis页面编辑"><a href="#资产平台接入新资产时创建，由mis页面编辑" class="headerlink" title="资产平台接入新资产时创建，由mis页面编辑"></a>资产平台接入新资产时创建，由mis页面编辑</h5><p><img src="/img/note/design/assetSystemDesign1.png" alt="资产平台结构设计"></p>
+<h4 id="2、资产描述"><a href="#2、资产描述" class="headerlink" title="2、资产描述"></a>2、资产描述</h4><h4 id="平台自带静态属性"><a href="#平台自带静态属性" class="headerlink" title="平台自带静态属性"></a>平台自带静态属性</h4><ul>
+<li>城市</li>
+<li>标签（标签内容自定义）</li>
+</ul>
+<h4 id="自定义静态属性、类似枚举"><a href="#自定义静态属性、类似枚举" class="headerlink" title="自定义静态属性、类似枚举"></a>自定义静态属性、类似枚举</h4><ul>
+<li>车型</li>
+<li>锁型</li>
+</ul>
+<h5 id="静态属性通过交互界面管理，业务系统通过接口获取，类似于configcenter"><a href="#静态属性通过交互界面管理，业务系统通过接口获取，类似于configcenter" class="headerlink" title="静态属性通过交互界面管理，业务系统通过接口获取，类似于configcenter"></a>静态属性通过交互界面管理，业务系统通过接口获取，类似于configcenter</h5><h4 id="3、资产属性元信息"><a href="#3、资产属性元信息" class="headerlink" title="3、资产属性元信息"></a>3、资产属性元信息</h4><h5 id="对资产的各个字段的描述信息，关系到资产属性的生成和校验逻辑"><a href="#对资产的各个字段的描述信息，关系到资产属性的生成和校验逻辑" class="headerlink" title="对资产的各个字段的描述信息，关系到资产属性的生成和校验逻辑"></a>对资产的各个字段的描述信息，关系到资产属性的生成和校验逻辑</h5><p><img src="/img/note/design/assetSystemDesign2.png" alt="资产平台结构设计"></p>
+<h4 id="4、资产属性来源"><a href="#4、资产属性来源" class="headerlink" title="4、资产属性来源"></a>4、资产属性来源</h4><h5 id="记录资产属性的生成过程、以及确定校验逻辑"><a href="#记录资产属性的生成过程、以及确定校验逻辑" class="headerlink" title="记录资产属性的生成过程、以及确定校验逻辑"></a>记录资产属性的生成过程、以及确定校验逻辑</h5><h5 id="资产平台业务的扩展和完善，本质上是对资产属性来源的丰富和完善"><a href="#资产平台业务的扩展和完善，本质上是对资产属性来源的丰富和完善" class="headerlink" title="资产平台业务的扩展和完善，本质上是对资产属性来源的丰富和完善"></a>资产平台业务的扩展和完善，本质上是对资产属性来源的丰富和完善</h5><p><img src="/img/note/design/assetSystemDesign3.png" alt="资产平台结构设计"></p>
+<h4 id="5、健康监控"><a href="#5、健康监控" class="headerlink" title="5、健康监控"></a>5、健康监控</h4><h5 id="记录资产运行的业务、系统、健康状况"><a href="#记录资产运行的业务、系统、健康状况" class="headerlink" title="记录资产运行的业务、系统、健康状况"></a>记录资产运行的业务、系统、健康状况</h5><h5 id="作用："><a href="#作用：" class="headerlink" title="作用："></a>作用：</h5><ol>
+<li>mis资产业务状况一览</li>
+<li>资产健康状况一览</li>
+<li>资产数据存储迁移依据</li>
+<li>资产系统优化依据</li>
+</ol>
+<h4 id="6、资产统计"><a href="#6、资产统计" class="headerlink" title="6、资产统计"></a>6、资产统计</h4><h5 id="按照资产属性的统计类型，离线计算或流计算资产数据情况"><a href="#按照资产属性的统计类型，离线计算或流计算资产数据情况" class="headerlink" title="按照资产属性的统计类型，离线计算或流计算资产数据情况"></a>按照资产属性的统计类型，离线计算或流计算资产数据情况</h5><h4 id="7、编码生成"><a href="#7、编码生成" class="headerlink" title="7、编码生成"></a>7、编码生成</h4><h5 id="按照资产编码选择的生成规则生成资产唯一编码。单独提供编码接口或者资产创建时自动生成"><a href="#按照资产编码选择的生成规则生成资产唯一编码。单独提供编码接口或者资产创建时自动生成" class="headerlink" title="按照资产编码选择的生成规则生成资产唯一编码。单独提供编码接口或者资产创建时自动生成"></a>按照资产编码选择的生成规则生成资产唯一编码。单独提供编码接口或者资产创建时自动生成</h5><ul>
+<li>长度控制</li>
+<li>是否有序</li>
+<li>编码组合</li>
+</ul>
+<h4 id="8、操作类型"><a href="#8、操作类型" class="headerlink" title="8、操作类型"></a>8、操作类型</h4><ol>
+<li>资产系统在自己的业务系统中定义，在操作中携带，资产平台不做校验、只做记录</li>
+<li>在资产平台中添加操作记录，在资产操作中携带，可以附带以下逻辑<ol>
+<li>按照操作类型记录资产生命周期</li>
+<li>绑定特殊逻辑，比如标签逻辑、归属城市逻辑</li>
+</ol>
+</li>
+</ol>
+<h4 id="9、查询模板"><a href="#9、查询模板" class="headerlink" title="9、查询模板"></a>9、查询模板</h4><h5 id="定义一次查询返回的资产属性字段，可以是单个资产的部分属性，也可以是多个资产组合而成的属性"><a href="#定义一次查询返回的资产属性字段，可以是单个资产的部分属性，也可以是多个资产组合而成的属性" class="headerlink" title="定义一次查询返回的资产属性字段，可以是单个资产的部分属性，也可以是多个资产组合而成的属性"></a>定义一次查询返回的资产属性字段，可以是单个资产的部分属性，也可以是多个资产组合而成的属性</h5><h5 id="生成模板编号"><a href="#生成模板编号" class="headerlink" title="生成模板编号"></a>生成模板编号</h5><p><img src="/img/note/design/assetSystemDesign4.png" alt="资产平台结构设计"></p>
+<h3 id="存储容器"><a href="#存储容器" class="headerlink" title="存储容器"></a>存储容器</h3><p><img src="/img/note/design/assetSystemDesign5.png" alt="资产平台结构设计"></p>
+<h3 id="数据迁移流程"><a href="#数据迁移流程" class="headerlink" title="数据迁移流程"></a>数据迁移流程</h3><h5 id="原系统情况，多个资产系统共用一套数据源，原资产模型存在诸多不合理之处。"><a href="#原系统情况，多个资产系统共用一套数据源，原资产模型存在诸多不合理之处。" class="headerlink" title="原系统情况，多个资产系统共用一套数据源，原资产模型存在诸多不合理之处。"></a>原系统情况，多个资产系统共用一套数据源，原资产模型存在诸多不合理之处。</h5><p><img src="/img/note/design/assetSystemDesign7.png" alt="资产平台结构设计"></p>
+<h5 id="数据源与系统迁移流程"><a href="#数据源与系统迁移流程" class="headerlink" title="数据源与系统迁移流程"></a>数据源与系统迁移流程</h5><p><img src="/img/note/design/assetSystemDesign8.png" alt="资产平台结构设计"></p>
+<h3 id="分布式数据一致性方案"><a href="#分布式数据一致性方案" class="headerlink" title="分布式数据一致性方案"></a>分布式数据一致性方案</h3><h4 id="方案一（通过事务管理，关联运营事务与资产事务）"><a href="#方案一（通过事务管理，关联运营事务与资产事务）" class="headerlink" title="方案一（通过事务管理，关联运营事务与资产事务）"></a>方案一（通过事务管理，关联运营事务与资产事务）</h4><p><img src="/img/note/design/assetSystemDesign9.png" alt="资产平台结构设计"></p>
+<h4 id="方案二（通过sdk包装，保持运营事务与资产事务粒度一致）"><a href="#方案二（通过sdk包装，保持运营事务与资产事务粒度一致）" class="headerlink" title="方案二（通过sdk包装，保持运营事务与资产事务粒度一致）"></a>方案二（通过sdk包装，保持运营事务与资产事务粒度一致）</h4><p><img src="/img/note/design/assetSystemDesign10.png" alt="资产平台结构设计"></p>
+<h2 id="资产档案中心-1"><a href="#资产档案中心-1" class="headerlink" title="资产档案中心"></a>资产档案中心</h2><h3 id="数据收集、实时计算模块"><a href="#数据收集、实时计算模块" class="headerlink" title="数据收集、实时计算模块"></a>数据收集、实时计算模块</h3><p><img src="/img/note/design/assetSystemDesign11.png" alt="资产平台结构设计"></p>
+<ul>
+<li>触发层：指标变更的触发事件，包含事件本身以及事件内容</li>
+<li>适配层：基于已有业务，让业务方按照我们的事件模型定义属性不太现实，这里使用适配层转换成档案中心统一模型</li>
+<li>流模型：对事件流的描述信息，数据来源</li>
+<li>档案模型：对档案中心的数据描述，大致有资产基本信息、资产指标、资产日志（生命周期）。基于各种档案类型，分别抽象档案模型，以及对具体的档案模型实现执行接口；</li>
+<li>模型转换：本质上是将流模型 → 档案模型，并调用具体的档案变更接口中间的处理过程。</li>
+</ul>
+<h3 id="示例："><a href="#示例：" class="headerlink" title="示例："></a>示例：</h3><h4 id="事件说明：一次路面签收动作，涉及资产档案中心3个具体档案变动："><a href="#事件说明：一次路面签收动作，涉及资产档案中心3个具体档案变动：" class="headerlink" title="事件说明：一次路面签收动作，涉及资产档案中心3个具体档案变动："></a>事件说明：一次路面签收动作，涉及资产档案中心3个具体档案变动：</h4><ol>
+<li>资产状态变更（资产基本信息）</li>
+<li>城市投放车辆增加（指标）</li>
+<li>资产生命周期记录（日志）</li>
+</ol>
+<h4 id="档案模型定义："><a href="#档案模型定义：" class="headerlink" title="档案模型定义："></a>档案模型定义：</h4><h5 id="档案基础模型："><a href="#档案基础模型：" class="headerlink" title="档案基础模型："></a>档案基础模型：</h5><pre><code class="lang-java">/**
+ * @author wangwenxiang@didiglobal.com
+ * 档案
+ */
+public interface Record {
+
+    /**
+     * 资产类型
+     */
+    int assetType();
+
+    /**
+     * 数据源
+     */
+    DataSource dataSource();
+
+}
+</code></pre>
+<h5 id="基础信息类档案："><a href="#基础信息类档案：" class="headerlink" title="基础信息类档案："></a>基础信息类档案：</h5><pre><code class="lang-java">/**
+ * @author wangwenxiang@didiglobal.com
+ * 基本信息类 档案
+ * C 资产对象标识
+ * T 档案属性
+ */
+public interface AssetInfoRecord&lt;C, T&gt; extends Record{
+
+    /**
+     * 查询
+     */
+    T query(C c);
+
+    /**
+     * 变更
+     */
+    boolean update(List&lt;C&gt; cList, T t);
+
+}
+</code></pre>
+<h5 id="指标类档案："><a href="#指标类档案：" class="headerlink" title="指标类档案："></a>指标类档案：</h5><pre><code class="lang-java">/**
+ * @author wangwenxiang@didiglobal.com
+ * 基本信息类 档案
+ * C 指标
+ * T 档案属性
+ */
+public interface IndexRecord&lt;C, T&gt; extends Record{
+
+    /**
+     * 查询
+     */
+    T query(C c);
+
+    /**
+     * 指标添加
+     */
+    boolean insert(List&lt;C&gt; cList, T t);
+
+    /**
+     * 指标覆盖
+     */
+    boolean cover(List&lt;C&gt; cList, T t);
+
+}
+</code></pre>
+<h5 id="日志类型档案："><a href="#日志类型档案：" class="headerlink" title="日志类型档案："></a>日志类型档案：</h5><pre><code class="lang-java">/**
+ * @author wangwenxiang@didiglobal.com
+ * 基本信息类 档案
+ * C 查询条件
+ * T 日志
+ */
+public interface LogRecord&lt;C, T&gt; extends Record{
+
+    /**
+     * 查询
+     */
+    List&lt;T&gt; query(C c);
+
+    /**
+     * 日志记录
+     */
+    boolean logRecord(T t);
+
+}
+</code></pre>
+<h4 id="流模型定义："><a href="#流模型定义：" class="headerlink" title="流模型定义："></a>流模型定义：</h4><ul>
+<li>资产信息：车辆id</li>
+<li>上下文信息：时间、地点、运维人员、资产快照</li>
+<li>操作变更：状态变更后值</li>
+</ul>
+<h4 id="模型转换规则："><a href="#模型转换规则：" class="headerlink" title="模型转换规则："></a>模型转换规则：</h4><h5 id="因为该事件导致3个档案信息发生变化，因此绑定3个规则，每个规则在生成的时候需要绑定档案模型以及具体变更方法："><a href="#因为该事件导致3个档案信息发生变化，因此绑定3个规则，每个规则在生成的时候需要绑定档案模型以及具体变更方法：" class="headerlink" title="因为该事件导致3个档案信息发生变化，因此绑定3个规则，每个规则在生成的时候需要绑定档案模型以及具体变更方法："></a>因为该事件导致3个档案信息发生变化，因此绑定3个规则，每个规则在生成的时候需要绑定档案模型以及具体变更方法：</h5><h5 id="1、签收导致状态变更规则："><a href="#1、签收导致状态变更规则：" class="headerlink" title="1、签收导致状态变更规则："></a>1、签收导致状态变更规则：</h5><ul>
+<li>绑定方法：AssetInfoRecord.update</li>
+<li>对象计算：根据流模型的资产信息，找到具体车辆id</li>
+<li>结果量计算：根据流模型的操作变更信息：状态变更结果值</li>
+</ul>
+<h5 id="2、城市投放车辆增加"><a href="#2、城市投放车辆增加" class="headerlink" title="2、城市投放车辆增加"></a>2、城市投放车辆增加</h5><ul>
+<li>绑定方法：IndexRecord.insert</li>
+<li>对象计算：根据流模型的上下文信息，找到车型信息和城市信息</li>
+<li>结果量计算：根据资产信息：计算车辆数量</li>
+</ul>
+<h5 id="3、资产生命周期记录"><a href="#3、资产生命周期记录" class="headerlink" title="3、资产生命周期记录"></a>3、资产生命周期记录</h5><ul>
+<li>绑定方法：LogRecord.logRecord</li>
+<li>对象计算：根据流模型的上下文信息，找到资产类型</li>
+<li>结果量计算：将流模型转换成资产生命周期模型</li>
+</ul>
+<p><img src="/img/note/design/assetSystemDesign12.png" alt="资产平台结构设计"></p>
+</div>
+    </article>
+</section>
+
+<div class="clear"></div>
+
+
+
+    <footer id="footer">
+  <div class="foot">
+    <!-- <a id="gotop">TOP</a> -->
+    <!-- <div id="copyright">Copyright &copy; 2016 <a href="#" target="_blank">WangWenXiang</a><br>
+       Power by <a href="https://github.com/winx402" target="_blank">Github Pages</a> |
+      <a href="https://hexo.io/" target="_blank">HEXO</a></div> -->
+      <div id="copyright">还没想好要写什么</div>
+  </div>
+</footer>
+
+</div>
+<div class="img-view">
+    <span><img src="/img/guide.jpeg"></span>
+</div>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

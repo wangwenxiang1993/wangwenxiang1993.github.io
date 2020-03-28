@@ -1,0 +1,249 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+    <title>winx&#39;blog</title>
+</head>
+<body>
+<div class="animated" id="info-min">
+    <div id="guide">
+    <div class="guide-button " _href="/tags/index/">首页</div>
+    <div class="guide-button " _href="/tags/tech/">技术</div>
+    <!--<div class="guide-button " _href="/tags/life/">生活</div>-->
+    <div class="guide-button " _href="/categories/read/">阅读</div>
+    <img src="/img/photo.png">
+</div>
+</div>
+<div id="wrap">
+    
+  
+    
+      <div id="big-title" style="color: #666">
+    
+
+  <div id="title-name">spring boot 动态启动与加载</div><br>
+  <div id="something">2017/08/31</div>
+</div>
+  <section id="content-specific">
+    <article class="post">
+        <div class="con"><h5 id="通常情况下，我们通过XML或者Annotation两种方式配置Bean-Definition。从Spring-3-0开始，增加了一种新的途径来配置Bean-Definition，这就是通过Java-Code配置Bean-Definition。"><a href="#通常情况下，我们通过XML或者Annotation两种方式配置Bean-Definition。从Spring-3-0开始，增加了一种新的途径来配置Bean-Definition，这就是通过Java-Code配置Bean-Definition。" class="headerlink" title="通常情况下，我们通过XML或者Annotation两种方式配置Bean Definition。从Spring 3.0开始，增加了一种新的途径来配置Bean Definition，这就是通过Java Code配置Bean Definition。"></a>通常情况下，我们通过XML或者Annotation两种方式配置Bean Definition。从Spring 3.0开始，增加了一种新的途径来配置Bean Definition，这就是通过Java Code配置Bean Definition。</h5><a id="more"></a>
+<h4 id="Java-Code配置与XML和Annotation两种配置方式不同点在于："><a href="#Java-Code配置与XML和Annotation两种配置方式不同点在于：" class="headerlink" title="Java Code配置与XML和Annotation两种配置方式不同点在于："></a>Java Code配置与XML和Annotation两种配置方式不同点在于：</h4><h5 id="前两种方式XML和Annotation的配置方式为预定义方式，即开发人员通过XML文件或者Annotation预定义配置Bean的各种属性后，启动Spring容器，Spring容器会首先解析这些配置属性，生成对应的Bean-Definition-装入到DefaultListtableBeanFactory对象的属性容器中，以此同时，Spring框架也会定义内部使用的Bean定义，如Bean名为：org-springframework-context-annotation-internalConfigurationAnnotationProcessor的-ConfigurationClassPostProcessor-定义。而后此刻不会做任何Bean-Definition的解析动作，Spring框架会根据前两种配置，过滤出BeanDefinitionRegistryPostProcessor-类型的Bean定义，并通过Spring框架生成对应的Bean对象（如-ConfigurationClassPostProcessor-实例）。结合-Spring-上下文源码可知这个对象是一个-processor-类型工具类，Spring容器会在实例化开发人员所定义的-Bean-前先调用该-processor-的-postProcessBeanDefinitionRegistry-…-方法。此处实现基于-Java-Code-配置Bean-Definition的处理。"><a href="#前两种方式XML和Annotation的配置方式为预定义方式，即开发人员通过XML文件或者Annotation预定义配置Bean的各种属性后，启动Spring容器，Spring容器会首先解析这些配置属性，生成对应的Bean-Definition-装入到DefaultListtableBeanFactory对象的属性容器中，以此同时，Spring框架也会定义内部使用的Bean定义，如Bean名为：org-springframework-context-annotation-internalConfigurationAnnotationProcessor的-ConfigurationClassPostProcessor-定义。而后此刻不会做任何Bean-Definition的解析动作，Spring框架会根据前两种配置，过滤出BeanDefinitionRegistryPostProcessor-类型的Bean定义，并通过Spring框架生成对应的Bean对象（如-ConfigurationClassPostProcessor-实例）。结合-Spring-上下文源码可知这个对象是一个-processor-类型工具类，Spring容器会在实例化开发人员所定义的-Bean-前先调用该-processor-的-postProcessBeanDefinitionRegistry-…-方法。此处实现基于-Java-Code-配置Bean-Definition的处理。" class="headerlink" title="前两种方式XML和Annotation的配置方式为预定义方式，即开发人员通过XML文件或者Annotation预定义配置Bean的各种属性后，启动Spring容器，Spring容器会首先解析这些配置属性，生成对应的Bean Definition,装入到DefaultListtableBeanFactory对象的属性容器中，以此同时，Spring框架也会定义内部使用的Bean定义，如Bean名为：org.springframework.context.annotation.internalConfigurationAnnotationProcessor的 ConfigurationClassPostProcessor 定义。而后此刻不会做任何Bean Definition的解析动作，Spring框架会根据前两种配置，过滤出BeanDefinitionRegistryPostProcessor 类型的Bean定义，并通过Spring框架生成对应的Bean对象（如 ConfigurationClassPostProcessor 实例）。结合 Spring 上下文源码可知这个对象是一个 processor 类型工具类，Spring容器会在实例化开发人员所定义的 Bean 前先调用该 processor 的 postProcessBeanDefinitionRegistry(…) 方法。此处实现基于 Java Code 配置Bean Definition的处理。"></a>前两种方式XML和Annotation的配置方式为预定义方式，即开发人员通过XML文件或者Annotation预定义配置Bean的各种属性后，启动Spring容器，Spring容器会首先解析这些配置属性，生成对应的Bean Definition,装入到<code>DefaultListtableBeanFactory</code>对象的属性容器中，以此同时，Spring框架也会定义内部使用的Bean定义，如Bean名为：<code>org.springframework.context.annotation.internalConfigurationAnnotationProcessor</code>的 <code>ConfigurationClassPostProcessor</code> 定义。而后此刻不会做任何Bean Definition的解析动作，Spring框架会根据前两种配置，过滤出<code>BeanDefinitionRegistryPostProcessor</code> 类型的Bean定义，并通过Spring框架生成对应的Bean对象（如 <code>ConfigurationClassPostProcessor</code> 实例）。结合 Spring 上下文源码可知这个对象是一个 processor 类型工具类，<u>Spring容器会在实例化开发人员所定义的 Bean 前先调用该 processor 的 postProcessBeanDefinitionRegistry(…) 方法。此处实现基于 Java Code 配置Bean Definition的处理</u>。</h5><h5 id="基于-Java-Code-的配置方式，其执行原理不同于前两种。它是在-Spring-框架已经解析了基于-XML-和-Annotation-配置后，通过加入-BeanDefinitionRegistryPostProcessor-类型的-processor-来处理配置信息，让开发人员通过-Java-编程方式定义一个-Java-对象。其优点在于可以将配置信息集中在一定数量的-Java-对象中，同时通过-Java-编程方式，比基于-Annotation-方式具有更高的灵活性。并且该配置方式给开发人员提供了一种非常好的范例来增加用户自定义的解析工具类。其主要缺点在于与-Java-代码结合紧密，配置信息的改变需要重新编译-Java-代码，另外这是一种新引入的解析方式，需要一定的学习成本。"><a href="#基于-Java-Code-的配置方式，其执行原理不同于前两种。它是在-Spring-框架已经解析了基于-XML-和-Annotation-配置后，通过加入-BeanDefinitionRegistryPostProcessor-类型的-processor-来处理配置信息，让开发人员通过-Java-编程方式定义一个-Java-对象。其优点在于可以将配置信息集中在一定数量的-Java-对象中，同时通过-Java-编程方式，比基于-Annotation-方式具有更高的灵活性。并且该配置方式给开发人员提供了一种非常好的范例来增加用户自定义的解析工具类。其主要缺点在于与-Java-代码结合紧密，配置信息的改变需要重新编译-Java-代码，另外这是一种新引入的解析方式，需要一定的学习成本。" class="headerlink" title="基于 Java Code 的配置方式，其执行原理不同于前两种。它是在 Spring 框架已经解析了基于 XML 和 Annotation 配置后，通过加入 BeanDefinitionRegistryPostProcessor 类型的 processor 来处理配置信息，让开发人员通过 Java 编程方式定义一个 Java 对象。其优点在于可以将配置信息集中在一定数量的 Java 对象中，同时通过 Java 编程方式，比基于 Annotation 方式具有更高的灵活性。并且该配置方式给开发人员提供了一种非常好的范例来增加用户自定义的解析工具类。其主要缺点在于与 Java 代码结合紧密，配置信息的改变需要重新编译 Java 代码，另外这是一种新引入的解析方式，需要一定的学习成本。"></a>基于 Java Code 的配置方式，其执行原理不同于前两种。它是在 Spring 框架已经解析了基于 XML 和 Annotation 配置后，通过加入 BeanDefinitionRegistryPostProcessor 类型的 processor 来处理配置信息，让开发人员通过 Java 编程方式定义一个 Java 对象。其优点在于可以将配置信息集中在一定数量的 Java 对象中，同时通过 Java 编程方式，比基于 Annotation 方式具有更高的灵活性。并且该配置方式给开发人员提供了一种非常好的范例来增加用户自定义的解析工具类。其主要缺点在于与 Java 代码结合紧密，配置信息的改变需要重新编译 Java 代码，另外这是一种新引入的解析方式，需要一定的学习成本。</h5><p><br></p>
+<h4 id="提及一点的就是，Spring框架有3个主要的Hook类，分别是："><a href="#提及一点的就是，Spring框架有3个主要的Hook类，分别是：" class="headerlink" title="提及一点的就是，Spring框架有3个主要的Hook类，分别是："></a>提及一点的就是，Spring框架有3个主要的Hook类，分别是：</h4><p><code>org.springframework.context.ApplicationContextAware</code></p>
+<h5 id="它的setApplicationContext-方法将在Spring启动之前第一个被调用。"><a href="#它的setApplicationContext-方法将在Spring启动之前第一个被调用。" class="headerlink" title="它的setApplicationContext 方法将在Spring启动之前第一个被调用。"></a>它的setApplicationContext 方法将在Spring启动之前第一个被调用。</h5><p><code>org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor</code></p>
+<h5 id="它的postProcessBeanDefinitionRegistry-和-postProcessBeanFactory-方法是第二和第三被调用，它们在Bean初始化创建之前启动，如果Spring的bean需要的其他第三方中的组件，我们在这里将其注入给Spring。"><a href="#它的postProcessBeanDefinitionRegistry-和-postProcessBeanFactory-方法是第二和第三被调用，它们在Bean初始化创建之前启动，如果Spring的bean需要的其他第三方中的组件，我们在这里将其注入给Spring。" class="headerlink" title="它的postProcessBeanDefinitionRegistry 和 postProcessBeanFactory 方法是第二和第三被调用，它们在Bean初始化创建之前启动，如果Spring的bean需要的其他第三方中的组件，我们在这里将其注入给Spring。"></a>它的postProcessBeanDefinitionRegistry 和 postProcessBeanFactory 方法是第二和第三被调用，它们在Bean初始化创建之前启动，如果Spring的bean需要的其他第三方中的组件，我们在这里将其注入给Spring。</h5><p><code>org.springframework.context.ApplicationListener</code><br>用于在初始化完成后做一些事情，当Spring所有XML或元注解的Bean都启动被创建成功了，这时会调用它的唯一方法onApplicationEvent。<br><br></p>
+<h4 id="通过-BeanDefinitionRegistryPostProcessor-加载自己的bean的demo："><a href="#通过-BeanDefinitionRegistryPostProcessor-加载自己的bean的demo：" class="headerlink" title="通过 BeanDefinitionRegistryPostProcessor 加载自己的bean的demo："></a>通过 BeanDefinitionRegistryPostProcessor 加载自己的bean的demo：</h4><pre><code class="lang-java">import org.springframework.beans.BeansException;
+import org.springframework.beans.MutablePropertyValues;
+import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
+import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.BeanDefinitionHolder;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
+
+/**
+ * @author winx
+ * @create 2017-09-01.
+ */
+@Configuration
+public class MyBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
+
+    /**
+     * 先执行：postProcessBeanDefinitionRegistry()方法
+     * 通过Class对象，注册自己的 BeanDefinition
+     */
+    @Override
+    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+        try {
+            AnnotatedBeanDefinition annotatedBeanDefinition = new AnnotatedGenericBeanDefinition(Class.forName(&quot;&quot;));
+            BeanDefinitionHolder beanDefinitionHolder = new BeanDefinitionHolder(annotatedBeanDefinition, &quot;beanName&quot;);
+            BeanDefinitionReaderUtils.registerBeanDefinition(beanDefinitionHolder, registry);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 再执行：postProcessBeanFactory()方法。
+     * 通过 beanName 拿到注册后的 BeanDefinition
+     * 然后加入自定义属性，BeanDefinition 会在初始化bean时，将 Property 键值对插入到之前的Class对象属性中。
+     */
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        BeanDefinition beanDefinition = beanFactory.getBeanDefinition(&quot;beanName&quot;);
+        MutablePropertyValues mutablePropertyValues = beanDefinition.getPropertyValues();
+        //加入属性.
+        mutablePropertyValues.addPropertyValue(&quot;username&quot;, &quot;root&quot;);
+    }
+}
+</code></pre>
+<h5 id="Configuration注解提示spring-boot通过该类加载bean"><a href="#Configuration注解提示spring-boot通过该类加载bean" class="headerlink" title="@Configuration注解提示spring boot通过该类加载bean"></a><code>@Configuration</code>注解提示spring boot通过该类加载bean</h5><h5 id="postProcessBeanDefinitionRegistry-通过Class对象，注册自己的-BeanDefinition"><a href="#postProcessBeanDefinitionRegistry-通过Class对象，注册自己的-BeanDefinition" class="headerlink" title="postProcessBeanDefinitionRegistry() 通过Class对象，注册自己的 BeanDefinition"></a><code>postProcessBeanDefinitionRegistry()</code> 通过Class对象，注册自己的 BeanDefinition</h5><h5 id="postProcessBeanFactory-方法会在postProcessBeanDefinitionRegistry-之后执行，-通过beanFactory拿到-BeanDefinition-后加入属性，这一步可以跳过。"><a href="#postProcessBeanFactory-方法会在postProcessBeanDefinitionRegistry-之后执行，-通过beanFactory拿到-BeanDefinition-后加入属性，这一步可以跳过。" class="headerlink" title="postProcessBeanFactory()方法会在postProcessBeanDefinitionRegistry()之后执行， 通过beanFactory拿到 BeanDefinition 后加入属性，这一步可以跳过。"></a><code>postProcessBeanFactory()</code>方法会在<code>postProcessBeanDefinitionRegistry()</code>之后执行， 通过beanFactory拿到 BeanDefinition 后加入属性，这一步可以跳过。</h5><h3 id="实际项目需求"><a href="#实际项目需求" class="headerlink" title="实际项目需求"></a>实际项目需求</h3><h5 id="目前项目分为线上环境和dev环境，项目本身只支持http服务，因为线上环境有nginx做反向代理，所以用http和https均能正常访问线上服务。但是本地环境相对简单，不能支持https服务。先在需要根据环境的不同。动态的扩张spring-boot的多连接器设置。当环境为dev时，即加载多连接器，分别用两个端口提供http和https服务。当环境不为dev时，只加载默认http即可。"><a href="#目前项目分为线上环境和dev环境，项目本身只支持http服务，因为线上环境有nginx做反向代理，所以用http和https均能正常访问线上服务。但是本地环境相对简单，不能支持https服务。先在需要根据环境的不同。动态的扩张spring-boot的多连接器设置。当环境为dev时，即加载多连接器，分别用两个端口提供http和https服务。当环境不为dev时，只加载默认http即可。" class="headerlink" title="目前项目分为线上环境和dev环境，项目本身只支持http服务，因为线上环境有nginx做反向代理，所以用http和https均能正常访问线上服务。但是本地环境相对简单，不能支持https服务。先在需要根据环境的不同。动态的扩张spring boot的多连接器设置。当环境为dev时，即加载多连接器，分别用两个端口提供http和https服务。当环境不为dev时，只加载默认http即可。"></a>目前项目分为线上环境和dev环境，项目本身只支持http服务，因为线上环境有nginx做反向代理，所以用http和https均能正常访问线上服务。但是本地环境相对简单，不能支持https服务。先在需要根据环境的不同。动态的扩张spring boot的多连接器设置。当环境为dev时，即加载多连接器，分别用两个端口提供http和https服务。当环境不为dev时，只加载默认http即可。</h5><h5 id="根据这些需求，通过xml或者annotation去定义bean都不太合适。只能是通过java-code去判断环境并动态加载。"><a href="#根据这些需求，通过xml或者annotation去定义bean都不太合适。只能是通过java-code去判断环境并动态加载。" class="headerlink" title="根据这些需求，通过xml或者annotation去定义bean都不太合适。只能是通过java code去判断环境并动态加载。"></a>根据这些需求，通过xml或者annotation去定义bean都不太合适。只能是通过java code去判断环境并动态加载。</h5><h5 id="省去spring-boot支持https以及多连接器的配置，相关的代码网络上很多。直接说遇到的主要问题吧。上面的demo通过mutablePropertyValues-addPropertyValue-quot-key-quot-quot-root-quot-的方式为目标class定义属性，但是要求属性key必须有相应的set方法。"><a href="#省去spring-boot支持https以及多连接器的配置，相关的代码网络上很多。直接说遇到的主要问题吧。上面的demo通过mutablePropertyValues-addPropertyValue-quot-key-quot-quot-root-quot-的方式为目标class定义属性，但是要求属性key必须有相应的set方法。" class="headerlink" title="省去spring boot支持https以及多连接器的配置，相关的代码网络上很多。直接说遇到的主要问题吧。上面的demo通过mutablePropertyValues.addPropertyValue(&quot;key&quot;, &quot;root&quot;);的方式为目标class定义属性，但是要求属性key必须有相应的set方法。"></a>省去spring boot支持https以及多连接器的配置，相关的代码网络上很多。直接说遇到的主要问题吧。上面的demo通过<code>mutablePropertyValues.addPropertyValue(&quot;key&quot;, &quot;root&quot;);</code>的方式为目标class定义属性，但是要求属性key必须有相应的set方法。</h5><pre><code class="lang-java">@Configuration
+public class HttpsBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor, EnvironmentAware {
+
+    private String profile;
+
+    @Override
+    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry beanDefinitionRegistry) throws BeansException {
+        if (&quot;dev&quot;.equals(profile)){
+            AnnotatedBeanDefinition annotatedBeanDefinition = new AnnotatedGenericBeanDefinition(TomcatEmbeddedServletContainerFactory.class);
+            BeanDefinitionHolder beanDefinitionHolder = new BeanDefinitionHolder(annotatedBeanDefinition, &quot;tomcatEmbeddedServletContainerFactory&quot;);
+            BeanDefinitionReaderUtils.registerBeanDefinition(beanDefinitionHolder, beanDefinitionRegistry);
+        }
+    }
+
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
+        MutablePropertyValues tomcatEmbeddedServletContainerFactory = configurableListableBeanFactory.getBeanDefinition(&quot;tomcatEmbeddedServletContainerFactory&quot;).getPropertyValues();
+        tomcatEmbeddedServletContainerFactory.addPropertyValue(&quot;additionalTomcatConnectors&quot;, getConnector());
+    }
+
+    public Connector getConnector(){
+        Connector connector = new Connector(&quot;org.apache.coyote.http11.Http11NioProtocol&quot;);
+        Http11NioProtocol protocol = (Http11NioProtocol) connector.getProtocolHandler();
+        connector.setScheme(&quot;https&quot;);
+        connector.setSecure(true);
+        connector.setPort(8443);
+        protocol.setSSLEnabled(true);
+        protocol.setKeystoreFile(&quot;/Users/winx/.keystore&quot;);
+        protocol.setKeystorePass(&quot;123456&quot;);
+        protocol.setTruststoreFile(&quot;/Users/winx/.keystore&quot;);
+        protocol.setTruststorePass(&quot;123456&quot;);
+        protocol.setKeyAlias(&quot;tomcat&quot;);
+        return connector;
+    }
+
+    @Override
+    public void setEnvironment(Environment environment) {
+        profile = environment.getProperty(&quot;profile&quot;);
+    }
+}
+</code></pre>
+<h5 id="在拿到MutablePropertyValues之后，想要给TomcatEmbeddedServletContainerFactory对象设置additionalTomcatConnectors属性，Connector中包含了https关键信息的设置。之后报错如下："><a href="#在拿到MutablePropertyValues之后，想要给TomcatEmbeddedServletContainerFactory对象设置additionalTomcatConnectors属性，Connector中包含了https关键信息的设置。之后报错如下：" class="headerlink" title="在拿到MutablePropertyValues之后，想要给TomcatEmbeddedServletContainerFactory对象设置additionalTomcatConnectors属性，Connector中包含了https关键信息的设置。之后报错如下："></a>在拿到<code>MutablePropertyValues</code>之后，想要给<code>TomcatEmbeddedServletContainerFactory</code>对象设置<code>additionalTomcatConnectors</code>属性，Connector中包含了https关键信息的设置。之后报错如下：</h5><pre><code>org.springframework.context.ApplicationContextException: Unable to start embedded container; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name &#39;tomcatEmbeddedServletContainerFactory&#39;: Error setting property values; nested exception is org.springframework.beans.NotWritablePropertyException: Invalid property &#39;additionalTomcatConnectors&#39; of bean class [org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory]: Bean property &#39;additionalTomcatConnectors&#39; is not writable or has an invalid setter method. Does the parameter type of the setter match the return type of the getter?
+    at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.onRefresh(EmbeddedWebApplicationContext.java:133) ~[spring-boot-1.3.6.RELEASE.jar:1.3.6.RELEASE]
+    at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:532) ~[spring-context-4.2.7.RELEASE.jar:4.2.7.RELEASE]
+    at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.refresh(EmbeddedWebApplicationContext.java:118) ~[spring-boot-1.3.6.RELEASE.jar:1.3.6.RELEASE]
+    at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:760) [spring-boot-1.3.6.RELEASE.jar:1.3.6.RELEASE]
+    at org.springframework.boot.SpringApplication.createAndRefreshContext(SpringApplication.java:360) [spring-boot-1.3.6.RELEASE.jar:1.3.6.RELEASE]
+    at org.springframework.boot.SpringApplication.run(SpringApplication.java:306) [spring-boot-1.3.6.RELEASE.jar:1.3.6.RELEASE]
+    at org.springframework.boot.SpringApplication.run(SpringApplication.java:1185) [spring-boot-1.3.6.RELEASE.jar:1.3.6.RELEASE]
+    at org.springframework.boot.SpringApplication.run(SpringApplication.java:1174) [spring-boot-1.3.6.RELEASE.jar:1.3.6.RELEASE]
+    at com.winx.es.metis.RunMetis.main(RunMetis.java:47) [classes/:na]
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name &#39;tomcatEmbeddedServletContainerFactory&#39;: Error setting property values; nested exception is org.springframework.beans.NotWritablePropertyException: Invalid property &#39;additionalTomcatConnectors&#39; of bean class [org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory]: Bean property &#39;additionalTomcatConnectors&#39; is not writable or has an invalid setter method. Does the parameter type of the setter match the return type of the getter?
+    at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1518) ~[spring-beans-4.2.7.RELEASE.jar:4.2.7.RELEASE]
+    at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1226) ~[spring-beans-4.2.7.RELEASE.jar:4.2.7.RELEASE]
+    at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:543) ~[spring-beans-4.2.7.RELEASE.jar:4.2.7.RELEASE]
+    at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:482) ~[spring-beans-4.2.7.RELEASE.jar:4.2.7.RELEASE]
+    at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:306) ~[spring-beans-4.2.7.RELEASE.jar:4.2.7.RELEASE]
+    at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230) ~[spring-beans-4.2.7.RELEASE.jar:4.2.7.RELEASE]
+    at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:302) ~[spring-beans-4.2.7.RELEASE.jar:4.2.7.RELEASE]
+    at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202) ~[spring-beans-4.2.7.RELEASE.jar:4.2.7.RELEASE]
+    at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.getEmbeddedServletContainerFactory(EmbeddedWebApplicationContext.java:195) ~[spring-boot-1.3.6.RELEASE.jar:1.3.6.RELEASE]
+    at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.createEmbeddedServletContainer(EmbeddedWebApplicationContext.java:158) ~[spring-boot-1.3.6.RELEASE.jar:1.3.6.RELEASE]
+    at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.onRefresh(EmbeddedWebApplicationContext.java:130) ~[spring-boot-1.3.6.RELEASE.jar:1.3.6.RELEASE]
+    ... 8 common frames omitted
+Caused by: org.springframework.beans.NotWritablePropertyException: Invalid property &#39;additionalTomcatConnectors&#39; of bean class [org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory]: Bean property &#39;additionalTomcatConnectors&#39; is not writable or has an invalid setter method. Does the parameter type of the setter match the return type of the getter?
+    at org.springframework.beans.BeanWrapperImpl.createNotWritablePropertyException(BeanWrapperImpl.java:230) ~[spring-beans-4.2.7.RELEASE.jar:4.2.7.RELEASE]
+    at org.springframework.beans.AbstractNestablePropertyAccessor.setPropertyValue(AbstractNestablePropertyAccessor.java:423) ~[spring-beans-4.2.7.RELEASE.jar:4.2.7.RELEASE]
+    at org.springframework.beans.AbstractNestablePropertyAccessor.setPropertyValue(AbstractNestablePropertyAccessor.java:280) ~[spring-beans-4.2.7.RELEASE.jar:4.2.7.RELEASE]
+    at org.springframework.beans.AbstractPropertyAccessor.setPropertyValues(AbstractPropertyAccessor.java:95) ~[spring-beans-4.2.7.RELEASE.jar:4.2.7.RELEASE]
+    at org.springframework.beans.AbstractPropertyAccessor.setPropertyValues(AbstractPropertyAccessor.java:75) ~[spring-beans-4.2.7.RELEASE.jar:4.2.7.RELEASE]
+    at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyPropertyValues(AbstractAutowireCapableBeanFactory.java:1514) ~[spring-beans-4.2.7.RELEASE.jar:4.2.7.RELEASE]
+    ... 18 common frames omitted
+</code></pre><h5 id="关键错误信息：Bean-property-39-additionalTomcatConnectors-39-is-not-writable-or-has-an-invalid-setter-method-Does-the-parameter-type-of-the-setter-match-the-return-type-of-the-getter-，没有权限写入以及没有找到相应的个体方法。"><a href="#关键错误信息：Bean-property-39-additionalTomcatConnectors-39-is-not-writable-or-has-an-invalid-setter-method-Does-the-parameter-type-of-the-setter-match-the-return-type-of-the-getter-，没有权限写入以及没有找到相应的个体方法。" class="headerlink" title="关键错误信息：Bean property &#39;additionalTomcatConnectors&#39; is not writable or has an invalid setter method. Does the parameter type of the setter match the return type of the getter?，没有权限写入以及没有找到相应的个体方法。"></a><strong>关键错误信息</strong>：<code>Bean property &#39;additionalTomcatConnectors&#39; is not writable or has an invalid setter method. Does the parameter type of the setter match the return type of the getter?</code>，没有权限写入以及没有找到相应的个体方法。</h5><h5 id="查看TomcatEmbeddedServletContainerFactory源码后发现其相应的设置方法如下："><a href="#查看TomcatEmbeddedServletContainerFactory源码后发现其相应的设置方法如下：" class="headerlink" title="查看TomcatEmbeddedServletContainerFactory源码后发现其相应的设置方法如下："></a>查看<code>TomcatEmbeddedServletContainerFactory</code>源码后发现其相应的设置方法如下：</h5><pre><code class="lang-java">public void addAdditionalTomcatConnectors(Connector... connectors) {
+    Assert.notNull(connectors, &quot;Connectors must not be null&quot;);
+    this.additionalTomcatConnectors.addAll(Arrays.asList(connectors));
+}
+</code></pre>
+<h5 id="顿时觉得坑爹的add啊，之后在Bean-Definition的私有属性设置，以及通过方法设置属性值的方向去尝试解决问题，没有任何效果。几乎快要绝望的时候，突然灵机一动，为什么我不能自己定义一个不需要后置设置属性的TomcatEmbeddedServletContainerFactory呢，于是有了下面的代码："><a href="#顿时觉得坑爹的add啊，之后在Bean-Definition的私有属性设置，以及通过方法设置属性值的方向去尝试解决问题，没有任何效果。几乎快要绝望的时候，突然灵机一动，为什么我不能自己定义一个不需要后置设置属性的TomcatEmbeddedServletContainerFactory呢，于是有了下面的代码：" class="headerlink" title="顿时觉得坑爹的add啊，之后在Bean Definition的私有属性设置，以及通过方法设置属性值的方向去尝试解决问题，没有任何效果。几乎快要绝望的时候，突然灵机一动，为什么我不能自己定义一个不需要后置设置属性的TomcatEmbeddedServletContainerFactory呢，于是有了下面的代码："></a>顿时觉得坑爹的add啊，之后在Bean Definition的私有属性设置，以及通过方法设置属性值的方向去尝试解决问题，没有任何效果。几乎快要绝望的时候，突然灵机一动，为什么我不能自己定义一个不需要后置设置属性的<code>TomcatEmbeddedServletContainerFactory</code>呢，于是有了下面的代码：</h5><pre><code class="lang-java">@Configuration
+public class HttpsBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor, EnvironmentAware {
+
+    private String profile;
+
+    @Override
+    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry beanDefinitionRegistry) throws BeansException {
+        if (&quot;dev&quot;.equals(profile)){
+            AnnotatedBeanDefinition annotatedBeanDefinition = new AnnotatedGenericBeanDefinition(HttpsTomcatEmbeddedServletContainerFactory.class);
+            BeanDefinitionHolder beanDefinitionHolder = new BeanDefinitionHolder(annotatedBeanDefinition, &quot;tomcatEmbeddedServletContainerFactory&quot;);
+            BeanDefinitionReaderUtils.registerBeanDefinition(beanDefinitionHolder, beanDefinitionRegistry);
+        }
+    }
+
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {}
+
+
+    @Override
+    public void setEnvironment(Environment environment) {
+        profile = environment.getProperty(&quot;profile&quot;);
+    }
+}
+</code></pre>
+<h5 id="注意上面的注入对象是HttpsTomcatEmbeddedServletContainerFactory，不是之前的TomcatEmbeddedServletContainerFactory，贴上HttpsTomcatEmbeddedServletContainerFactory代码："><a href="#注意上面的注入对象是HttpsTomcatEmbeddedServletContainerFactory，不是之前的TomcatEmbeddedServletContainerFactory，贴上HttpsTomcatEmbeddedServletContainerFactory代码：" class="headerlink" title="注意上面的注入对象是HttpsTomcatEmbeddedServletContainerFactory，不是之前的TomcatEmbeddedServletContainerFactory，贴上HttpsTomcatEmbeddedServletContainerFactory代码："></a>注意上面的注入对象是<code>HttpsTomcatEmbeddedServletContainerFactory</code>，不是之前的<code>TomcatEmbeddedServletContainerFactory</code>，贴上<code>HttpsTomcatEmbeddedServletContainerFactory</code>代码：</h5><pre><code class="lang-java">import org.apache.catalina.connector.Connector;
+import org.apache.coyote.http11.Http11NioProtocol;
+import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+
+/**
+ * @author winx
+ * @create 2017-09-01.
+ */
+public class HttpsTomcatEmbeddedServletContainerFactory extends TomcatEmbeddedServletContainerFactory {
+
+    public HttpsTomcatEmbeddedServletContainerFactory() {
+        super();
+        Connector connector = new Connector(&quot;org.apache.coyote.http11.Http11NioProtocol&quot;);
+        Http11NioProtocol protocol = (Http11NioProtocol) connector.getProtocolHandler();
+        connector.setScheme(&quot;https&quot;);
+        connector.setSecure(true);
+        connector.setPort(8443);
+        protocol.setSSLEnabled(true);
+        protocol.setKeystoreFile(&quot;/Users/winx/.keystore&quot;);
+        protocol.setKeystorePass(&quot;123456&quot;);
+        protocol.setTruststoreFile(&quot;/Users/winx/.keystore&quot;);
+        protocol.setTruststorePass(&quot;123456&quot;);
+        protocol.setKeyAlias(&quot;tomcat&quot;);
+        addAdditionalTomcatConnectors(connector);
+    }
+}
+</code></pre>
+<h5 id="成功的解决了之前属性设置问题。"><a href="#成功的解决了之前属性设置问题。" class="headerlink" title="成功的解决了之前属性设置问题。"></a>成功的解决了之前属性设置问题。</h5></div>
+    </article>
+</section>
+
+<div class="clear"></div>
+
+
+
+    <footer id="footer">
+  <div class="foot">
+    <!-- <a id="gotop">TOP</a> -->
+    <!-- <div id="copyright">Copyright &copy; 2016 <a href="#" target="_blank">WangWenXiang</a><br>
+       Power by <a href="https://github.com/winx402" target="_blank">Github Pages</a> |
+      <a href="https://hexo.io/" target="_blank">HEXO</a></div> -->
+      <div id="copyright">还没想好要写什么</div>
+  </div>
+</footer>
+
+</div>
+<div class="img-view">
+    <span><img src="/img/guide.jpeg"></span>
+</div>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

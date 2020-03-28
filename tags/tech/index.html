@@ -1,0 +1,447 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+    <title>winx&#39;blog</title>
+</head>
+<body>
+<div class="animated" id="info-min">
+    <div id="guide">
+    <div class="guide-button " _href="/tags/index/">首页</div>
+    <div class="guide-button guide-selected" _href="/tags/tech/">技术</div>
+    <!--<div class="guide-button " _href="/tags/life/">生活</div>-->
+    <div class="guide-button " _href="/categories/read/">阅读</div>
+    <img src="/img/photo.png">
+</div>
+</div>
+<div id="wrap">
+    
+
+  
+    <div id="big-title" style="background-image:url(/img/project-bg.jpg);color: #ccc">
+  
+
+  <div id="title-name">技术</div><br>
+  <div id="something"></div>
+</div>
+
+<div id="contents">
+    <section id="content">
+        
+        <article class="post">
+            <header>
+                <h2><a href="
+    
+        /note/transaction/distributed-transaction/
+    
+
+"
+                       title="分布式事务">分布式事务</a></h2>
+            </header>
+            <div class="con">
+                <p>
+                    什么是事务事务是数据库操作的最小工作单元，是作为单个逻辑工作单元执行的一系列操作；这些操作作为一个整体一起向系统提交，要么都执行、要么都不执行；事务是一组不可再分割的操作集合（工作逻辑单元）；
+                    <a class="more" href="
+    
+        /note/transaction/distributed-transaction/
+    
+
+">[继续阅读]</a>
+                </p>
+            </div>
+            <div class="meta">
+                
+                <i class="fa fa-sun-o">&nbsp;2019/10/14</i>
+                
+                    <i class="fa fa-flag-o">&nbsp;原创</i>
+                
+                
+            </div>
+
+        </article>
+        
+        <article class="post">
+            <header>
+                <h2><a href="
+    
+        /note/spring/spring-transaction/
+    
+
+"
+                       title="Spring事务解析过程分析">Spring事务解析过程分析</a></h2>
+            </header>
+            <div class="con">
+                <p>
+                    spring支持编程式事务管理和声明式事务管理两种方式。编程式事务管理使用TransactionTemplate或者直接使用底层的PlatformTransactionManager；申明式事务管理=编程式事务管理+aop，在已有的编程式事务实现的基础上，用aop进行代理、拦截、事务处理，实现配置化的事务管理，因为只需要在配置文件中做相关的事务规则声明(或通过基于@Transactional注解的方式)，便可以将事务规则应用到业务逻辑中，因此叫做声明式事务管理。
+                    <a class="more" href="
+    
+        /note/spring/spring-transaction/
+    
+
+">[继续阅读]</a>
+                </p>
+            </div>
+            <div class="meta">
+                
+                <i class="fa fa-sun-o">&nbsp;2019/09/18</i>
+                
+                    <i class="fa fa-flag-o">&nbsp;原创</i>
+                
+                
+                    <i class="fa fa-tags">&nbsp;[
+                        
+                            <a href="/tags/spring/">spring</a>
+                        
+                            <a href="/tags/java/">java</a>
+                        ]
+                    </i>
+                
+            </div>
+
+        </article>
+        
+        <article class="post">
+            <header>
+                <h2><a href="
+    
+        /note/arithmetic/bitMapInMysql/
+    
+
+"
+                       title="BitMap在Mysql中的实际应用">BitMap在Mysql中的实际应用</a></h2>
+            </header>
+            <div class="con">
+                <p>
+                    这是一个实际开发中遇到的问题：仓库中存在多种物料，每种物料都有其适配的车型。比如A物料适配1、2、3车型；B物料适配2、4车型。数据存储在mysql中，如果需要将适配车型作为一种筛选条件。那么mysql中应该如何存储呢？
+                    <a class="more" href="
+    
+        /note/arithmetic/bitMapInMysql/
+    
+
+">[继续阅读]</a>
+                </p>
+            </div>
+            <div class="meta">
+                
+                <i class="fa fa-sun-o">&nbsp;2018/12/23</i>
+                
+                    <i class="fa fa-flag-o">&nbsp;原创</i>
+                
+                
+                    <i class="fa fa-tags">&nbsp;[
+                        
+                            <a href="/tags/arithmetic/">算法</a>
+                        ]
+                    </i>
+                
+            </div>
+
+        </article>
+        
+        <article class="post">
+            <header>
+                <h2><a href="
+    
+        /note/jdk/threadPoolExecutor/
+    
+
+"
+                       title="ThreadPoolExecutor源码阅读">ThreadPoolExecutor源码阅读</a></h2>
+            </header>
+            <div class="con">
+                <p>
+                    线程的使用在java中占有极其重要的地位，在jdk1.4极其之前的jdk版本中，关于线程池的使用是极其简陋的。在jdk1.5之后这一情况有了很大的改观。Jdk1.5之后加入了java.util.concurrent包，这个包中主要介绍java中线程以及线程池的使用。为我们在开发中处理线程的问题提供了非常大的帮助。
+                    <a class="more" href="
+    
+        /note/jdk/threadPoolExecutor/
+    
+
+">[继续阅读]</a>
+                </p>
+            </div>
+            <div class="meta">
+                
+                <i class="fa fa-sun-o">&nbsp;2018/05/21</i>
+                
+                    <i class="fa fa-flag-o">&nbsp;原创</i>
+                
+                
+                    <i class="fa fa-tags">&nbsp;[
+                        
+                            <a href="/tags/java/">java</a>
+                        ]
+                    </i>
+                
+            </div>
+
+        </article>
+        
+        <article class="post">
+            <header>
+                <h2><a href="
+    
+        /note/arithmetic/scoreroute/
+    
+
+"
+                       title="顺路程度算法">顺路程度算法</a></h2>
+            </header>
+            <div class="con">
+                <p>
+                    之前在做私车同行项目中，需要用一个分数值去表现司机和乘客行程的顺路匹配程度。以此来做一些类似于推荐和排序的需求。奈何于网络上没有找到相对满意的理论和工程实现。因此我们尝试从某些维度出发，将其赋予不同的权重值，通过参数的调节，达到一个相对满意的程度。
+                    <a class="more" href="
+    
+        /note/arithmetic/scoreroute/
+    
+
+">[继续阅读]</a>
+                </p>
+            </div>
+            <div class="meta">
+                
+                <i class="fa fa-sun-o">&nbsp;2018/05/18</i>
+                
+                    <i class="fa fa-flag-o">&nbsp;原创</i>
+                
+                
+                    <i class="fa fa-tags">&nbsp;[
+                        
+                            <a href="/tags/arithmetic/">算法</a>
+                        ]
+                    </i>
+                
+            </div>
+
+        </article>
+        
+        <article class="post">
+            <header>
+                <h2><a href="
+    
+        /note/arithmetic/bloomfilter/
+    
+
+"
+                       title="大量订单的去重计算-BloomFilter">大量订单的去重计算-BloomFilter</a></h2>
+            </header>
+            <div class="con">
+                <p>
+                    如果需要对数据进行去重，我们最先想到一定是集合set，以及数据库的唯一索引。如果数据有持久化的需求，数据库的唯一索引是一个比较好的解决办法，因为这样你可以做分布式处理并且保证最终的一致性。如果数据不需要持久存储，只需要在内存当中去处理重复数据，则我们通常会使用set集合做处理。但是如果数据量特别大呢？我们如何处理
+                    <a class="more" href="
+    
+        /note/arithmetic/bloomfilter/
+    
+
+">[继续阅读]</a>
+                </p>
+            </div>
+            <div class="meta">
+                
+                <i class="fa fa-sun-o">&nbsp;2018/05/08</i>
+                
+                    <i class="fa fa-flag-o">&nbsp;原创</i>
+                
+                
+                    <i class="fa fa-tags">&nbsp;[
+                        
+                            <a href="/tags/arithmetic/">算法</a>
+                        ]
+                    </i>
+                
+            </div>
+
+        </article>
+        
+        <article class="post">
+            <header>
+                <h2><a href="
+    
+        /note/arithmetic/dbscan/
+    
+
+"
+                       title="DBSCAN聚类算法">DBSCAN聚类算法</a></h2>
+            </header>
+            <div class="con">
+                <p>
+                    DBSCAN(Density-Based Spatial Clustering of Applications with Noise，具有噪声的基于密度的聚类方法)是一种很典型的密度聚类算法，和K-Means，BIRCH这些一般只适用于凸样本集的聚类相比，DBSCAN既可以适用于凸样本集，也可以适用于非凸样本集。下面我们就对DBSCAN算法的原理做一个总结。
+                    <a class="more" href="
+    
+        /note/arithmetic/dbscan/
+    
+
+">[继续阅读]</a>
+                </p>
+            </div>
+            <div class="meta">
+                
+                <i class="fa fa-sun-o">&nbsp;2018/04/13</i>
+                
+                    <i class="fa fa-flag-o">&nbsp;原创</i>
+                
+                
+                    <i class="fa fa-tags">&nbsp;[
+                        
+                            <a href="/tags/arithmetic/">算法</a>
+                        ]
+                    </i>
+                
+            </div>
+
+        </article>
+        
+        <article class="post">
+            <header>
+                <h2><a href="
+    
+        /note/arithmetic/point2area/
+    
+
+"
+                       title="聚类算法-基于上车地点的区域计算">聚类算法-基于上车地点的区域计算</a></h2>
+            </header>
+            <div class="con">
+                <p>
+                    
+                    <a class="more" href="
+    
+        /note/arithmetic/point2area/
+    
+
+">[继续阅读]</a>
+                </p>
+            </div>
+            <div class="meta">
+                
+                <i class="fa fa-sun-o">&nbsp;2018/04/13</i>
+                
+                    <i class="fa fa-flag-o">&nbsp;原创</i>
+                
+                
+                    <i class="fa fa-tags">&nbsp;[
+                        
+                            <a href="/tags/arithmetic/">算法</a>
+                        ]
+                    </i>
+                
+            </div>
+
+        </article>
+        
+        <article class="post">
+            <header>
+                <h2><a href="
+    
+        /note/jdk/javaReenTrantLock/
+    
+
+"
+                       title="Java并发之ReentrantLock">Java并发之ReentrantLock</a></h2>
+            </header>
+            <div class="con">
+                <p>
+                    Java 的ReentrantLock是我们最常用的java锁之一。ReentrantLock实现了我们最常用的一些锁的特性，那么它是如何实现这些过程的呢。其实现的原理是基于AbstractQueuedSynchronizer（AQS）和 自定义同步器 sync 的。关于AQS的实现原理可以去看我的另一篇文章：Java并发之AQS
+                    <a class="more" href="
+    
+        /note/jdk/javaReenTrantLock/
+    
+
+">[继续阅读]</a>
+                </p>
+            </div>
+            <div class="meta">
+                
+                <i class="fa fa-sun-o">&nbsp;2018/04/10</i>
+                
+                    <i class="fa fa-flag-o">&nbsp;原创</i>
+                
+                
+                    <i class="fa fa-tags">&nbsp;[
+                        
+                            <a href="/tags/java/">java</a>
+                        ]
+                    </i>
+                
+            </div>
+
+        </article>
+        
+        <article class="post">
+            <header>
+                <h2><a href="
+    
+        /note/jdk/javaAQS/
+    
+
+"
+                       title="Java并发之AQS">Java并发之AQS</a></h2>
+            </header>
+            <div class="con">
+                <p>
+                    Java的并发工具，我们常用的有ReentrantLock/Semaphore/CountDownLatch等工具，而这些工具类又是如何实现的呢？这就不得不提到AbstractQueuedSynchronizer类，也就是AQS！类如其名，抽象的队列式的同步器，AQS定义了一套多线程访问共享资源的同步器框架!
+                    <a class="more" href="
+    
+        /note/jdk/javaAQS/
+    
+
+">[继续阅读]</a>
+                </p>
+            </div>
+            <div class="meta">
+                
+                <i class="fa fa-sun-o">&nbsp;2018/04/09</i>
+                
+                
+                    <i class="fa fa-tags">&nbsp;[
+                        
+                            <a href="/tags/java/">java</a>
+                        ]
+                    </i>
+                
+            </div>
+
+        </article>
+        
+    </section>
+    <div class="clear"></div>
+</div>
+
+
+<div id="footer-page">
+    <span class="page-number current">1</span><a class="page-number" href="/tags/tech/page/2/">2</a><a class="page-number" href="/tags/tech/page/3/">3</a><a class="page-number" href="/tags/tech/page/4/">4</a>
+</div>
+
+
+    <footer id="footer">
+  <div class="foot">
+    <!-- <a id="gotop">TOP</a> -->
+    <!-- <div id="copyright">Copyright &copy; 2016 <a href="#" target="_blank">WangWenXiang</a><br>
+       Power by <a href="https://github.com/winx402" target="_blank">Github Pages</a> |
+      <a href="https://hexo.io/" target="_blank">HEXO</a></div> -->
+      <div id="copyright">还没想好要写什么</div>
+  </div>
+</footer>
+
+</div>
+<div class="img-view">
+    <span><img src="/img/guide.jpeg"></span>
+</div>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

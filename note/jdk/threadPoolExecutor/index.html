@@ -1,0 +1,313 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+    <title>winx&#39;blog</title>
+</head>
+<body>
+<div class="animated" id="info-min">
+    <div id="guide">
+    <div class="guide-button " _href="/tags/index/">首页</div>
+    <div class="guide-button " _href="/tags/tech/">技术</div>
+    <!--<div class="guide-button " _href="/tags/life/">生活</div>-->
+    <div class="guide-button " _href="/categories/read/">阅读</div>
+    <img src="/img/photo.png">
+</div>
+</div>
+<div id="wrap">
+    
+  
+    
+      <div id="big-title" style="color: #666">
+    
+
+  <div id="title-name">ThreadPoolExecutor源码阅读</div><br>
+  <div id="something">2018/05/21</div>
+</div>
+  <section id="content-specific">
+    <article class="post">
+        <div class="con"><h5 id="线程的使用在java中占有极其重要的地位，在jdk1-4极其之前的jdk版本中，关于线程池的使用是极其简陋的。在jdk1-5之后这一情况有了很大的改观。Jdk1-5之后加入了java-util-concurrent包，这个包中主要介绍java中线程以及线程池的使用。为我们在开发中处理线程的问题提供了非常大的帮助。"><a href="#线程的使用在java中占有极其重要的地位，在jdk1-4极其之前的jdk版本中，关于线程池的使用是极其简陋的。在jdk1-5之后这一情况有了很大的改观。Jdk1-5之后加入了java-util-concurrent包，这个包中主要介绍java中线程以及线程池的使用。为我们在开发中处理线程的问题提供了非常大的帮助。" class="headerlink" title="线程的使用在java中占有极其重要的地位，在jdk1.4极其之前的jdk版本中，关于线程池的使用是极其简陋的。在jdk1.5之后这一情况有了很大的改观。Jdk1.5之后加入了java.util.concurrent包，这个包中主要介绍java中线程以及线程池的使用。为我们在开发中处理线程的问题提供了非常大的帮助。"></a>线程的使用在java中占有极其重要的地位，在jdk1.4极其之前的jdk版本中，关于线程池的使用是极其简陋的。在jdk1.5之后这一情况有了很大的改观。Jdk1.5之后加入了java.util.concurrent包，这个包中主要介绍java中线程以及线程池的使用。为我们在开发中处理线程的问题提供了非常大的帮助。</h5><a id="more"></a>
+<h5 id="线程池的作用和优点就不多说，直接上源码："><a href="#线程池的作用和优点就不多说，直接上源码：" class="headerlink" title="线程池的作用和优点就不多说，直接上源码："></a>线程池的作用和优点就不多说，直接上源码：</h5><h3 id="ThreadPoolExecutor结构图"><a href="#ThreadPoolExecutor结构图" class="headerlink" title="ThreadPoolExecutor结构图"></a>ThreadPoolExecutor结构图</h3><pre><code class="lang-java">public class ThreadPoolExecutor extends AbstractExecutorService
+</code></pre>
+<p>|—java.lang.Object<br>|——java.util.concurrent.AbstractExecutorService<br>|———java.util.concurrent.ThreadPoolExecutor</p>
+<h4 id="所有引用的接口："><a href="#所有引用的接口：" class="headerlink" title="所有引用的接口："></a>所有引用的接口：</h4><p>java.util.concurrent.Executor<br>java.util.concurrent.ExecutorService</p>
+<h3 id="线程安全AtomicInteger变量ctl"><a href="#线程安全AtomicInteger变量ctl" class="headerlink" title="线程安全AtomicInteger变量ctl"></a>线程安全AtomicInteger变量ctl</h3><pre><code class="lang-java">/**
+     * The main pool control state, ctl, is an atomic integer packing
+     * two conceptual fields
+     *   workerCount, indicating the effective number of threads
+     *   runState,    indicating whether running, shutting down etc
+     *
+     * In order to pack them into one int, we limit workerCount to
+     * (2^29)-1 (about 500 million) threads rather than (2^31)-1 (2
+     * billion) otherwise representable. If this is ever an issue in
+     * the future, the variable can be changed to be an AtomicLong,
+     * and the shift/mask constants below adjusted. But until the need
+     * arises, this code is a bit faster and simpler using an int.
+     *
+     * The workerCount is the number of workers that have been
+     * permitted to start and not permitted to stop.  The value may be
+     * transiently different from the actual number of live threads,
+     * for example when a ThreadFactory fails to create a thread when
+     * asked, and when exiting threads are still performing
+     * bookkeeping before terminating. The user-visible pool size is
+     * reported as the current size of the workers set.
+     */
+private final AtomicInteger ctl = new AtomicInteger(ctlOf(RUNNING, 0));
+</code></pre>
+<h5 id="在该变量属性上已经有较为详细的介绍了。大致的意思是ctl是线程池的主要控制变量，这个变量主要有两个含义："><a href="#在该变量属性上已经有较为详细的介绍了。大致的意思是ctl是线程池的主要控制变量，这个变量主要有两个含义：" class="headerlink" title="在该变量属性上已经有较为详细的介绍了。大致的意思是ctl是线程池的主要控制变量，这个变量主要有两个含义："></a>在该变量属性上已经有较为详细的介绍了。大致的意思是ctl是线程池的主要控制变量，这个变量主要有两个含义：</h5><ol>
+<li>工作线程数量，表示实际的线程数量</li>
+<li>线程池状态，线程池的各种状态情况，后面会详细介绍</li>
+</ol>
+<h5 id="那么如何用着一个变量来表示两个不同的含义呢。我们都知道，java中的int有32位，其中最高位为状态位，表示正负，因此java中int能够表示的大小范围在-231-231-1。因此，这里将int的32位分为了两部分，其中低29位用来表示工作线程数量，一共229-1-大约5亿。这里的工作线程数表示那些已经被允许开始并且没有被允许停止的线程。而高3位则用来表示线程池的状态，这个将在后面具体介绍。"><a href="#那么如何用着一个变量来表示两个不同的含义呢。我们都知道，java中的int有32位，其中最高位为状态位，表示正负，因此java中int能够表示的大小范围在-231-231-1。因此，这里将int的32位分为了两部分，其中低29位用来表示工作线程数量，一共229-1-大约5亿。这里的工作线程数表示那些已经被允许开始并且没有被允许停止的线程。而高3位则用来表示线程池的状态，这个将在后面具体介绍。" class="headerlink" title="那么如何用着一个变量来表示两个不同的含义呢。我们都知道，java中的int有32位，其中最高位为状态位，表示正负，因此java中int能够表示的大小范围在-231~231-1。因此，这里将int的32位分为了两部分，其中低29位用来表示工作线程数量，一共229-1 大约5亿。这里的工作线程数表示那些已经被允许开始并且没有被允许停止的线程。而高3位则用来表示线程池的状态，这个将在后面具体介绍。"></a>那么如何用着一个变量来表示两个不同的含义呢。我们都知道，java中的int有32位，其中最高位为状态位，表示正负，因此java中int能够表示的大小范围在-2<sup>31</sup>~2<sup>31</sup>-1。因此，这里将int的32位分为了两部分，其中低29位用来表示工作线程数量，一共2<sup>29</sup>-1 大约5亿。这里的工作线程数表示那些已经被允许开始并且没有被允许停止的线程。而高3位则用来表示线程池的状态，这个将在后面具体介绍。</h5><h3 id="线程池状态"><a href="#线程池状态" class="headerlink" title="线程池状态"></a>线程池状态</h3><pre><code class="lang-java">private static final int COUNT_BITS = Integer.SIZE - 3;
+
+// runState is stored in the high-order bits
+private static final int RUNNING    = -1 &lt;&lt; COUNT_BITS;
+private static final int SHUTDOWN   =  0 &lt;&lt; COUNT_BITS;
+private static final int STOP       =  1 &lt;&lt; COUNT_BITS;
+private static final int TIDYING    =  2 &lt;&lt; COUNT_BITS;
+private static final int TERMINATED =  3 &lt;&lt; COUNT_BITS;
+</code></pre>
+<h5 id="COUNT-BITS等于29，表示低的29位。"><a href="#COUNT-BITS等于29，表示低的29位。" class="headerlink" title="COUNT_BITS等于29，表示低的29位。"></a><code>COUNT_BITS</code>等于29，表示低的29位。</h5><ol>
+<li>RUNNING：运行状态，高三位都为1时表示(11100000000000000000000000000000), 表示线程池接受新的任务和处理队列中已有的任务；</li>
+<li>SHUTDOWN：00000000000000000000000000000000，不接受新的任务，但是处理队列中的任务；</li>
+<li>STOP：00100000000000000000000000000000，不接受新任务，也不处理队列任务，并且中断(interrupt)正在处理的任务；</li>
+<li>TIDYING：01000000000000000000000000000000，所有的任务都已经终结，工作线程数为0。将要执行terminated()钩子方法；</li>
+<li>TERMINATED：01100000000000000000000000000000，terminated()方法执行完成。</li>
+</ol>
+<h3 id="阻塞队列"><a href="#阻塞队列" class="headerlink" title="阻塞队列"></a>阻塞队列</h3><pre><code class="lang-java">private final BlockingQueue&lt;Runnable&gt; workQueue;
+</code></pre>
+<h5 id="阻塞对流用于存放用户提交的任务，final关键字表示其必须在构造函数中进行初始化，并且之后不能修改。目前常用的阻塞队列有ArrayBlockingQueue、LinkedBlockingQueue、SynchronousQueue。关于Java中阻塞队列的具体实现，可以参考的另外一篇文章java阻塞队列详解"><a href="#阻塞对流用于存放用户提交的任务，final关键字表示其必须在构造函数中进行初始化，并且之后不能修改。目前常用的阻塞队列有ArrayBlockingQueue、LinkedBlockingQueue、SynchronousQueue。关于Java中阻塞队列的具体实现，可以参考的另外一篇文章java阻塞队列详解" class="headerlink" title="阻塞对流用于存放用户提交的任务，final关键字表示其必须在构造函数中进行初始化，并且之后不能修改。目前常用的阻塞队列有ArrayBlockingQueue、LinkedBlockingQueue、SynchronousQueue。关于Java中阻塞队列的具体实现，可以参考的另外一篇文章java阻塞队列详解"></a>阻塞对流用于存放用户提交的任务，final关键字表示其必须在构造函数中进行初始化，并且之后不能修改。目前常用的阻塞队列有ArrayBlockingQueue、LinkedBlockingQueue、SynchronousQueue。关于Java中阻塞队列的具体实现，可以参考的另外一篇文章<a href="https://winx402.github.io/note/jdk/blockingQueue/" target="_blank" rel="external">java阻塞队列详解</a></h5><h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h3><pre><code class="lang-java">public ThreadPoolExecutor(int corePoolSize,
+                          int maximumPoolSize,
+                          long keepAliveTime,
+                          TimeUnit unit,
+                          BlockingQueue&lt;Runnable&gt; workQueue,
+                          ThreadFactory threadFactory,
+                          RejectedExecutionHandler handler) {
+    if (corePoolSize &lt; 0 ||
+        maximumPoolSize &lt;= 0 ||
+        maximumPoolSize &lt; corePoolSize ||
+        keepAliveTime &lt; 0)
+        throw new IllegalArgumentException();
+    if (workQueue == null || threadFactory == null || handler == null)
+        throw new NullPointerException();
+    this.acc = System.getSecurityManager() == null ?
+            null :
+            AccessController.getContext();
+    this.corePoolSize = corePoolSize;
+    this.maximumPoolSize = maximumPoolSize;
+    this.workQueue = workQueue;
+    this.keepAliveTime = unit.toNanos(keepAliveTime);
+    this.threadFactory = threadFactory;
+    this.handler = handler;
+}
+</code></pre>
+<h5 id="构造函数的参数主要是一下含义："><a href="#构造函数的参数主要是一下含义：" class="headerlink" title="构造函数的参数主要是一下含义："></a>构造函数的参数主要是一下含义：</h5><ol>
+<li>corePoolSize：核心线程数</li>
+<li>maximumPoolSize：最大线程数</li>
+<li>keepAliveTime、unit：线程存活时间以及时间单位</li>
+<li>workQueue：阻塞队列，存放任务</li>
+<li>threadFactory：创建线程的线程工厂</li>
+<li>handler：拒绝策略</li>
+</ol>
+<h3 id="提交任务：execute"><a href="#提交任务：execute" class="headerlink" title="提交任务：execute"></a>提交任务：execute</h3><pre><code class="lang-java">public void execute(Runnable command) {
+    if (command == null)
+        throw new NullPointerException();
+    //获取ctl
+    int c = ctl.get();
+    //如果当前线程池的线程数量小于核心线程数。则直接添加线程
+    if (workerCountOf(c) &lt; corePoolSize) {
+        if (addWorker(command, true))
+            return;
+        //如果添加线程失败，则刷新ctl
+        c = ctl.get();
+    }
+    //如果线程池状态正常，尝试将任务插入队列尾部
+    if (isRunning(c) &amp;&amp; workQueue.offer(command)) {
+        int recheck = ctl.get();
+        //再次检查县城次状态，如果不是运行状态
+        if (! isRunning(recheck) &amp;&amp; remove(command))
+            reject(command);
+        //如果线程池当前没有线程正在运行，则通过一个空的任务添加一个线程。
+        else if (workerCountOf(recheck) == 0)
+            addWorker(null, false);
+    }
+    //如果因为线程池状态关闭，或者因为队列添加失败，则尝试新建一个线程执行任务
+    else if (!addWorker(command, false))
+        //拒绝
+        reject(command);
+}
+</code></pre>
+<h5 id="让我们看下addWorker-Runnable-boolean"><a href="#让我们看下addWorker-Runnable-boolean" class="headerlink" title="让我们看下addWorker(Runnable, boolean):"></a>让我们看下addWorker(Runnable, boolean):</h5><pre><code class="lang-java">private boolean addWorker(Runnable firstTask, boolean core) {
+    retry:
+    for (;;) {
+        //获取ctl
+        int c = ctl.get();
+        //线程池状态
+        int rs = runStateOf(c);
+        // Check if queue empty only if necessary.
+        // 如果线程池的状态不是运行中（也就是线程池已经关闭，并且不接受新的任务），以及排除状态为SHUTDOWN，并且firstTask为null，workQueue不为空这种情况。
+        if (rs &gt;= SHUTDOWN &amp;&amp;
+            ! (rs == SHUTDOWN &amp;&amp;
+               firstTask == null &amp;&amp;
+               ! workQueue.isEmpty()))
+            //可以认为线程池已经关闭，添加任务失败，返回false
+            return false;
+        for (;;) {
+            //获取工作线程数量
+            int wc = workerCountOf(c);
+            //如果线程数量超出上限（2^29），或者超出核心线程、最大线程。则添加失败
+            if (wc &gt;= CAPACITY ||
+                wc &gt;= (core ? corePoolSize : maximumPoolSize))
+                return false;
+            //如果线程数量正常，则尝试通过cas修改线程数量。如果修改成功，跳出循环
+            if (compareAndIncrementWorkerCount(c))
+                break retry;
+            //修改ctl失败，重新获取ctl
+            c = ctl.get();  // Re-read ctl
+            //如果线程池状态已经被修改，则跳转retry重新判断。否则for循环重试修改线程数量
+            if (runStateOf(c) != rs)
+                continue retry;
+            // else CAS failed due to workerCount change; retry inner loop
+        }
+    }
+    boolean workerStarted = false;
+    boolean workerAdded = false;
+    Worker w = null;
+    try {
+        //创建一个新的worker工作线程，注意firstTask可以为null
+        w = new Worker(firstTask);
+        final Thread t = w.thread;
+        if (t != null) {
+            final ReentrantLock mainLock = this.mainLock;
+            //获取独占锁
+            mainLock.lock();
+            try {
+                // 获取线程池最新状态
+                int rs = runStateOf(ctl.get());
+                //可以看到这里的状态判断和方法开始处的状态判断刚好相反。该判断表示线程池状态是否能够正常执行下去
+                if (rs &lt; SHUTDOWN ||
+                    (rs == SHUTDOWN &amp;&amp; firstTask == null)) {
+                    if (t.isAlive()) // precheck that t is startable
+                        throw new IllegalThreadStateException();
+                    //线程池状态正常，将worker添加进集合
+                    workers.add(w);
+                    int s = workers.size();
+                    //如果当前线程池中的线程数量大于最大线程数，则修改最大线程数
+                    if (s &gt; largestPoolSize)
+                        largestPoolSize = s;
+                    //状态修改，线程添加进池成功
+                    workerAdded = true;
+                }
+            } finally {
+                mainLock.unlock();
+            }
+            if (workerAdded) {
+                //线程启动
+                t.start();
+                workerStarted = true;
+            }
+        }
+    } finally {
+        if (! workerStarted)
+            addWorkerFailed(w);
+    }
+    return workerStarted;
+}
+</code></pre>
+<h5 id="通过execute方法和addWorker方法。可以看到，当我们向线程池中添加一个任务的时候，线程池主要有以下几个处理流程："><a href="#通过execute方法和addWorker方法。可以看到，当我们向线程池中添加一个任务的时候，线程池主要有以下几个处理流程：" class="headerlink" title="通过execute方法和addWorker方法。可以看到，当我们向线程池中添加一个任务的时候，线程池主要有以下几个处理流程："></a>通过execute方法和addWorker方法。可以看到，当我们向线程池中添加一个任务的时候，线程池主要有以下几个处理流程：</h5><ol>
+<li>如果线程池中的线程数量少于核心线程数，则直接创建新的线程执行任务</li>
+<li>如果以及达到核心线程数，则尝试将任务提交至队列中</li>
+<li>如果队列满，则尝试使用最大线程数量创建新的线程去执行</li>
+<li>如果超出最大线程数，则使用拒绝策略拒绝该任务</li>
+</ol>
+<h5 id="在这个过程中，我们注意到，提交任务的时候，如果判断到当前的的执行线程数量为0，那么会通过一个addWorker方法提交一个空的任务。并且在addWorker中能够成功的将其包装成Worder类并开始执行。那么在Worder类中，是如何处理这个空的任务呢。"><a href="#在这个过程中，我们注意到，提交任务的时候，如果判断到当前的的执行线程数量为0，那么会通过一个addWorker方法提交一个空的任务。并且在addWorker中能够成功的将其包装成Worder类并开始执行。那么在Worder类中，是如何处理这个空的任务呢。" class="headerlink" title="在这个过程中，我们注意到，提交任务的时候，如果判断到当前的的执行线程数量为0，那么会通过一个addWorker方法提交一个空的任务。并且在addWorker中能够成功的将其包装成Worder类并开始执行。那么在Worder类中，是如何处理这个空的任务呢。"></a>在这个过程中，我们注意到，提交任务的时候，如果判断到当前的的执行线程数量为0，那么会通过一个addWorker方法提交一个空的任务。并且在addWorker中能够成功的将其包装成Worder类并开始执行。那么在Worder类中，是如何处理这个空的任务呢。</h5><h3 id="任务的执行过程：runWorker-Worker-："><a href="#任务的执行过程：runWorker-Worker-：" class="headerlink" title="任务的执行过程：runWorker(Worker)："></a>任务的执行过程：runWorker(Worker)：</h3><pre><code class="lang-java">final void runWorker(Worker w) {
+    //获取当前执行线程，也就是线程池中的线程
+    Thread wt = Thread.currentThread();
+    //获取任务
+    Runnable task = w.firstTask;
+    w.firstTask = null;
+    w.unlock(); // allow interrupts
+    //线程异常中断
+    boolean completedAbruptly = true;
+    try {
+        //循环判断任务不为空，获取下一个任务不为空
+        while (task != null || (task = getTask()) != null) {
+            w.lock(); //加锁执行
+            if ((runStateAtLeast(ctl.get(), STOP) ||
+                 (Thread.interrupted() &amp;&amp;
+                  runStateAtLeast(ctl.get(), STOP))) &amp;&amp;
+                !wt.isInterrupted())
+                //线程中断
+                wt.interrupt();
+            try {
+                //前置方法。默认为空
+                beforeExecute(wt, task);
+                Throwable thrown = null;
+                try {
+                    //真正的任务执行，这里很有意思的是没有通过线程的start方法执行。而是直接调用的run方法。Runnable只是一个任务的载体
+                    task.run();
+                } catch (RuntimeException x) {
+                    thrown = x; throw x;
+                } catch (Error x) {
+                    thrown = x; throw x;
+                } catch (Throwable x) {
+                    thrown = x; throw new Error(x);
+                } finally {
+                    //后置方法
+                    afterExecute(task, thrown);
+                }
+            } finally {
+                //将task置为null，方便循环中获取队列的下一个任务
+                task = null;
+                w.completedTasks++;
+                w.unlock();
+            }
+        }
+        completedAbruptly = false;
+    } finally {
+        processWorkerExit(w, completedAbruptly);
+    }
+}
+</code></pre>
+<h5 id="线程池中的线程处理流程很简单，就是重复的从队列当中获取新的任务并且执行。如果getTask方法获取不到新的任务，则在finally中通过processWorkerExit将该线程从线程池中删除。"><a href="#线程池中的线程处理流程很简单，就是重复的从队列当中获取新的任务并且执行。如果getTask方法获取不到新的任务，则在finally中通过processWorkerExit将该线程从线程池中删除。" class="headerlink" title="线程池中的线程处理流程很简单，就是重复的从队列当中获取新的任务并且执行。如果getTask方法获取不到新的任务，则在finally中通过processWorkerExit将该线程从线程池中删除。"></a>线程池中的线程处理流程很简单，就是重复的从队列当中获取新的任务并且执行。如果getTask方法获取不到新的任务，则在finally中通过processWorkerExit将该线程从线程池中删除。</h5><h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p><a href="https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ThreadPoolExecutor.html" target="_blank" rel="external">ThreadPoolExecutor</a><br><a href="http://www.oschina.net/question/565065_86540" target="_blank" rel="external">Java线程池使用说明</a></p>
+</div>
+    </article>
+</section>
+
+<div class="clear"></div>
+
+
+
+    <footer id="footer">
+  <div class="foot">
+    <!-- <a id="gotop">TOP</a> -->
+    <!-- <div id="copyright">Copyright &copy; 2016 <a href="#" target="_blank">WangWenXiang</a><br>
+       Power by <a href="https://github.com/winx402" target="_blank">Github Pages</a> |
+      <a href="https://hexo.io/" target="_blank">HEXO</a></div> -->
+      <div id="copyright">还没想好要写什么</div>
+  </div>
+</footer>
+
+</div>
+<div class="img-view">
+    <span><img src="/img/guide.jpeg"></span>
+</div>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

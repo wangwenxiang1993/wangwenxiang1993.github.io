@@ -1,0 +1,548 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+    <title>winx&#39;blog</title>
+</head>
+<body>
+<div class="animated" id="info-min">
+    <div id="guide">
+    <div class="guide-button " _href="/tags/index/">首页</div>
+    <div class="guide-button " _href="/tags/tech/">技术</div>
+    <!--<div class="guide-button " _href="/tags/life/">生活</div>-->
+    <div class="guide-button " _href="/categories/read/">阅读</div>
+    <img src="/img/photo.png">
+</div>
+</div>
+<div id="wrap">
+    
+  
+    
+      <div id="big-title" style="color: #666">
+    
+
+  <div id="title-name">java阻塞队列详解</div><br>
+  <div id="something">2018/03/27</div>
+</div>
+  <section id="content-specific">
+    <article class="post">
+        <div class="con"><h5 id="java-util-concurrent包里的BlockingQueue接口表示一个线程安放入和提取实例的队列。这里我们将分析和演示如何使用这个BlockingQueue，以及对BlockingQueue的各种实现的源码解析。"><a href="#java-util-concurrent包里的BlockingQueue接口表示一个线程安放入和提取实例的队列。这里我们将分析和演示如何使用这个BlockingQueue，以及对BlockingQueue的各种实现的源码解析。" class="headerlink" title="java.util.concurrent包里的BlockingQueue接口表示一个线程安放入和提取实例的队列。这里我们将分析和演示如何使用这个BlockingQueue，以及对BlockingQueue的各种实现的源码解析。"></a><code>java.util.concurrent</code>包里的<strong>BlockingQueue</strong>接口表示一个线程安放入和提取实例的队列。这里我们将分析和演示如何使用这个<strong>BlockingQueue</strong>，以及对BlockingQueue的各种实现的源码解析。</h5><a id="more"></a>
+<h2 id="BlockingQueue的使用"><a href="#BlockingQueue的使用" class="headerlink" title="BlockingQueue的使用"></a>BlockingQueue的使用</h2><h5 id="BlockingQueue的数据结构为队列，通常将操作线程区分为生成者和消费者。下图是对这个原理的阐述："><a href="#BlockingQueue的数据结构为队列，通常将操作线程区分为生成者和消费者。下图是对这个原理的阐述：" class="headerlink" title="BlockingQueue的数据结构为队列，通常将操作线程区分为生成者和消费者。下图是对这个原理的阐述："></a><strong>BlockingQueue</strong>的数据结构为队列，通常将操作线程区分为生成者和消费者。下图是对这个原理的阐述：</h5><p><img src="/img/note/jdk/blockingqueue.png" alt="blockingQueue"></p>
+<h5 id="生产者线程往里边放，消费者线程从里边取的一个BlockingQueue。"><a href="#生产者线程往里边放，消费者线程从里边取的一个BlockingQueue。" class="headerlink" title="生产者线程往里边放，消费者线程从里边取的一个BlockingQueue。"></a>生产者线程往里边放，消费者线程从里边取的一个BlockingQueue。</h5><h5 id="生产者线程将会持续生产新对象并将其插入到队列之中，直到队列达到它所能容纳的临界点。也就是说，它是有限的。如果该阻塞队列到达了其临界点，负责生产的线程将会在往里边插入新对象时发生阻塞。它会一直处于阻塞之中，直到负责消费的线程从队列中拿走一个对象。"><a href="#生产者线程将会持续生产新对象并将其插入到队列之中，直到队列达到它所能容纳的临界点。也就是说，它是有限的。如果该阻塞队列到达了其临界点，负责生产的线程将会在往里边插入新对象时发生阻塞。它会一直处于阻塞之中，直到负责消费的线程从队列中拿走一个对象。" class="headerlink" title="生产者线程将会持续生产新对象并将其插入到队列之中，直到队列达到它所能容纳的临界点。也就是说，它是有限的。如果该阻塞队列到达了其临界点，负责生产的线程将会在往里边插入新对象时发生阻塞。它会一直处于阻塞之中，直到负责消费的线程从队列中拿走一个对象。"></a>生产者线程将会持续生产新对象并将其插入到队列之中，直到队列达到它所能容纳的临界点。也就是说，它是有限的。如果该阻塞队列到达了其临界点，负责生产的线程将会在往里边插入新对象时发生阻塞。它会一直处于阻塞之中，直到负责消费的线程从队列中拿走一个对象。</h5><h5 id="负责消费的线程将会一直从该阻塞队列中拿出对象。如果消费线程尝试去从一个空的队列中提取对象的话，这个消费线程将会处于阻塞之中，直到生产线程把一个对象丢进队列。"><a href="#负责消费的线程将会一直从该阻塞队列中拿出对象。如果消费线程尝试去从一个空的队列中提取对象的话，这个消费线程将会处于阻塞之中，直到生产线程把一个对象丢进队列。" class="headerlink" title="负责消费的线程将会一直从该阻塞队列中拿出对象。如果消费线程尝试去从一个空的队列中提取对象的话，这个消费线程将会处于阻塞之中，直到生产线程把一个对象丢进队列。"></a>负责消费的线程将会一直从该阻塞队列中拿出对象。如果消费线程尝试去从一个空的队列中提取对象的话，这个消费线程将会处于阻塞之中，直到生产线程把一个对象丢进队列。</h5><h2 id="BlockingQueue"><a href="#BlockingQueue" class="headerlink" title="BlockingQueue"></a>BlockingQueue</h2><pre><code class="lang-java">public interface BlockingQueue&lt;E&gt; extends Queue&lt;E&gt; {
+
+    boolean add(E e);
+
+    boolean offer(E e);
+
+    void put(E e) throws InterruptedException;
+
+    boolean offer(E e, long timeout, TimeUnit unit)
+        throws InterruptedException;
+
+    E take() throws InterruptedException;
+
+    E poll(long timeout, TimeUnit unit)
+        throws InterruptedException;
+
+    int remainingCapacity();
+
+    boolean remove(Object o);
+
+    public boolean contains(Object o);
+
+    int drainTo(Collection&lt;? super E&gt; c);
+
+    int drainTo(Collection&lt;? super E&gt; c, int maxElements);
+}
+</code></pre>
+<h5 id="接口BlockingQueue的方法就是上面几个，分析一下几个主要方法的用途："><a href="#接口BlockingQueue的方法就是上面几个，分析一下几个主要方法的用途：" class="headerlink" title="接口BlockingQueue的方法就是上面几个，分析一下几个主要方法的用途："></a>接口<strong>BlockingQueue</strong>的方法就是上面几个，分析一下几个主要方法的用途：</h5><ol>
+<li><strong>offer</strong> &amp; <strong>poll</strong>：往队列中插入、取出数据，如果成功则返回true，如果失败则返回false，这个过程不阻塞，看下ArrayBlockingQueue中的实现：<pre><code class="lang-java">public boolean offer(E e) {
+     checkNotNull(e);
+     //通过锁来保证线程安全
+     final ReentrantLock lock = this.lock;
+     lock.lock();
+     try {
+         if (count == items.length)
+             //如果队列已满
+             return false;
+         else {
+             //如果队列未满，真正的插入操作在enqueue中进行
+             enqueue(e);
+             return true;
+         }
+     } finally {
+         lock.unlock();
+     }
+ }
+</code></pre>
+<pre><code class="lang-java">public E poll() {
+     //通过锁来保证线程安全
+     final ReentrantLock lock = this.lock;
+     lock.lock();
+     try {
+         //如果队列为空则返回null，否则通过dequeue拿到队首数据
+         return (count == 0) ? null : dequeue();
+     } finally {
+         lock.unlock();
+     }
+ }
+</code></pre>
+</li>
+<li><p><strong>add</strong> &amp; <strong>remove</strong> ：往队列中插入、删除数据，如果成功则返回true，不阻塞，如果失败则抛出异常，看下AbstractQueue中的实现：</p>
+<pre><code class="lang-java">public boolean add(E e) {
+     if (offer(e))
+         return true;
+     else
+         throw new IllegalStateException(&quot;Queue full&quot;);
+ }
+</code></pre>
+<pre><code class="lang-java">public E remove() {
+     E x = poll();
+     if (x != null)
+         return x;
+     else
+         throw new NoSuchElementException();
+ }
+</code></pre>
+<h5 id="可以看到add和remove的操作很简单，把具体队列操作都依赖给了offer和pull"><a href="#可以看到add和remove的操作很简单，把具体队列操作都依赖给了offer和pull" class="headerlink" title="可以看到add和remove的操作很简单，把具体队列操作都依赖给了offer和pull"></a>可以看到add和remove的操作很简单，把具体队列操作都依赖给了offer和pull</h5></li>
+<li><p><strong>put</strong> &amp; <strong>take</strong>：put操作时阻塞队列的核心，将数据插入队列，如果队列满，则阻塞直到插入成功。take和put相对应，从队列中取数据，看下ArrayBlockingQueue中的实现：</p>
+<pre><code class="lang-java">public void put(E e) throws InterruptedException {
+     checkNotNull(e);
+     final ReentrantLock lock = this.lock;
+     lock.lockInterruptibly();
+     try {
+         while (count == items.length)
+             notFull.await(); //利用条件对象notFull阻塞
+         enqueue(e);
+     } finally {
+         lock.unlock();
+     }
+ }
+</code></pre>
+<pre><code class="lang-java">public E take() throws InterruptedException {
+     final ReentrantLock lock = this.lock;
+     lock.lockInterruptibly();
+     try {
+         while (count == 0)
+             notEmpty.await(); //利用条件对象notEmpty阻塞
+         return dequeue();
+     } finally {
+         lock.unlock();
+     }
+ }
+</code></pre>
+</li>
+</ol>
+<h5 id="知道了BlockingQueue的基本用法和简单的实现，那么java中常见的BlockingQueue有哪些呢："><a href="#知道了BlockingQueue的基本用法和简单的实现，那么java中常见的BlockingQueue有哪些呢：" class="headerlink" title="知道了BlockingQueue的基本用法和简单的实现，那么java中常见的BlockingQueue有哪些呢："></a>知道了<strong>BlockingQueue</strong>的基本用法和简单的实现，那么java中常见的<strong>BlockingQueue</strong>有哪些呢：</h5><ul>
+<li>ArrayBlockingQueue</li>
+<li>DelayQueue</li>
+<li>LinkedBlockingQueue</li>
+<li>SynchronousQueue</li>
+</ul>
+<h5 id="他们有什么区别呢。下面我们将通过源码来具体分析他们的实现过程。"><a href="#他们有什么区别呢。下面我们将通过源码来具体分析他们的实现过程。" class="headerlink" title="他们有什么区别呢。下面我们将通过源码来具体分析他们的实现过程。"></a>他们有什么区别呢。下面我们将通过源码来具体分析他们的实现过程。</h5><h2 id="ArrayBlockingQueue"><a href="#ArrayBlockingQueue" class="headerlink" title="ArrayBlockingQueue"></a>ArrayBlockingQueue</h2><h5 id="ArrayBlockingQueue类继承了AbstractQueue并实现了BlockingQueue接口，来看下ArrayBlockingQueue中一些主要的属性。"><a href="#ArrayBlockingQueue类继承了AbstractQueue并实现了BlockingQueue接口，来看下ArrayBlockingQueue中一些主要的属性。" class="headerlink" title="ArrayBlockingQueue类继承了AbstractQueue并实现了BlockingQueue接口，来看下ArrayBlockingQueue中一些主要的属性。"></a><strong>ArrayBlockingQueue</strong>类继承了AbstractQueue并实现了<strong>BlockingQueue</strong>接口，来看下<strong>ArrayBlockingQueue</strong>中一些主要的属性。</h5><pre><code class="lang-java">public class ArrayBlockingQueue&lt;E&gt; extends AbstractQueue&lt;E&gt;
+        implements BlockingQueue&lt;E&gt;, java.io.Serializable {
+    //使用final 数组保存队列中的数据。数组需要初始化长度。因此数组的长度就是ArrayBlockingQueue的最大容量
+    final Object[] items;
+
+    //数组的下标指针，标识着下一步的take, poll, peek or remove操作。相当于头部指针
+    int takeIndex;
+
+    ////数组的下标指针，标识着下一步的put, offer, or add操作，相当于尾部指针
+    int putIndex;
+
+    //当前队列中已有数据的个数
+    int count;
+
+    //锁，保证基本的数据操作的线程安全
+    final ReentrantLock lock;
+
+    //条件对象，用于takes操作的等待
+    private final Condition notEmpty;
+
+    //条件对象，用于puts操作的等待
+    private final Condition notFull;
+
+    //迭代器
+    transient Itrs itrs = null;
+}
+</code></pre>
+<h5 id="可以看到ArrayBlockingQueue的底层数据结构是通过有界数组来实现的，因此你必须在创建的时候就应该确定好容量："><a href="#可以看到ArrayBlockingQueue的底层数据结构是通过有界数组来实现的，因此你必须在创建的时候就应该确定好容量：" class="headerlink" title="可以看到ArrayBlockingQueue的底层数据结构是通过有界数组来实现的，因此你必须在创建的时候就应该确定好容量："></a>可以看到<strong>ArrayBlockingQueue</strong>的底层数据结构是通过有界数组来实现的，因此你必须在创建的时候就应该确定好容量：</h5><pre><code class="lang-java">public ArrayBlockingQueue(int capacity) {
+        this(capacity, false);
+    }
+</code></pre>
+<pre><code class="lang-java">public ArrayBlockingQueue(int capacity, boolean fair) {
+        if (capacity &lt;= 0)
+            throw new IllegalArgumentException();
+        this.items = new Object[capacity];
+        lock = new ReentrantLock(fair);
+        notEmpty = lock.newCondition();
+        notFull =  lock.newCondition();
+    }
+</code></pre>
+<pre><code class="lang-java">public ArrayBlockingQueue(int capacity, boolean fair,
+                              Collection&lt;? extends E&gt; c) {
+        this(capacity, fair);
+
+        final ReentrantLock lock = this.lock;
+        lock.lock(); // Lock only for visibility, not mutual exclusion
+        try {
+            int i = 0;
+            try {
+                for (E e : c) {
+                    checkNotNull(e);
+                    items[i++] = e;
+                }
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                throw new IllegalArgumentException();
+            }
+            count = i;
+            putIndex = (i == capacity) ? 0 : i;
+        } finally {
+            lock.unlock();
+        }
+    }
+</code></pre>
+<h5 id="可以看到ArrayBlockingQueue的初始化可以有三个参数："><a href="#可以看到ArrayBlockingQueue的初始化可以有三个参数：" class="headerlink" title="可以看到ArrayBlockingQueue的初始化可以有三个参数："></a>可以看到ArrayBlockingQueue的初始化可以有三个参数：</h5><ol>
+<li><strong>capacity（容量）</strong>：三个构造函数都需要的变量，也就是ArrayBlockingQueue的初始容量。</li>
+<li><strong>fair（是否公平）</strong>：缺省默认为非公平，这里的公平与非公平主要体现在锁的获取上，ArrayBlockingQueue会根据这个参数来创建公平锁或者非公平锁</li>
+<li><strong>c（集合）</strong>：初始集合数据，即使有这个参数，ArrayBlockingQueue依然会按照capacity的大小来初始化数组大小，即使c的容量可能会超过capacity。如果c的容量大于capacity大小。构造函数中会捕获该异常<strong>ArrayIndexOutOfBoundsException</strong>，并抛出一个新的<strong>IllegalArgumentException</strong>异常。</li>
+</ol>
+<h5 id="这是ArrayBlockingQueue的主要特点，那么我们来看看ArrayBlockingQueue是如何来操作数据添加和删除数据的"><a href="#这是ArrayBlockingQueue的主要特点，那么我们来看看ArrayBlockingQueue是如何来操作数据添加和删除数据的" class="headerlink" title="这是ArrayBlockingQueue的主要特点，那么我们来看看ArrayBlockingQueue是如何来操作数据添加和删除数据的"></a>这是<strong>ArrayBlockingQueue</strong>的主要特点，那么我们来看看ArrayBlockingQueue是如何来操作数据添加和删除数据的</h5><h4 id="enqueue（入队）"><a href="#enqueue（入队）" class="headerlink" title="enqueue（入队）"></a>enqueue（入队）</h4><pre><code class="lang-java">private void enqueue(E x) {
+        final Object[] items = this.items;
+        //通过putIndex下标直接插入数据
+        items[putIndex] = x;
+        //自增putIndex后，如果已经是数组尾部，则重新开始计算，循环指针
+        if (++putIndex == items.length)
+            putIndex = 0;
+        count++;//数据大小加1
+        notEmpty.signal(); //释放因为take操作而阻塞的线程
+    }
+</code></pre>
+<h5 id="该操作为私有操作，只有方法内部可以调用，通过上面的代码我们知道put-offer-add操作都是通过该方法插入的数据，所以在enqueue方法中并没有锁的操作，因为在外部已经获取过锁"><a href="#该操作为私有操作，只有方法内部可以调用，通过上面的代码我们知道put-offer-add操作都是通过该方法插入的数据，所以在enqueue方法中并没有锁的操作，因为在外部已经获取过锁" class="headerlink" title="该操作为私有操作，只有方法内部可以调用，通过上面的代码我们知道put, offer, add操作都是通过该方法插入的数据，所以在enqueue方法中并没有锁的操作，因为在外部已经获取过锁"></a>该操作为私有操作，只有方法内部可以调用，通过上面的代码我们知道put, offer, add操作都是通过该方法插入的数据，所以在enqueue方法中并没有锁的操作，因为在外部已经获取过锁</h5><h4 id="dequeue（出队）"><a href="#dequeue（出队）" class="headerlink" title="dequeue（出队）"></a>dequeue（出队）</h4><pre><code class="lang-java">private E dequeue() {
+        final Object[] items = this.items;
+        //通过takeIndex获取数组数据
+        E x = (E) items[takeIndex];
+        //制空
+        items[takeIndex] = null;
+        //自增takeIndex后，如果已经是数组尾部，则重新开始计算，循环指针
+        if (++takeIndex == items.length)
+            takeIndex = 0;
+        count--;//数据大小减1
+        if (itrs != null)
+            itrs.elementDequeued();
+        notFull.signal();//释放因为put操作而阻塞的线程
+        return x; //返回数据
+    }
+</code></pre>
+<h2 id="DelayQueue"><a href="#DelayQueue" class="headerlink" title="DelayQueue"></a>DelayQueue</h2><h5 id="DelayQueue是一个无界的BlockingQueue，用于放置实现了Delayed接口的对象，其中的对象只能在其到期时才能从队列中取走。这种队列是有序的，即队头对象的延迟到期时间最长。注意：不能将null元素放置到这种队列中。"><a href="#DelayQueue是一个无界的BlockingQueue，用于放置实现了Delayed接口的对象，其中的对象只能在其到期时才能从队列中取走。这种队列是有序的，即队头对象的延迟到期时间最长。注意：不能将null元素放置到这种队列中。" class="headerlink" title="DelayQueue是一个无界的BlockingQueue，用于放置实现了Delayed接口的对象，其中的对象只能在其到期时才能从队列中取走。这种队列是有序的，即队头对象的延迟到期时间最长。注意：不能将null元素放置到这种队列中。"></a><strong>DelayQueue</strong>是一个无界的<strong>BlockingQueue</strong>，用于放置实现了<strong>Delayed</strong>接口的对象，其中的对象只能在其到期时才能从队列中取走。这种队列是有序的，即队头对象的延迟到期时间最长。注意：不能将null元素放置到这种队列中。</h5><h3 id="先来看下使用过程："><a href="#先来看下使用过程：" class="headerlink" title="先来看下使用过程："></a>先来看下使用过程：</h3><h5 id="创建一个Delayed，用于保存任务数据以及延迟执行的时间"><a href="#创建一个Delayed，用于保存任务数据以及延迟执行的时间" class="headerlink" title="创建一个Delayed，用于保存任务数据以及延迟执行的时间"></a>创建一个Delayed，用于保存任务数据以及延迟执行的时间</h5><pre><code class="lang-java">public class B implements Delayed{
+
+        private long endTime; //执行时间
+
+        public B(long endTime) {
+            this.endTime = endTime;
+        }
+
+        public long getDelay(TimeUnit unit) {
+            return unit.convert(endTime - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+        }
+
+        public int compareTo(Delayed o) {
+            if(o == null) return 1;
+            if(o == this) return 0;
+            if (this.getDelay(TimeUnit.NANOSECONDS) &gt; o.getDelay(TimeUnit.NANOSECONDS)) {
+                return 1;
+            }else if (this.getDelay(TimeUnit.NANOSECONDS) == o.getDelay(TimeUnit.NANOSECONDS)) {
+                return 0;
+            }else {
+                return -1;
+            }
+        }
+    }
+</code></pre>
+<h5 id="main方法"><a href="#main方法" class="headerlink" title="main方法"></a>main方法</h5><pre><code class="lang-java">public static void main(String[] args) throws InterruptedException {
+        DelayQueue&lt;B&gt; delayed = new DelayQueue&lt;B&gt;();
+        B b = new B(new Date().getTime() + 10000); //第一个任务在10秒后执行
+        B b1 = new B(new Date().getTime() + 5000); //第二个任务在5秒后执行
+        delayed.put(b);
+        delayed.put(b1);
+        System.out.println(delayed.take().getEndTime());
+        System.out.println(delayed.take().getEndTime());
+    }
+</code></pre>
+<h5 id="输出结果："><a href="#输出结果：" class="headerlink" title="输出结果："></a>输出结果：</h5><pre><code>1522220892807
+1522220897807
+</code></pre><h3 id="DelayQueue实现细节"><a href="#DelayQueue实现细节" class="headerlink" title="DelayQueue实现细节"></a>DelayQueue实现细节</h3><h4 id="看下DelayQueue的属性变量"><a href="#看下DelayQueue的属性变量" class="headerlink" title="看下DelayQueue的属性变量"></a>看下DelayQueue的属性变量</h4><pre><code class="lang-java">public class DelayQueue&lt;E extends Delayed&gt; extends AbstractQueue&lt;E&gt;
+    implements BlockingQueue&lt;E&gt; {
+
+    //锁，控制队列操作的线程安全
+    private final transient ReentrantLock lock = new ReentrantLock();
+
+    //优先队列，实际存储节点的数据结构，优先队列将按照我们提供的compareTo方法进行排序
+    //队列中使用数组进行存储数据，但是在容量不够的时候可以动态扩容。在这里初始大小为11
+    private final PriorityQueue&lt;E&gt; q = new PriorityQueue&lt;E&gt;();
+
+    //当前头部节点的等待线程，防止多个线程等待同一个节点
+    private Thread leader = null;
+
+    //线程阻塞使用Condition实现
+    private final Condition available = lock.newCondition();
+}
+</code></pre>
+<h4 id="我们来看下构造函数："><a href="#我们来看下构造函数：" class="headerlink" title="我们来看下构造函数："></a>我们来看下构造函数：</h4><h5 id="无参构造函数"><a href="#无参构造函数" class="headerlink" title="无参构造函数"></a>无参构造函数</h5><pre><code class="lang-java">public DelayQueue() {}
+</code></pre>
+<h5 id="通过集合初始化DelayQueue"><a href="#通过集合初始化DelayQueue" class="headerlink" title="通过集合初始化DelayQueue"></a>通过集合初始化<strong>DelayQueue</strong></h5><pre><code class="lang-java">public DelayQueue(Collection&lt;? extends E&gt; c) {
+        this.addAll(c);
+}
+</code></pre>
+<h5 id="可以看到DelayQueue的构造函数非常简单，这是因为DelayQueue是无界的，而且真正存储数据的PriorityQueue默认就已经初始化完成。所以DelayQueue实际并不关心数据的存储，它的核心还是在于take操作的阻塞过程："><a href="#可以看到DelayQueue的构造函数非常简单，这是因为DelayQueue是无界的，而且真正存储数据的PriorityQueue默认就已经初始化完成。所以DelayQueue实际并不关心数据的存储，它的核心还是在于take操作的阻塞过程：" class="headerlink" title="可以看到DelayQueue的构造函数非常简单，这是因为DelayQueue是无界的，而且真正存储数据的PriorityQueue默认就已经初始化完成。所以DelayQueue实际并不关心数据的存储，它的核心还是在于take操作的阻塞过程："></a>可以看到<strong>DelayQueue</strong>的构造函数非常简单，这是因为<strong>DelayQueue</strong>是无界的，而且真正存储数据的<strong>PriorityQueue</strong>默认就已经初始化完成。所以<strong>DelayQueue</strong>实际并不关心数据的存储，它的核心还是在于take操作的阻塞过程：</h5><pre><code class="lang-java">public E take() throws InterruptedException {
+        final ReentrantLock lock = this.lock; //通过锁来保证线程安全
+        lock.lockInterruptibly(); //可中断锁
+        try {
+            for (;;) {
+                E first = q.peek(); //查看队列头部的节点
+                if (first == null)
+                    available.await(); //如果队列为空，阻塞
+                else {
+                    long delay = first.getDelay(NANOSECONDS); //获取等待时间
+                    if (delay &lt;= 0) //等待时间小于等于0 则直接返回，这是该方法唯一的出口。除非锁中断
+                        return q.poll();
+                    first = null; // 等待时间大于0，需要阻塞等待
+                    if (leader != null)
+                        available.await(); //如果有其他线程在等待该节点，则阻塞
+                    else {
+                        Thread thisThread = Thread.currentThread();
+                        leader = thisThread; //设置等待头部节点的线程
+                        try {
+                            available.awaitNanos(delay); //等待固定时间
+                        } finally {
+                            if (leader == thisThread)
+                                leader = null; //等待结束后释放等待线程，重新获取节点
+                        }
+                    }
+                }
+            }
+        } finally {
+            if (leader == null &amp;&amp; q.peek() != null)
+                available.signal(); //如果没有线程在等待头部节点，并且队列不为空。则唤醒其他等待线程
+            lock.unlock(); //锁释放
+        }
+    }
+</code></pre>
+<h5 id="整理一下操作流程："><a href="#整理一下操作流程：" class="headerlink" title="整理一下操作流程："></a>整理一下操作流程：</h5><ol>
+<li>获取锁</li>
+<li>获取队列头部的节点（不出队）</li>
+<li>如果头部节点为空，则判断队列为空，线程阻塞等待并释放锁，唤醒时回到步骤2</li>
+<li>如果节点不为空，获取头部节点的等待时间（这里参照之前的例子，需要自行计算等待时间，略坑）</li>
+<li>如果等待时间小于等于0。则认为该节点可以返回，调用poll操作返回。这是该方法的唯一一个正常出口</li>
+<li>等待时间大于0<ol>
+<li>判断是否还有其他线程在等待该节点，如果有，则阻塞并释放锁。（理论上来说等该线程唤醒并执行时获取到的应该是后续的节点了），唤醒时回到步骤2</li>
+<li>如果没有其他线程等待，则通过awaitNanos方法等待固定时间。唤醒时释放头部节点的等待线程。重新回到步骤2</li>
+</ol>
+</li>
+<li>通常情况下，awaitNanos方法过后重新获取节点能够正常返回了。然后调用finally块，在finally中会释放步骤3和步骤6中的第1部分的阻塞线程中的一个。</li>
+</ol>
+<h5 id="在上面的操作过程中有一个小坑就是步骤4，这里的等待时间需要自行计算。这里会带来什么坑呢，看个例子："><a href="#在上面的操作过程中有一个小坑就是步骤4，这里的等待时间需要自行计算。这里会带来什么坑呢，看个例子：" class="headerlink" title="在上面的操作过程中有一个小坑就是步骤4，这里的等待时间需要自行计算。这里会带来什么坑呢，看个例子："></a>在上面的操作过程中有一个小坑就是步骤4，这里的等待时间需要自行计算。这里会带来什么坑呢，看个例子：</h5><pre><code class="lang-java">public static void main(String[] args) throws InterruptedException {
+        DelayQueue&lt;B&gt; delayed = new DelayQueue&lt;B&gt;();
+        B b = new B(new Date().getTime() + 10000);
+        B b1 = new B(new Date().getTime() + 5000);
+        delayed.put(b);
+        delayed.put(b1);
+        b1.setEndTime(b1.getEndTime() + 10000);
+        System.out.println(delayed.take().getEndTime());
+        System.out.println(delayed.take().getEndTime());
+    }
+
+    private static class B implements Delayed{
+
+        private long endTime;
+
+        public B(long endTime) {
+            this.endTime = endTime;
+        }
+
+        public long getDelay(TimeUnit unit) {
+            return unit.convert(endTime - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+        }
+
+        public long getEndTime() {
+            return endTime;
+        }
+
+        public void setEndTime(long endTime) {
+            this.endTime = endTime;
+        }
+
+        public int compareTo(Delayed o) {
+            if(o == null) return 1;
+            if(o == this) return 0;
+            if (this.getDelay(TimeUnit.NANOSECONDS) &gt; o.getDelay(TimeUnit.NANOSECONDS)) {
+                return 1;
+            }else if (this.getDelay(TimeUnit.NANOSECONDS) == o.getDelay(TimeUnit.NANOSECONDS)) {
+                return 0;
+            }else {
+                return -1;
+            }
+        }
+    }
+</code></pre>
+<h5 id="输出结果"><a href="#输出结果" class="headerlink" title="输出结果"></a>输出结果</h5><pre><code>1522230732548
+1522230727548
+</code></pre><h5 id="解释一下上面的例子，这个例子和之前的例子是一样的。设置了两个任务并且入队。一个任务5秒后执行，一个任务10秒后执行。入队后将5秒执行的任务再往后推迟10秒（变成了15秒）。结果执行结果显示15秒延迟的任务先执行。再立刻执行了10秒延迟任务。"><a href="#解释一下上面的例子，这个例子和之前的例子是一样的。设置了两个任务并且入队。一个任务5秒后执行，一个任务10秒后执行。入队后将5秒执行的任务再往后推迟10秒（变成了15秒）。结果执行结果显示15秒延迟的任务先执行。再立刻执行了10秒延迟任务。" class="headerlink" title="解释一下上面的例子，这个例子和之前的例子是一样的。设置了两个任务并且入队。一个任务5秒后执行，一个任务10秒后执行。入队后将5秒执行的任务再往后推迟10秒（变成了15秒）。结果执行结果显示15秒延迟的任务先执行。再立刻执行了10秒延迟任务。"></a>解释一下上面的例子，这个例子和之前的例子是一样的。设置了两个任务并且入队。一个任务5秒后执行，一个任务10秒后执行。入队后将5秒执行的任务再往后推迟10秒（变成了15秒）。结果执行结果显示15秒延迟的任务先执行。再立刻执行了10秒延迟任务。</h5><h5 id="这个坑就在于需要开发者自己去计算到期时间，而且这个时间必须是实时计算出来。如果固定返回一个大于0的数字，这个队列将永远循环阻塞在该节点。后面的任务将不会被执行。就算不是固定时间，但是修改了任务执行时间，任务不会重新排序。导致队列部分后续任务执行时间错误。"><a href="#这个坑就在于需要开发者自己去计算到期时间，而且这个时间必须是实时计算出来。如果固定返回一个大于0的数字，这个队列将永远循环阻塞在该节点。后面的任务将不会被执行。就算不是固定时间，但是修改了任务执行时间，任务不会重新排序。导致队列部分后续任务执行时间错误。" class="headerlink" title="这个坑就在于需要开发者自己去计算到期时间，而且这个时间必须是实时计算出来。如果固定返回一个大于0的数字，这个队列将永远循环阻塞在该节点。后面的任务将不会被执行。就算不是固定时间，但是修改了任务执行时间，任务不会重新排序。导致队列部分后续任务执行时间错误。"></a>这个坑就在于需要开发者自己去计算到期时间，而且这个时间必须是实时计算出来。如果固定返回一个大于0的数字，这个队列将永远循环阻塞在该节点。后面的任务将不会被执行。就算不是固定时间，但是修改了任务执行时间，任务不会重新排序。导致队列部分后续任务执行时间错误。</h5><h5 id="当然这样也有一点好处，就是使得DelayQueue本身足够简单。DelayQueue不用去关心或者计算任务的过期时间，而是把这部分操场依赖给了任务本身。但是没有做到动态的调整队列顺序已保证过期时间计算的复杂性。所以这个操作还是有点坑。"><a href="#当然这样也有一点好处，就是使得DelayQueue本身足够简单。DelayQueue不用去关心或者计算任务的过期时间，而是把这部分操场依赖给了任务本身。但是没有做到动态的调整队列顺序已保证过期时间计算的复杂性。所以这个操作还是有点坑。" class="headerlink" title="当然这样也有一点好处，就是使得DelayQueue本身足够简单。DelayQueue不用去关心或者计算任务的过期时间，而是把这部分操场依赖给了任务本身。但是没有做到动态的调整队列顺序已保证过期时间计算的复杂性。所以这个操作还是有点坑。"></a>当然这样也有一点好处，就是使得<strong>DelayQueue</strong>本身足够简单。<strong>DelayQueue</strong>不用去关心或者计算任务的过期时间，而是把这部分操场依赖给了任务本身。但是没有做到动态的调整队列顺序已保证过期时间计算的复杂性。所以这个操作还是有点坑。</h5><h3 id="offer、poll"><a href="#offer、poll" class="headerlink" title="offer、poll"></a>offer、poll</h3><pre><code class="lang-java">public boolean offer(E e) {
+        final ReentrantLock lock = this.lock;
+        lock.lock();
+        try {
+            q.offer(e); //调用优先队列的offer操作，有排序
+            if (q.peek() == e) {
+                leader = null; //如果插入的节点是头部节点，则唤醒等待线程
+                available.signal();
+            }
+            return true;
+        } finally {
+            lock.unlock();
+        }
+    }
+</code></pre>
+<pre><code class="lang-java">public E poll() {
+        final ReentrantLock lock = this.lock;
+        lock.lock();
+        try {
+            E first = q.peek();
+            if (first == null || first.getDelay(NANOSECONDS) &gt; 0) //如果头部节点为空或者没到执行时间
+                return null; //返回空
+            else
+                return q.poll();
+        } finally {
+            lock.unlock();
+        }
+    }
+</code></pre>
+<h2 id="LinkedBlockingQueue"><a href="#LinkedBlockingQueue" class="headerlink" title="LinkedBlockingQueue"></a>LinkedBlockingQueue</h2><h5 id="LinkedBlockingQueue是一个由链表实现的有界队列阻塞队列。让我们来看下代码："><a href="#LinkedBlockingQueue是一个由链表实现的有界队列阻塞队列。让我们来看下代码：" class="headerlink" title="LinkedBlockingQueue是一个由链表实现的有界队列阻塞队列。让我们来看下代码："></a>LinkedBlockingQueue是一个由链表实现的有界队列阻塞队列。让我们来看下代码：</h5><pre><code class="lang-java">public class LinkedBlockingQueue&lt;E&gt; extends AbstractQueue&lt;E&gt;
+        implements BlockingQueue&lt;E&gt;, java.io.Serializable {
+
+    //链表节点，存储节点数据和下一个节点
+    static class Node&lt;E&gt; {
+        E item;
+
+        Node&lt;E&gt; next;
+
+        Node(E x) { item = x; }
+    }
+
+    //最大容量。默认为Integer.MAX_VALUE
+    private final int capacity;
+
+    //线程安全类AtomicInteger，记录链表队列长度
+    private final AtomicInteger count = new AtomicInteger();
+
+    //头部节点
+    transient Node&lt;E&gt; head;
+
+    //尾部节点
+    private transient Node&lt;E&gt; last;
+
+    /** 获取节点操作 的锁 */
+    private final ReentrantLock takeLock = new ReentrantLock();
+
+    /** 获取节点操作 的条件对象 */
+    private final Condition notEmpty = takeLock.newCondition();
+
+    /** 添加节点操作 的锁 */
+    private final ReentrantLock putLock = new ReentrantLock();
+
+    /** 添加节点操作 的条件对象 */
+    private final Condition notFull = putLock.newCondition();
+}
+</code></pre>
+<h3 id="看下构造函数"><a href="#看下构造函数" class="headerlink" title="看下构造函数"></a>看下构造函数</h3><pre><code class="lang-java">public LinkedBlockingQueue() {
+        this(Integer.MAX_VALUE);
+    }
+</code></pre>
+<h5 id="默认构造函数的初始化大小为Integer-MAX-VALUE"><a href="#默认构造函数的初始化大小为Integer-MAX-VALUE" class="headerlink" title="默认构造函数的初始化大小为Integer.MAX_VALUE"></a>默认构造函数的初始化大小为Integer.MAX_VALUE</h5><pre><code class="lang-java">public LinkedBlockingQueue(int capacity) {
+        if (capacity &lt;= 0) throw new IllegalArgumentException();
+        this.capacity = capacity;
+        last = head = new Node&lt;E&gt;(null);
+    }
+</code></pre>
+<h5 id="头部节点和尾部节点都指向同一个空节点"><a href="#头部节点和尾部节点都指向同一个空节点" class="headerlink" title="头部节点和尾部节点都指向同一个空节点"></a>头部节点和尾部节点都指向同一个空节点</h5><pre><code class="lang-java">public LinkedBlockingQueue(Collection&lt;? extends E&gt; c) {
+        this(Integer.MAX_VALUE);
+        final ReentrantLock putLock = this.putLock;
+        putLock.lock(); // Never contended, but necessary for visibility
+        try {
+            int n = 0;
+            for (E e : c) {
+                if (e == null)
+                    throw new NullPointerException();
+                if (n == capacity)
+                    throw new IllegalStateException(&quot;Queue full&quot;);
+                enqueue(new Node&lt;E&gt;(e));
+                ++n;
+            }
+            count.set(n);
+        } finally {
+            putLock.unlock();
+        }
+    }
+</code></pre>
+<h5 id="利用集合初始化队列，设置为Integer-MAX-VALUE容量，然后循环入队enqueue操作"><a href="#利用集合初始化队列，设置为Integer-MAX-VALUE容量，然后循环入队enqueue操作" class="headerlink" title="利用集合初始化队列，设置为Integer.MAX_VALUE容量，然后循环入队enqueue操作"></a>利用集合初始化队列，设置为Integer.MAX_VALUE容量，然后循环入队enqueue操作</h5><h3 id="put"><a href="#put" class="headerlink" title="put"></a>put</h3><pre><code class="lang-java">public void put(E e) throws InterruptedException {
+        if (e == null) throw new NullPointerException(); //不允许插入空值
+        int c = -1;
+        Node&lt;E&gt; node = new Node&lt;E&gt;(e); //构建新的节点
+        final ReentrantLock putLock = this.putLock;
+        final AtomicInteger count = this.count;
+        putLock.lockInterruptibly(); //可中断锁
+        try {
+            while (count.get() == capacity) {
+                notFull.await(); //如果队列满，则一直阻塞
+            }
+            enqueue(node); //如果操作
+            c = count.getAndIncrement();
+            if (c + 1 &lt; capacity)
+                notFull.signal(); //判断这次操作后队列没有满，则唤醒其他入队请求线程
+        } finally {
+            putLock.unlock(); //解锁
+        }
+        if (c == 0)
+            signalNotEmpty(); //如果本次操作之前队列为空，则在本次操作之后队列不为空了，所以这里需要唤醒获取节点的线程
+    }
+</code></pre>
+<h5 id="通过put方法看到LinkedBlockingQueue的操作和ArrayBlockingQueue的操作都大同小异，主要是通过ReentrantLock来控制线程安全，以及通过Condition实现条件阻塞。他们之间主要的不同点就在于他们存储数据的数据结构。"><a href="#通过put方法看到LinkedBlockingQueue的操作和ArrayBlockingQueue的操作都大同小异，主要是通过ReentrantLock来控制线程安全，以及通过Condition实现条件阻塞。他们之间主要的不同点就在于他们存储数据的数据结构。" class="headerlink" title="通过put方法看到LinkedBlockingQueue的操作和ArrayBlockingQueue的操作都大同小异，主要是通过ReentrantLock来控制线程安全，以及通过Condition实现条件阻塞。他们之间主要的不同点就在于他们存储数据的数据结构。"></a>通过<strong>put</strong>方法看到<strong>LinkedBlockingQueue</strong>的操作和<strong>ArrayBlockingQueue</strong>的操作都大同小异，主要是通过<strong>ReentrantLock</strong>来控制线程安全，以及通过<strong>Condition</strong>实现条件阻塞。他们之间主要的不同点就在于他们存储数据的数据结构。</h5></div>
+    </article>
+</section>
+
+<div class="clear"></div>
+
+
+
+    <footer id="footer">
+  <div class="foot">
+    <!-- <a id="gotop">TOP</a> -->
+    <!-- <div id="copyright">Copyright &copy; 2016 <a href="#" target="_blank">WangWenXiang</a><br>
+       Power by <a href="https://github.com/winx402" target="_blank">Github Pages</a> |
+      <a href="https://hexo.io/" target="_blank">HEXO</a></div> -->
+      <div id="copyright">还没想好要写什么</div>
+  </div>
+</footer>
+
+</div>
+<div class="img-view">
+    <span><img src="/img/guide.jpeg"></span>
+</div>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

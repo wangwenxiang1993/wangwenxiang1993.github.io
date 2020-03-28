@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+    <title>winx&#39;blog</title>
+</head>
+<body>
+<div class="animated" id="info-min">
+    <div id="guide">
+    <div class="guide-button " _href="/tags/index/">首页</div>
+    <div class="guide-button " _href="/tags/tech/">技术</div>
+    <!--<div class="guide-button " _href="/tags/life/">生活</div>-->
+    <div class="guide-button " _href="/categories/read/">阅读</div>
+    <img src="/img/photo.png">
+</div>
+</div>
+<div id="wrap">
+    
+  
+    
+      <div id="big-title" style="color: #666">
+    
+
+  <div id="title-name">fastJson为什么这么快</div><br>
+  <div id="something">2018/03/26</div>
+</div>
+  <section id="content-specific">
+    <article class="post">
+        <div class="con"><h5 id="JSON处理主要包括两个部分，serialize和deserialize。serialize就是把Java对象变成JSON-String或者JSON-Bytes。Deserialize是把JSON-String或者Json-Bytes变成java对象。其实这个过程有些JSON库是分三部分的，json-string-lt-－-gt-json-tree-lt-－-gt-java-object。Fastjson也支持这种转换方式，但是这种转换方式因为有多余的步骤，性能不好，不推荐使用。"><a href="#JSON处理主要包括两个部分，serialize和deserialize。serialize就是把Java对象变成JSON-String或者JSON-Bytes。Deserialize是把JSON-String或者Json-Bytes变成java对象。其实这个过程有些JSON库是分三部分的，json-string-lt-－-gt-json-tree-lt-－-gt-java-object。Fastjson也支持这种转换方式，但是这种转换方式因为有多余的步骤，性能不好，不推荐使用。" class="headerlink" title="JSON处理主要包括两个部分，serialize和deserialize。serialize就是把Java对象变成JSON String或者JSON Bytes。Deserialize是把JSON String或者Json Bytes变成java对象。其实这个过程有些JSON库是分三部分的，json string &lt;－-&gt; json tree &lt;－-&gt; java object。Fastjson也支持这种转换方式，但是这种转换方式因为有多余的步骤，性能不好，不推荐使用。"></a>JSON处理主要包括两个部分，serialize和deserialize。serialize就是把Java对象变成JSON String或者JSON Bytes。Deserialize是把JSON String或者Json Bytes变成java对象。其实这个过程有些JSON库是分三部分的，json string &lt;－-&gt; json tree &lt;－-&gt; java object。Fastjson也支持这种转换方式，但是这种转换方式因为有多余的步骤，性能不好，不推荐使用。</h5><a id="more"></a>
+<h2 id="为什么Fastjson能够做到这么快？"><a href="#为什么Fastjson能够做到这么快？" class="headerlink" title="为什么Fastjson能够做到这么快？"></a>为什么Fastjson能够做到这么快？</h2><h3 id="Fastjson中Serialzie的优化实现"><a href="#Fastjson中Serialzie的优化实现" class="headerlink" title="Fastjson中Serialzie的优化实现"></a>Fastjson中Serialzie的优化实现</h3><h4 id="1-自行编写类似StringBuilder的工具类SerializeWriter。"><a href="#1-自行编写类似StringBuilder的工具类SerializeWriter。" class="headerlink" title="1.自行编写类似StringBuilder的工具类SerializeWriter。"></a>1.自行编写类似StringBuilder的工具类<strong>SerializeWriter</strong>。</h4><h5 id="把java对象序列化成json文本，是不可能使用字符串直接拼接的，因为这样性能很差。比字符串拼接更好的办法是使用java-lang-StringBuilder。StringBuilder虽然速度很好了，但还能够进一步提升性能的，fastjson中提供了一个类似StringBuilder的类com-alibaba-fastjson-serializer-SerializeWriter。"><a href="#把java对象序列化成json文本，是不可能使用字符串直接拼接的，因为这样性能很差。比字符串拼接更好的办法是使用java-lang-StringBuilder。StringBuilder虽然速度很好了，但还能够进一步提升性能的，fastjson中提供了一个类似StringBuilder的类com-alibaba-fastjson-serializer-SerializeWriter。" class="headerlink" title="把java对象序列化成json文本，是不可能使用字符串直接拼接的，因为这样性能很差。比字符串拼接更好的办法是使用java.lang.StringBuilder。StringBuilder虽然速度很好了，但还能够进一步提升性能的，fastjson中提供了一个类似StringBuilder的类com.alibaba.fastjson.serializer.SerializeWriter。"></a>把java对象序列化成json文本，是不可能使用字符串直接拼接的，因为这样性能很差。比字符串拼接更好的办法是使用<code>java.lang.StringBuilder</code>。StringBuilder虽然速度很好了，但还能够进一步提升性能的，fastjson中提供了一个类似StringBuilder的类<code>com.alibaba.fastjson.serializer.SerializeWriter</code>。</h5><h5 id="SerializeWriter提供一些针对性的方法减少数组越界检查。例如public-void-writeIntAndChar-int-i-char-c-，这样的方法一次性把两个值写到buf中去，能够减少一次越界检查。目前SerializeWriter还有一些关键的方法能够减少越界检查的，我还没实现。也就是说，如果实现了，能够进一步提升serialize的性能。"><a href="#SerializeWriter提供一些针对性的方法减少数组越界检查。例如public-void-writeIntAndChar-int-i-char-c-，这样的方法一次性把两个值写到buf中去，能够减少一次越界检查。目前SerializeWriter还有一些关键的方法能够减少越界检查的，我还没实现。也就是说，如果实现了，能够进一步提升serialize的性能。" class="headerlink" title="SerializeWriter提供一些针对性的方法减少数组越界检查。例如public void writeIntAndChar(int i, char c) {}，这样的方法一次性把两个值写到buf中去，能够减少一次越界检查。目前SerializeWriter还有一些关键的方法能够减少越界检查的，我还没实现。也就是说，如果实现了，能够进一步提升serialize的性能。"></a><strong>SerializeWriter</strong>提供一些针对性的方法减少数组越界检查。例如<code>public void writeIntAndChar(int i, char c) {}</code>，这样的方法一次性把两个值写到buf中去，能够减少一次越界检查。目前SerializeWriter还有一些关键的方法能够减少越界检查的，我还没实现。也就是说，如果实现了，能够进一步提升serialize的性能。</h5><h4 id="2、使用ThreadLocal来缓存buf。"><a href="#2、使用ThreadLocal来缓存buf。" class="headerlink" title="2、使用ThreadLocal来缓存buf。"></a>2、使用ThreadLocal来缓存buf。</h4><h5 id="这个办法能够减少对象分配和gc，从而提升性能。SerializeWriter中包含了一个char-buf，每序列化一次，都要做一次分配，使用ThreadLocal优化，能够提升性能。"><a href="#这个办法能够减少对象分配和gc，从而提升性能。SerializeWriter中包含了一个char-buf，每序列化一次，都要做一次分配，使用ThreadLocal优化，能够提升性能。" class="headerlink" title="这个办法能够减少对象分配和gc，从而提升性能。SerializeWriter中包含了一个char[] buf，每序列化一次，都要做一次分配，使用ThreadLocal优化，能够提升性能。"></a>这个办法能够减少对象分配和gc，从而提升性能。SerializeWriter中包含了一个char[] buf，每序列化一次，都要做一次分配，使用ThreadLocal优化，能够提升性能。</h5><h4 id="3、使用asm避免反射"><a href="#3、使用asm避免反射" class="headerlink" title="3、使用asm避免反射"></a>3、使用asm避免反射</h4><h5 id="获取java-bean的属性值，需要调用反射，fastjson引入了asm的来避免反射导致的开销。fastjson内置的asm是基于objectweb-asm-3-3-1改造的，只保留必要的部分，fastjson-asm部分不到1000行代码，引入了asm的同时不导致大小变大太多。"><a href="#获取java-bean的属性值，需要调用反射，fastjson引入了asm的来避免反射导致的开销。fastjson内置的asm是基于objectweb-asm-3-3-1改造的，只保留必要的部分，fastjson-asm部分不到1000行代码，引入了asm的同时不导致大小变大太多。" class="headerlink" title="获取java bean的属性值，需要调用反射，fastjson引入了asm的来避免反射导致的开销。fastjson内置的asm是基于objectweb asm 3.3.1改造的，只保留必要的部分，fastjson asm部分不到1000行代码，引入了asm的同时不导致大小变大太多。"></a>获取java bean的属性值，需要调用反射，fastjson引入了asm的来避免反射导致的开销。fastjson内置的asm是基于objectweb asm 3.3.1改造的，只保留必要的部分，fastjson asm部分不到1000行代码，引入了asm的同时不导致大小变大太多。</h5><h4 id="4、使用一个特殊的IdentityHashMap优化性能。"><a href="#4、使用一个特殊的IdentityHashMap优化性能。" class="headerlink" title="4、使用一个特殊的IdentityHashMap优化性能。"></a>4、使用一个特殊的IdentityHashMap优化性能。</h4><h5 id="fastjson对每种类型使用一种serializer，于是就存在class-gt-JavaBeanSerizlier的映射。fastjson使用IdentityHashMap而不是HashMap，避免equals操作。我们知道HashMap的算法的transfer操作，并发时可能导致死循环，但是ConcurrentHashMap比HashMap系列会慢，因为其使用volatile和lock。fastjson自己实现了一个特别的IdentityHashMap，去掉transfer操作的IdentityHashMap，能够在并发时工作，但是不会导致死循环。"><a href="#fastjson对每种类型使用一种serializer，于是就存在class-gt-JavaBeanSerizlier的映射。fastjson使用IdentityHashMap而不是HashMap，避免equals操作。我们知道HashMap的算法的transfer操作，并发时可能导致死循环，但是ConcurrentHashMap比HashMap系列会慢，因为其使用volatile和lock。fastjson自己实现了一个特别的IdentityHashMap，去掉transfer操作的IdentityHashMap，能够在并发时工作，但是不会导致死循环。" class="headerlink" title="fastjson对每种类型使用一种serializer，于是就存在class -&gt; JavaBeanSerizlier的映射。fastjson使用IdentityHashMap而不是HashMap，避免equals操作。我们知道HashMap的算法的transfer操作，并发时可能导致死循环，但是ConcurrentHashMap比HashMap系列会慢，因为其使用volatile和lock。fastjson自己实现了一个特别的IdentityHashMap，去掉transfer操作的IdentityHashMap，能够在并发时工作，但是不会导致死循环。"></a>fastjson对每种类型使用一种serializer，于是就存在class -&gt; JavaBeanSerizlier的映射。fastjson使用IdentityHashMap而不是HashMap，避免equals操作。我们知道HashMap的算法的transfer操作，并发时可能导致死循环，但是ConcurrentHashMap比HashMap系列会慢，因为其使用volatile和lock。fastjson自己实现了一个特别的IdentityHashMap，去掉transfer操作的IdentityHashMap，能够在并发时工作，但是不会导致死循环。</h5><h4 id="5、缺省启用sort-field输出"><a href="#5、缺省启用sort-field输出" class="headerlink" title="5、缺省启用sort field输出"></a>5、缺省启用sort field输出</h4><h5 id="json的object是一种key-value结构，正常的hashmap是无序的，fastjson缺省是排序输出的，这是为deserialize优化做准备。"><a href="#json的object是一种key-value结构，正常的hashmap是无序的，fastjson缺省是排序输出的，这是为deserialize优化做准备。" class="headerlink" title="json的object是一种key/value结构，正常的hashmap是无序的，fastjson缺省是排序输出的，这是为deserialize优化做准备。"></a>json的object是一种key/value结构，正常的hashmap是无序的，fastjson缺省是排序输出的，这是为deserialize优化做准备。</h5><h4 id="6、集成jdk实现的一些优化算法"><a href="#6、集成jdk实现的一些优化算法" class="headerlink" title="6、集成jdk实现的一些优化算法"></a>6、集成jdk实现的一些优化算法</h4><h5 id="在优化fastjson的过程中，参考了jdk内部实现的算法，比如int-to-char-算法等等。"><a href="#在优化fastjson的过程中，参考了jdk内部实现的算法，比如int-to-char-算法等等。" class="headerlink" title="在优化fastjson的过程中，参考了jdk内部实现的算法，比如int to char[]算法等等。"></a>在优化fastjson的过程中，参考了jdk内部实现的算法，比如int to char[]算法等等。</h5><h3 id="fastjson的deserializer的主要优化算法"><a href="#fastjson的deserializer的主要优化算法" class="headerlink" title="fastjson的deserializer的主要优化算法"></a>fastjson的deserializer的主要优化算法</h3><h5 id="deserializer也称为parser或者decoder，fastjson在这方面投入的优化精力最多。"><a href="#deserializer也称为parser或者decoder，fastjson在这方面投入的优化精力最多。" class="headerlink" title="deserializer也称为parser或者decoder，fastjson在这方面投入的优化精力最多。"></a>deserializer也称为parser或者decoder，fastjson在这方面投入的优化精力最多。</h5><h4 id="1、读取token基于预测。"><a href="#1、读取token基于预测。" class="headerlink" title="1、读取token基于预测。"></a>1、读取token基于预测。</h4><h5 id="所有的parser基本上都需要做词法处理，json也不例外。fastjson词法处理的时候，使用了基于预测的优化算法。比如key之后，最大的可能是冒号”-”，value之后，可能是有两个，逗号”-”或者右括号”-”。在com-alibaba-fastjson-parser-JSONScanner中提供了这样的方法："><a href="#所有的parser基本上都需要做词法处理，json也不例外。fastjson词法处理的时候，使用了基于预测的优化算法。比如key之后，最大的可能是冒号”-”，value之后，可能是有两个，逗号”-”或者右括号”-”。在com-alibaba-fastjson-parser-JSONScanner中提供了这样的方法：" class="headerlink" title="所有的parser基本上都需要做词法处理，json也不例外。fastjson词法处理的时候，使用了基于预测的优化算法。比如key之后，最大的可能是冒号”:”，value之后，可能是有两个，逗号”,”或者右括号”}”。在com.alibaba.fastjson.parser.JSONScanner中提供了这样的方法："></a>所有的parser基本上都需要做词法处理，json也不例外。fastjson词法处理的时候，使用了基于预测的优化算法。比如key之后，最大的可能是冒号”:”，value之后，可能是有两个，逗号”,”或者右括号”}”。在com.alibaba.fastjson.parser.JSONScanner中提供了这样的方法：</h5><pre><code class="lang-java">public void nextToken(int expect) {
+    for (;;) {
+        switch (expect) {
+            case JSONToken.COMMA: //
+                if (ch == &#39;,&#39;) {
+                    token = JSONToken.COMMA;
+                    ch = buf[++bp];
+                    return;
+                }
+
+                if (ch == &#39;}&#39;) {
+                    token = JSONToken.RBRACE;
+                    ch = buf[++bp];
+                    return;
+                }
+
+                if (ch == &#39;]&#39;) {
+                    token = JSONToken.RBRACKET;
+                    ch = buf[++bp];
+                    return;
+                }
+
+                if (ch == EOI) {
+                    token = JSONToken.EOF;
+                    return;
+                }
+                break;
+        // ... ...
+    }
+}
+</code></pre>
+<h5 id="从上面摘抄下来的代码看，基于预测能够做更少的处理就能够读取到token。"><a href="#从上面摘抄下来的代码看，基于预测能够做更少的处理就能够读取到token。" class="headerlink" title="从上面摘抄下来的代码看，基于预测能够做更少的处理就能够读取到token。"></a>从上面摘抄下来的代码看，基于预测能够做更少的处理就能够读取到token。</h5><h4 id="2、sort-field-fast-match算法"><a href="#2、sort-field-fast-match算法" class="headerlink" title="2、sort field fast match算法"></a>2、sort field fast match算法</h4><h5 id="fastjson的serialize是按照key的顺序进行的，于是fastjson做deserializer时候，采用一种优化算法，就是假设key-value的内容是有序的，读取的时候只需要做key的匹配，而不需要把key从输入中读取出来。通过这个优化，使得fastjson在处理json文本的时候，少读取超过50-的token，这个是一个十分关键的优化算法。基于这个算法，使用asm实现，性能提升十分明显，超过300％的性能提升。"><a href="#fastjson的serialize是按照key的顺序进行的，于是fastjson做deserializer时候，采用一种优化算法，就是假设key-value的内容是有序的，读取的时候只需要做key的匹配，而不需要把key从输入中读取出来。通过这个优化，使得fastjson在处理json文本的时候，少读取超过50-的token，这个是一个十分关键的优化算法。基于这个算法，使用asm实现，性能提升十分明显，超过300％的性能提升。" class="headerlink" title="fastjson的serialize是按照key的顺序进行的，于是fastjson做deserializer时候，采用一种优化算法，就是假设key/value的内容是有序的，读取的时候只需要做key的匹配，而不需要把key从输入中读取出来。通过这个优化，使得fastjson在处理json文本的时候，少读取超过50%的token，这个是一个十分关键的优化算法。基于这个算法，使用asm实现，性能提升十分明显，超过300％的性能提升。"></a>fastjson的serialize是按照key的顺序进行的，于是fastjson做deserializer时候，采用一种优化算法，就是假设key/value的内容是有序的，读取的时候只需要做key的匹配，而不需要把key从输入中读取出来。通过这个优化，使得fastjson在处理json文本的时候，少读取超过50%的token，这个是一个十分关键的优化算法。基于这个算法，使用asm实现，性能提升十分明显，超过300％的性能提升。</h5><pre><code class="lang-java">{ &quot;id&quot; : 123, &quot;name&quot; : &quot;魏加流&quot;, &quot;salary&quot; : 56789.79}
+</code></pre>
+<h5 id="在上面例子看，三个部分的key，如果key-id、key-name、key-salary这三个key是顺序的，就可以做优化处理，这三个key不需要被读取出来，只需要比较就可以了。"><a href="#在上面例子看，三个部分的key，如果key-id、key-name、key-salary这三个key是顺序的，就可以做优化处理，这三个key不需要被读取出来，只需要比较就可以了。" class="headerlink" title="在上面例子看，三个部分的key，如果key_id、key_name、key_salary这三个key是顺序的，就可以做优化处理，这三个key不需要被读取出来，只需要比较就可以了。"></a>在上面例子看，三个部分的key，如果key_id、key_name、key_salary这三个key是顺序的，就可以做优化处理，这三个key不需要被读取出来，只需要比较就可以了。</h5><h5 id="这种算法分两种模式，一种是快速模式，一种是常规模式。快速模式是假定key是顺序的，能快速处理，如果发现不能够快速处理，则退回常规模式。保证性能的同时，不会影响功能。"><a href="#这种算法分两种模式，一种是快速模式，一种是常规模式。快速模式是假定key是顺序的，能快速处理，如果发现不能够快速处理，则退回常规模式。保证性能的同时，不会影响功能。" class="headerlink" title="这种算法分两种模式，一种是快速模式，一种是常规模式。快速模式是假定key是顺序的，能快速处理，如果发现不能够快速处理，则退回常规模式。保证性能的同时，不会影响功能。"></a>这种算法分两种模式，一种是快速模式，一种是常规模式。快速模式是假定key是顺序的，能快速处理，如果发现不能够快速处理，则退回常规模式。保证性能的同时，不会影响功能。</h5><h5 id="在这个例子中，常规模式需要处理13个token，快速模式只需要处理6个token。"><a href="#在这个例子中，常规模式需要处理13个token，快速模式只需要处理6个token。" class="headerlink" title="在这个例子中，常规模式需要处理13个token，快速模式只需要处理6个token。"></a>在这个例子中，常规模式需要处理13个token，快速模式只需要处理6个token。</h5><h5 id="实现sort-field-fast-match算法的代码在这个类"><a href="#实现sort-field-fast-match算法的代码在这个类" class="headerlink" title="实现sort field fast match算法的代码在这个类"></a>实现sort field fast match算法的代码在这个类</h5><h5 id="com-alibaba-fastjson-parser-deserializer-ASMDeserializerFactory-http-code-alibabatech-com-svn-fastjson-trunk-fastjson-src-main-java-com-alibaba-fastjson-parser-deserializer-ASMDeserializerFactory-java-，是使用asm针对每种类型的VO动态创建一个类实现的。"><a href="#com-alibaba-fastjson-parser-deserializer-ASMDeserializerFactory-http-code-alibabatech-com-svn-fastjson-trunk-fastjson-src-main-java-com-alibaba-fastjson-parser-deserializer-ASMDeserializerFactory-java-，是使用asm针对每种类型的VO动态创建一个类实现的。" class="headerlink" title="[com.alibaba.fastjson.parser.deserializer.ASMDeserializerFactory|http://code.alibabatech.com/svn/fastjson/trunk/fastjson/src/main/java/com/alibaba/fastjson/parser/deserializer/ASMDeserializerFactory.java]，是使用asm针对每种类型的VO动态创建一个类实现的。"></a>[com.alibaba.fastjson.parser.deserializer.ASMDeserializerFactory|<a href="http://code.alibabatech.com/svn/fastjson/trunk/fastjson/src/main/java/com/alibaba/fastjson/parser/deserializer/ASMDeserializerFactory.java]，是使用asm针对每种类型的VO动态创建一个类实现的。" target="_blank" rel="external">http://code.alibabatech.com/svn/fastjson/trunk/fastjson/src/main/java/com/alibaba/fastjson/parser/deserializer/ASMDeserializerFactory.java]，是使用asm针对每种类型的VO动态创建一个类实现的。</a></h5><h5 id="这里是有一个用于演示sort-field-fast-match算法的代码："><a href="#这里是有一个用于演示sort-field-fast-match算法的代码：" class="headerlink" title="这里是有一个用于演示sort field fast match算法的代码："></a>这里是有一个用于演示sort field fast match算法的代码：</h5><pre><code class="lang-java">// 用于快速匹配的每个字段的前缀
+char[] size_   = &quot;\&quot;size\&quot;:&quot;.toCharArray();
+char[] uri_    = &quot;\&quot;uri\&quot;:&quot;.toCharArray();
+char[] titile_ = &quot;\&quot;title\&quot;:&quot;.toCharArray();
+char[] width_  = &quot;\&quot;width\&quot;:&quot;.toCharArray();
+char[] height_ = &quot;\&quot;height\&quot;:&quot;.toCharArray();
+
+// 保存parse开始时的lexer状态信息
+int mark = lexer.getBufferPosition();
+char mark_ch = lexer.getCurrent();
+int mark_token = lexer.token();
+
+int height = lexer.scanFieldInt(height_);
+if (lexer.matchStat == JSONScanner.NOT_MATCH) {
+    // 退出快速模式, 进入常规模式
+    lexer.reset(mark, mark_ch, mark_token);
+    return (T) super.deserialze(parser, clazz);
+}
+
+String value = lexer.scanFieldString(size_);
+if (lexer.matchStat == JSONScanner.NOT_MATCH) {
+    // 退出快速模式, 进入常规模式
+    lexer.reset(mark, mark_ch, mark_token);
+    return (T) super.deserialze(parser, clazz);
+}
+Size size = Size.valueOf(value);
+
+// ... ...
+
+// batch set
+Image image = new Image();
+image.setSize(size);
+image.setUri(uri);
+image.setTitle(title);
+image.setWidth(width);
+image.setHeight(height);
+
+return (T) image;
+</code></pre>
+<h4 id="3、使用asm避免反射-1"><a href="#3、使用asm避免反射-1" class="headerlink" title="3、使用asm避免反射"></a>3、使用asm避免反射</h4><h5 id="deserialize的时候，会使用asm来构造对象，并且做batch-set，也就是说合并连续调用多个setter方法，而不是分散调用，这个能够提升性能。"><a href="#deserialize的时候，会使用asm来构造对象，并且做batch-set，也就是说合并连续调用多个setter方法，而不是分散调用，这个能够提升性能。" class="headerlink" title="deserialize的时候，会使用asm来构造对象，并且做batch set，也就是说合并连续调用多个setter方法，而不是分散调用，这个能够提升性能。"></a>deserialize的时候，会使用asm来构造对象，并且做batch set，也就是说合并连续调用多个setter方法，而不是分散调用，这个能够提升性能。</h5><h4 id="4、对utf-8的json-bytes，针对性使用优化的版本来转换编码。"><a href="#4、对utf-8的json-bytes，针对性使用优化的版本来转换编码。" class="headerlink" title="4、对utf-8的json bytes，针对性使用优化的版本来转换编码。"></a>4、对utf-8的json bytes，针对性使用优化的版本来转换编码。</h4><h5 id="这个类是com-alibaba-fastjson-util-UTF8Decoder，来源于JDK中的UTF8Decoder，但是它使用ThreadLocal-Cache-Buffer，避免转换时分配char-的开销。"><a href="#这个类是com-alibaba-fastjson-util-UTF8Decoder，来源于JDK中的UTF8Decoder，但是它使用ThreadLocal-Cache-Buffer，避免转换时分配char-的开销。" class="headerlink" title="这个类是com.alibaba.fastjson.util.UTF8Decoder，来源于JDK中的UTF8Decoder，但是它使用ThreadLocal Cache Buffer，避免转换时分配char[]的开销。"></a>这个类是com.alibaba.fastjson.util.UTF8Decoder，来源于JDK中的UTF8Decoder，但是它使用ThreadLocal Cache Buffer，避免转换时分配char[]的开销。</h5><h5 id="ThreadLocal-Cache的实现是这个类com-alibaba-fastjson-util-ThreadLocalCache。第一次1k，如果不够，会增长，最多增长到128k。"><a href="#ThreadLocal-Cache的实现是这个类com-alibaba-fastjson-util-ThreadLocalCache。第一次1k，如果不够，会增长，最多增长到128k。" class="headerlink" title="ThreadLocal Cache的实现是这个类com.alibaba.fastjson.util.ThreadLocalCache。第一次1k，如果不够，会增长，最多增长到128k。"></a>ThreadLocal Cache的实现是这个类com.alibaba.fastjson.util.ThreadLocalCache。第一次1k，如果不够，会增长，最多增长到128k。</h5><pre><code class="lang-java">//代码摘抄自com.alibaba.fastjson.JSON
+public static final &lt;T&gt; T parseObject(byte[] input, int off, int len, CharsetDecoder charsetDecoder, Type clazz,
+                                      Feature... features) {
+    charsetDecoder.reset();
+
+    int scaleLength = (int) (len * (double) charsetDecoder.maxCharsPerByte());
+    char[] chars = ThreadLocalCache.getChars(scaleLength); // 使用ThreadLocalCache，避免频繁分配内存
+
+    ByteBuffer byteBuf = ByteBuffer.wrap(input, off, len);
+    CharBuffer charByte = CharBuffer.wrap(chars);
+    IOUtils.decode(charsetDecoder, byteBuf, charByte);
+
+    int position = charByte.position();
+
+    return (T) parseObject(chars, position, clazz, features);
+}
+</code></pre>
+<h4 id="5、symbolTable算法。"><a href="#5、symbolTable算法。" class="headerlink" title="5、symbolTable算法。"></a>5、symbolTable算法。</h4><h5 id="我们看xml或者javac的parser实现，经常会看到有一个这样的东西symbol-table，它就是把一些经常使用的关键字缓存起来，在遍历char-的时候，同时把hash计算好，通过这个hash值在hashtable中来获取缓存好的symbol，避免创建新的字符串对象。这种优化在fastjson里面用在key的读取，以及enum-value的读取。这是也是parse性能优化的关键算法之一。"><a href="#我们看xml或者javac的parser实现，经常会看到有一个这样的东西symbol-table，它就是把一些经常使用的关键字缓存起来，在遍历char-的时候，同时把hash计算好，通过这个hash值在hashtable中来获取缓存好的symbol，避免创建新的字符串对象。这种优化在fastjson里面用在key的读取，以及enum-value的读取。这是也是parse性能优化的关键算法之一。" class="headerlink" title="我们看xml或者javac的parser实现，经常会看到有一个这样的东西symbol table，它就是把一些经常使用的关键字缓存起来，在遍历char[]的时候，同时把hash计算好，通过这个hash值在hashtable中来获取缓存好的symbol，避免创建新的字符串对象。这种优化在fastjson里面用在key的读取，以及enum value的读取。这是也是parse性能优化的关键算法之一。"></a>我们看xml或者javac的parser实现，经常会看到有一个这样的东西symbol table，它就是把一些经常使用的关键字缓存起来，在遍历char[]的时候，同时把hash计算好，通过这个hash值在hashtable中来获取缓存好的symbol，避免创建新的字符串对象。这种优化在fastjson里面用在key的读取，以及enum value的读取。这是也是parse性能优化的关键算法之一。</h5><h5 id="以下是摘抄自JSONScanner类中的代码，这段代码用于读取类型为enum的value。"><a href="#以下是摘抄自JSONScanner类中的代码，这段代码用于读取类型为enum的value。" class="headerlink" title="以下是摘抄自JSONScanner类中的代码，这段代码用于读取类型为enum的value。"></a>以下是摘抄自JSONScanner类中的代码，这段代码用于读取类型为enum的value。</h5><pre><code class="lang-java">int hash = 0;
+for (;;) {
+    ch = buf[index++];
+    if (ch == &#39;\&quot;&#39;) {
+        bp = index;
+        this.ch = ch = buf[bp];
+        strVal = symbolTable.addSymbol(buf, start, index - start - 1, hash); // 通过symbolTable来获得缓存好的symbol，包括fieldName、enumValue
+        break;
+    }
+
+    hash = 31 * hash + ch; // 在token scan的过程中计算好hash
+
+    // ... ...
+}
+</code></pre>
+<h3 id="我们能用fastjson来作什么？"><a href="#我们能用fastjson来作什么？" class="headerlink" title="我们能用fastjson来作什么？"></a>我们能用fastjson来作什么？</h3><ol>
+<li>替换其他所有的json库，java世界里没有其他的json库能够和fastjson可相比了。</li>
+<li>使用fastjson的序列化和反序列化替换java serialize，java serialize不单性能慢，而且体制大。</li>
+<li>使用fastjson替换hessian，json协议和hessian协议大小差不多一样，而且fastjson性能优越，10倍于hessian</li>
+<li>把fastjson用于redis、memached缓存对象数据。</li>
+</ol>
+<h5 id="转载自：http-wenshao-iteye-com-blog-1142031"><a href="#转载自：http-wenshao-iteye-com-blog-1142031" class="headerlink" title="转载自：http://wenshao.iteye.com/blog/1142031/"></a>转载自：<a href="http://wenshao.iteye.com/blog/1142031/" target="_blank" rel="external">http://wenshao.iteye.com/blog/1142031/</a></h5></div>
+    </article>
+</section>
+
+<div class="clear"></div>
+
+
+
+    <footer id="footer">
+  <div class="foot">
+    <!-- <a id="gotop">TOP</a> -->
+    <!-- <div id="copyright">Copyright &copy; 2016 <a href="#" target="_blank">WangWenXiang</a><br>
+       Power by <a href="https://github.com/winx402" target="_blank">Github Pages</a> |
+      <a href="https://hexo.io/" target="_blank">HEXO</a></div> -->
+      <div id="copyright">还没想好要写什么</div>
+  </div>
+</footer>
+
+</div>
+<div class="img-view">
+    <span><img src="/img/guide.jpeg"></span>
+</div>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+    <title>winx&#39;blog</title>
+</head>
+<body>
+<div class="animated" id="info-min">
+    <div id="guide">
+    <div class="guide-button " _href="/tags/index/">首页</div>
+    <div class="guide-button " _href="/tags/tech/">技术</div>
+    <!--<div class="guide-button " _href="/tags/life/">生活</div>-->
+    <div class="guide-button " _href="/categories/read/">阅读</div>
+    <img src="/img/photo.png">
+</div>
+</div>
+<div id="wrap">
+    
+  
+    
+      <div id="big-title" style="color: #666">
+    
+
+  <div id="title-name">ThreadLocal源码解析</div><br>
+  <div id="something">2017/03/09</div>
+</div>
+  <section id="content-specific">
+    <article class="post">
+        <div class="con"><h2 id="ThreadLocal是什么"><a href="#ThreadLocal是什么" class="headerlink" title="ThreadLocal是什么"></a>ThreadLocal是什么</h2><h5 id="This-class-provides-thread-local-variables-These-variables-differ-from-their-normal-counterparts-in-that-each-thread-that-accesses-one-via-its-get-or-set-method-has-its-own-independently-initialized-copy-of-the-variable-ThreadLocal-instances-are-typically-private-static-fields-in-classes-that-wish-to-associate-state-with-a-thread-e-g-a-user-ID-or-Transaction-ID"><a href="#This-class-provides-thread-local-variables-These-variables-differ-from-their-normal-counterparts-in-that-each-thread-that-accesses-one-via-its-get-or-set-method-has-its-own-independently-initialized-copy-of-the-variable-ThreadLocal-instances-are-typically-private-static-fields-in-classes-that-wish-to-associate-state-with-a-thread-e-g-a-user-ID-or-Transaction-ID" class="headerlink" title="This class provides thread-local variables.  These variables differ from their normal counterparts in that each thread that accesses one (via its get or set method) has its own, independently initialized copy of the variable.  ThreadLocal instances are typically private static fields in classes that wish to associate state with a thread (e.g., a user ID or Transaction ID)."></a>This class provides thread-local variables.  These variables differ from their normal counterparts in that each thread that accesses one (via its <tt>get</tt> or <tt>set</tt> method) has its own, independently initialized copy of the variable.  <tt>ThreadLocal</tt> instances are typically private static fields in classes that wish to associate state with a thread (e.g., a user ID or Transaction ID).</h5><a id="more"></a>
+<h3 id="这是ThreadLocal源码中一段介绍，翻译过来的大概意思是："><a href="#这是ThreadLocal源码中一段介绍，翻译过来的大概意思是：" class="headerlink" title="这是ThreadLocal源码中一段介绍，翻译过来的大概意思是："></a>这是ThreadLocal源码中一段介绍，翻译过来的大概意思是：</h3><h5 id="ThreadLocal类用来提供线程内部的局部变量。这种变量在多线程环境下访问-通过get或set方法访问-时能保证各个线程里的变量相对独立于其他线程内的变量。ThreadLocal实例通常来说都是private-static类型的，用于关联线程和线程的上下文。"><a href="#ThreadLocal类用来提供线程内部的局部变量。这种变量在多线程环境下访问-通过get或set方法访问-时能保证各个线程里的变量相对独立于其他线程内的变量。ThreadLocal实例通常来说都是private-static类型的，用于关联线程和线程的上下文。" class="headerlink" title="ThreadLocal类用来提供线程内部的局部变量。这种变量在多线程环境下访问(通过get或set方法访问)时能保证各个线程里的变量相对独立于其他线程内的变量。ThreadLocal实例通常来说都是private static类型的，用于关联线程和线程的上下文。"></a>ThreadLocal类用来提供线程内部的局部变量。这种变量在多线程环境下访问(通过get或set方法访问)时能保证各个线程里的变量相对独立于其他线程内的变量。ThreadLocal实例通常来说都是private static类型的，用于关联线程和线程的上下文。</h5><h5 id="这种解释和网络上所说的解决多线程的并发问题不太一样，当你把一个变量复制成了多份，我觉得这种方式并不叫解决多线程访问资源时的共享问题。本质上来说资源已经变成了多份，没有共享之说，当然这也是一种解决方式，但是如果资源不必线程共享，又何必要用ThreadLocal去实现呢。"><a href="#这种解释和网络上所说的解决多线程的并发问题不太一样，当你把一个变量复制成了多份，我觉得这种方式并不叫解决多线程访问资源时的共享问题。本质上来说资源已经变成了多份，没有共享之说，当然这也是一种解决方式，但是如果资源不必线程共享，又何必要用ThreadLocal去实现呢。" class="headerlink" title="这种解释和网络上所说的解决多线程的并发问题不太一样，当你把一个变量复制成了多份，我觉得这种方式并不叫解决多线程访问资源时的共享问题。本质上来说资源已经变成了多份，没有共享之说，当然这也是一种解决方式，但是如果资源不必线程共享，又何必要用ThreadLocal去实现呢。"></a>这种解释和网络上所说的解决多线程的并发问题不太一样，当你把一个变量复制成了多份，我觉得这种方式并不叫解决多线程访问资源时的共享问题。本质上来说资源已经变成了多份，没有共享之说，当然这也是一种解决方式，但是如果资源不必线程共享，又何必要用ThreadLocal去实现呢。</h5><h4 id="总结来说：ThreadLocal的作用是提供线程内的局部变量，这种变量在线程的生命周期内起作用，减少同一个线程内多个函数或者组件之间一些公共变量的传递的复杂度。"><a href="#总结来说：ThreadLocal的作用是提供线程内的局部变量，这种变量在线程的生命周期内起作用，减少同一个线程内多个函数或者组件之间一些公共变量的传递的复杂度。" class="headerlink" title="总结来说：ThreadLocal的作用是提供线程内的局部变量，这种变量在线程的生命周期内起作用，减少同一个线程内多个函数或者组件之间一些公共变量的传递的复杂度。"></a>总结来说：ThreadLocal的作用是提供线程内的局部变量，这种变量在线程的生命周期内起作用，减少同一个线程内多个函数或者组件之间一些公共变量的传递的复杂度。</h4><h5 id="举一个例子，一个请求需要按照1、2、3这个顺序执行3个函数。但是其中有一个参数是需要函数1提供给函数3使用的，但是这个参数对于函数2来说并没有作用（实际情况可能比这要复杂的多）。同时我们又不希望污染函数2，那么如何将该参数通过函数1传递到函数3呢？ThreadLocal是一个比较合理的解决方法。"><a href="#举一个例子，一个请求需要按照1、2、3这个顺序执行3个函数。但是其中有一个参数是需要函数1提供给函数3使用的，但是这个参数对于函数2来说并没有作用（实际情况可能比这要复杂的多）。同时我们又不希望污染函数2，那么如何将该参数通过函数1传递到函数3呢？ThreadLocal是一个比较合理的解决方法。" class="headerlink" title="举一个例子，一个请求需要按照1、2、3这个顺序执行3个函数。但是其中有一个参数是需要函数1提供给函数3使用的，但是这个参数对于函数2来说并没有作用（实际情况可能比这要复杂的多）。同时我们又不希望污染函数2，那么如何将该参数通过函数1传递到函数3呢？ThreadLocal是一个比较合理的解决方法。"></a>举一个例子，一个请求需要按照1、2、3这个顺序执行3个函数。但是其中有一个参数是需要函数1提供给函数3使用的，但是这个参数对于函数2来说并没有作用（实际情况可能比这要复杂的多）。同时我们又不希望污染函数2，那么如何将该参数通过函数1传递到函数3呢？ThreadLocal是一个比较合理的解决方法。</h5><h2 id="ThreadLocal代码演示"><a href="#ThreadLocal代码演示" class="headerlink" title="ThreadLocal代码演示"></a>ThreadLocal代码演示</h2><pre><code class="lang-JAVA">/**
+ * Created BY wangwenxiang on 2017/3/15.
+ */
+public class ThreadLocalTest {
+    private static ThreadLocal&lt;Integer&gt; integerThreadLocal = new ThreadLocal&lt;Integer&gt;();
+
+    /**
+     * 初始化并输出每个线程的ThreadLocal
+     * Runnable
+     * name
+     */
+    private static Thread[] initThread(){
+        Thread[] threads = new Thread[10];
+        for (int i=0;i&lt;10;i++){
+            final int finalI = i;
+            threads[i] = new Thread(new Runnable() {
+                public void run() {
+                    integerThreadLocal.set(finalI);
+                    System.out.println(Thread.currentThread().getName()+&quot;: &quot;+integerThreadLocal.get());
+                }
+            },&quot;thread-&quot; + i);
+        }
+        return threads;
+    }
+
+
+    public static void main(String[] args) {
+        Thread[] threads = initThread();
+        for (Thread thread : threads){
+            thread.start();
+        }
+    }
+}
+</code></pre>
+<h5 id="ThreadLocal的操作非常简单，基本上没有太多的过程。"><a href="#ThreadLocal的操作非常简单，基本上没有太多的过程。" class="headerlink" title="ThreadLocal的操作非常简单，基本上没有太多的过程。"></a>ThreadLocal的操作非常简单，基本上没有太多的过程。</h5><h5 id="执行结果："><a href="#执行结果：" class="headerlink" title="执行结果："></a>执行结果：</h5><pre><code>thread-0: 0
+thread-1: 1
+thread-2: 2
+thread-3: 3
+thread-4: 4
+thread-5: 5
+thread-6: 6
+thread-7: 7
+thread-8: 8
+thread-9: 9
+</code></pre><h5 id="可以看出虽然只创建了一个ThreadLocal对象，但是每个线程的初始化之后，得出来的结果并不一样。各个线程之间的值是相互独立的。"><a href="#可以看出虽然只创建了一个ThreadLocal对象，但是每个线程的初始化之后，得出来的结果并不一样。各个线程之间的值是相互独立的。" class="headerlink" title="可以看出虽然只创建了一个ThreadLocal对象，但是每个线程的初始化之后，得出来的结果并不一样。各个线程之间的值是相互独立的。"></a>可以看出虽然只创建了一个ThreadLocal对象，但是每个线程的初始化之后，得出来的结果并不一样。各个线程之间的值是相互独立的。</h5><h2 id="ThreadLocal源码"><a href="#ThreadLocal源码" class="headerlink" title="ThreadLocal源码"></a>ThreadLocal源码</h2><h3 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h3><pre><code class="lang-java">/**
+ * Creates a thread local variable.
+ */
+public ThreadLocal() {
+}
+</code></pre>
+<h5 id="这是ThreadLocal唯一的构造函数，什么也没做"><a href="#这是ThreadLocal唯一的构造函数，什么也没做" class="headerlink" title="这是ThreadLocal唯一的构造函数，什么也没做"></a>这是ThreadLocal唯一的构造函数，什么也没做</h5><h3 id="set方法"><a href="#set方法" class="headerlink" title="set方法"></a>set方法</h3><pre><code class="lang-JAVA">/**
+ * Sets the current thread&#39;s copy of this thread-local variable
+ * to the specified value.  Most subclasses will have no need to
+ * override this method, relying solely on the {@link #initialValue}
+ * method to set the values of thread-locals.
+ *
+ * @param value the value to be stored in the current thread&#39;s copy of
+ *        this thread-local.
+ */
+public void set(T value) {
+        Thread t = Thread.currentThread();
+        ThreadLocalMap map = getMap(t);
+        if (map != null)
+            map.set(this, value);
+        else
+            createMap(t, value);
+    }
+</code></pre>
+<h5 id="代码比较简单"><a href="#代码比较简单" class="headerlink" title="代码比较简单"></a>代码比较简单</h5><ol>
+<li>获取当前线程 <code>Thread t = Thread.currentThread();</code></li>
+<li>获取当前线程的ThreadLocalMap，使得每个线程的本地数据相互隔离的原因也在于这里，因为每个线程都有自己的ThreadLocalMap；</li>
+<li>判断ThreadLocalMap是否为空，直接插入或者创建map并插入；</li>
+</ol>
+<h4 id="ThreadLocalMap的set方法"><a href="#ThreadLocalMap的set方法" class="headerlink" title="ThreadLocalMap的set方法"></a>ThreadLocalMap的set方法</h4><pre><code class="lang-JAVA">/**
+ * Set the value associated with key.
+ * @param value the value to be set
+ *
+ * @param key the thread local object
+ */
+private void set(ThreadLocal key, Object value) {
+
+    // We don&#39;t use a fast path as with get() because it is at
+    // least as common to use set() to create new entries as
+    // it is to replace existing ones, in which case, a fast
+    // path would fail more often than not.
+
+    Entry[] tab = table;
+    int len = tab.length;
+    int i = key.threadLocalHashCode &amp; (len-1);
+
+    for (Entry e = tab[i];
+         e != null;
+         e = tab[i = nextIndex(i, len)]) {
+        ThreadLocal k = e.get();
+
+        if (k == key) {
+            e.value = value;
+            return;
+        }
+
+        if (k == null) {
+            replaceStaleEntry(key, value, i);
+            return;
+        }
+    }
+
+    tab[i] = new Entry(key, value);
+    int sz = ++size;
+    if (!cleanSomeSlots(i, sz) &amp;&amp; sz &gt;= threshold)
+        rehash();
+}
+</code></pre>
+<h5 id="map的key和value分别对应的是ThreadLocal本身和往ThreadLocal中set的值。"><a href="#map的key和value分别对应的是ThreadLocal本身和往ThreadLocal中set的值。" class="headerlink" title="map的key和value分别对应的是ThreadLocal本身和往ThreadLocal中set的值。"></a>map的key和value分别对应的是ThreadLocal本身和往ThreadLocal中set的值。</h5><ol>
+<li>首先根据ThreadLocal元素的hashCode计算出其数组下标；由于数组的长度用于等于2<sup>n</sup>个，所以下表的取值范围在0到2<sup>n</sup>-1；</li>
+<li>for循环，从数组位置i开始以步长1向后循环遍历，直到找到一个空位，每次循环将该位置的值赋值给e；</li>
+<li>当数组位置不为空时执行方法体：<ol>
+<li>获得该数组位置的ThreadLocal，判断是否与当前ThreadLocal相等，如果相等，则将value更新，set方法结束；</li>
+<li>如果该ThreadLocal为空，则替换，然后结束方法。</li>
+</ol>
+</li>
+<li>在位置i插入新值，计数加1</li>
+</ol>
+<h3 id="get方法"><a href="#get方法" class="headerlink" title="get方法"></a>get方法</h3><pre><code class="lang-JAVA">/**
+  * Returns the value in the current thread&#39;s copy of this
+  * thread-local variable.  If the variable has no value for the
+  * current thread, it is first initialized to the value returned
+  * by an invocation of the {@link #initialValue} method.
+  *
+  * @return the current thread&#39;s value of this thread-local
+  */
+public T get() {
+        Thread t = Thread.currentThread();
+        ThreadLocalMap map = getMap(t);
+        if (map != null) {
+            ThreadLocalMap.Entry e = map.getEntry(this);
+            if (e != null)
+                return (T)e.value;
+        }
+        return setInitialValue();
+    }
+</code></pre>
+<h5 id="get方法和set方法比较类似，首先获取当前线程，并获取线程的ThreadLocalMap，以当前的ThreadLocal作为key在map中获取value，判断value是否为null，如果为null，则将当前的ThreadLocal中设置初始值，并返回改值。"><a href="#get方法和set方法比较类似，首先获取当前线程，并获取线程的ThreadLocalMap，以当前的ThreadLocal作为key在map中获取value，判断value是否为null，如果为null，则将当前的ThreadLocal中设置初始值，并返回改值。" class="headerlink" title="get方法和set方法比较类似，首先获取当前线程，并获取线程的ThreadLocalMap，以当前的ThreadLocal作为key在map中获取value，判断value是否为null，如果为null，则将当前的ThreadLocal中设置初始值，并返回改值。"></a>get方法和set方法比较类似，首先获取当前线程，并获取线程的ThreadLocalMap，以当前的ThreadLocal作为key在map中获取value，判断value是否为null，如果为null，则将当前的ThreadLocal中设置初始值，并返回改值。</h5><h4 id="setInitialValue"><a href="#setInitialValue" class="headerlink" title="setInitialValue()"></a>setInitialValue()</h4><pre><code class="lang-JAVA">/**
+ * Variant of set() to establish initialValue. Used instead
+ * of set() in case user has overridden the set() method.
+ *
+ * @return the initial value
+ */
+private T setInitialValue() {
+    T value = initialValue();
+    Thread t = Thread.currentThread();
+    ThreadLocalMap map = getMap(t);
+    if (map != null)
+        map.set(this, value);
+    else
+        createMap(t, value);
+    return value;
+}
+</code></pre>
+<h5 id="该方法和set方法基本一样"><a href="#该方法和set方法基本一样" class="headerlink" title="该方法和set方法基本一样"></a>该方法和set方法基本一样</h5><h4 id="initialValue"><a href="#initialValue" class="headerlink" title="initialValue()"></a>initialValue()</h4><pre><code class="lang-JAVA">/**
+ * Returns the current thread&#39;s &quot;initial value&quot; for this
+ * thread-local variable.  This method will be invoked the first
+ * time a thread accesses the variable with the {@link #get}
+ * method, unless the thread previously invoked the {@link #set}
+ * method, in which case the &lt;tt&gt;initialValue&lt;/tt&gt; method will not
+ * be invoked for the thread.  Normally, this method is invoked at
+ * most once per thread, but it may be invoked again in case of
+ * subsequent invocations of {@link #remove} followed by {@link #get}.
+ *
+ * &lt;p&gt;This implementation simply returns &lt;tt&gt;null&lt;/tt&gt;; if the
+ * programmer desires thread-local variables to have an initial
+ * value other than &lt;tt&gt;null&lt;/tt&gt;, &lt;tt&gt;ThreadLocal&lt;/tt&gt; must be
+ * subclassed, and this method overridden.  Typically, an
+ * anonymous inner class will be used.
+ *
+ * @return the initial value for this thread-local
+ */
+ protected T initialValue() {
+     return null;
+ }
+</code></pre>
+<h5 id="该方法只在get方法中被调用，当ThreadLocal中没有设置value时。默认返回null，protected的访问权限表示该方法支持被覆盖。"><a href="#该方法只在get方法中被调用，当ThreadLocal中没有设置value时。默认返回null，protected的访问权限表示该方法支持被覆盖。" class="headerlink" title="该方法只在get方法中被调用，当ThreadLocal中没有设置value时。默认返回null，protected的访问权限表示该方法支持被覆盖。"></a>该方法只在get方法中被调用，当ThreadLocal中没有设置value时。默认返回null，protected的访问权限表示该方法支持被覆盖。</h5><h3 id="ThreadLocalMap"><a href="#ThreadLocalMap" class="headerlink" title="ThreadLocalMap"></a>ThreadLocalMap</h3><h5 id="ThreadLocalMap是使用ThreadLocal的弱引用作为Key的"><a href="#ThreadLocalMap是使用ThreadLocal的弱引用作为Key的" class="headerlink" title="ThreadLocalMap是使用ThreadLocal的弱引用作为Key的"></a>ThreadLocalMap是使用ThreadLocal的弱引用作为Key的</h5><pre><code class="lang-JAVA">static class ThreadLocalMap {
+        /**
+         * The entries in this hash map extend WeakReference, using
+         * its main ref field as the key (which is always a
+         * ThreadLocal object).  Note that null keys (i.e. entry.get()
+         * == null) mean that the key is no longer referenced, so the
+         * entry can be expunged from table.  Such entries are referred to
+         * as &quot;stale entries&quot; in the code that follows.
+         */
+        static class Entry extends WeakReference&lt;ThreadLocal&gt; {
+            /** The value associated with this ThreadLocal. */
+            Object value;
+
+            Entry(ThreadLocal k, Object v) {
+                super(k);
+                value = v;
+            }
+        }
+        ...
+        ...
+}
+</code></pre>
+<h5 id="下图是本文介绍到的一些对象之间的引用关系图，实线表示强引用，虚线表示弱引用："><a href="#下图是本文介绍到的一些对象之间的引用关系图，实线表示强引用，虚线表示弱引用：" class="headerlink" title="下图是本文介绍到的一些对象之间的引用关系图，实线表示强引用，虚线表示弱引用："></a>下图是本文介绍到的一些对象之间的引用关系图，实线表示强引用，虚线表示弱引用：</h5><p><img src="/img/note/ThreadLocal.png" alt="ThreadLocal"> <div class="img-note">ThreadLocal对象引用</div></p>
+<h5 id="如上图，ThreadLocalMap使用ThreadLocal的弱引用作为key，如果一个ThreadLocal没有外部强引用引用他，那么系统gc的时候，这个ThreadLocal势必会被回收，这样一来，ThreadLocalMap中就会出现key为null的Entry，就没有办法访问这些key为null的Entry的value，如果当前线程再迟迟不结束的话，这些key为null的Entry的value就会一直存在一条强引用链："><a href="#如上图，ThreadLocalMap使用ThreadLocal的弱引用作为key，如果一个ThreadLocal没有外部强引用引用他，那么系统gc的时候，这个ThreadLocal势必会被回收，这样一来，ThreadLocalMap中就会出现key为null的Entry，就没有办法访问这些key为null的Entry的value，如果当前线程再迟迟不结束的话，这些key为null的Entry的value就会一直存在一条强引用链：" class="headerlink" title="如上图，ThreadLocalMap使用ThreadLocal的弱引用作为key，如果一个ThreadLocal没有外部强引用引用他，那么系统gc的时候，这个ThreadLocal势必会被回收，这样一来，ThreadLocalMap中就会出现key为null的Entry，就没有办法访问这些key为null的Entry的value，如果当前线程再迟迟不结束的话，这些key为null的Entry的value就会一直存在一条强引用链："></a>如上图，ThreadLocalMap使用ThreadLocal的弱引用作为key，如果一个ThreadLocal没有外部强引用引用他，那么系统gc的时候，这个ThreadLocal势必会被回收，这样一来，ThreadLocalMap中就会出现key为null的Entry，就没有办法访问这些key为null的Entry的value，如果当前线程再迟迟不结束的话，这些key为null的Entry的value就会一直存在一条强引用链：</h5><h4 id="Thread-Ref-gt-Thread-gt-ThreaLocalMap-gt-Entry-gt-value"><a href="#Thread-Ref-gt-Thread-gt-ThreaLocalMap-gt-Entry-gt-value" class="headerlink" title="Thread Ref -&gt; Thread -&gt; ThreaLocalMap -&gt; Entry -&gt; value"></a>Thread Ref -&gt; Thread -&gt; ThreaLocalMap -&gt; Entry -&gt; value</h4><h5 id="永远无法回收，造成内存泄露。"><a href="#永远无法回收，造成内存泄露。" class="headerlink" title="永远无法回收，造成内存泄露。"></a>永远无法回收，造成内存泄露。</h5><h5 id="其实，在JDK的ThreadLocalMap的设计中已经考虑到这种情况，也加上了一些防护措施，下面是ThreadLocalMap的getEntry方法的源码："><a href="#其实，在JDK的ThreadLocalMap的设计中已经考虑到这种情况，也加上了一些防护措施，下面是ThreadLocalMap的getEntry方法的源码：" class="headerlink" title="其实，在JDK的ThreadLocalMap的设计中已经考虑到这种情况，也加上了一些防护措施，下面是ThreadLocalMap的getEntry方法的源码："></a>其实，在JDK的ThreadLocalMap的设计中已经考虑到这种情况，也加上了一些防护措施，下面是ThreadLocalMap的<code>getEntry</code>方法的源码：</h5><pre><code class="lang-JAVA">private Entry getEntry(ThreadLocal key) {
+    int i = key.threadLocalHashCode &amp; (table.length - 1);
+    Entry e = table[i];
+    if (e != null &amp;&amp; e.get() == key)
+        return e;
+    else
+        return getEntryAfterMiss(key, i, e);
+}
+</code></pre>
+<h4 id="当Entry为null时，getEntryAfterMiss方法"><a href="#当Entry为null时，getEntryAfterMiss方法" class="headerlink" title="当Entry为null时，getEntryAfterMiss方法"></a>当Entry为null时，getEntryAfterMiss方法</h4><pre><code class="lang-java">private Entry getEntryAfterMiss(ThreadLocal key, int i, Entry e) {
+    Entry[] tab = table;
+    int len = tab.length;
+    while (e != null) {
+        ThreadLocal k = e.get();
+        if (k == key)
+            return e;
+        if (k == null)
+            expungeStaleEntry(i);
+        else
+            i = nextIndex(i, len);
+        e = tab[i];
+    }
+    return null;
+}
+</code></pre>
+<h4 id="expungeStaleEntry函数的源码："><a href="#expungeStaleEntry函数的源码：" class="headerlink" title="expungeStaleEntry函数的源码："></a><code>expungeStaleEntry</code>函数的源码：</h4><pre><code class="lang-java">private int expungeStaleEntry(int staleSlot) {
+    Entry[] tab = table;
+    int len = tab.length;
+
+    // expunge entry at staleSlot
+    tab[staleSlot].value = null;
+    tab[staleSlot] = null;
+    size--;
+
+    // Rehash until we encounter null
+    Entry e;
+    int i;
+    for (i = nextIndex(staleSlot, len);
+         (e = tab[i]) != null;
+         i = nextIndex(i, len)) {
+        ThreadLocal k = e.get();
+        if (k == null) {
+            e.value = null;
+            tab[i] = null;
+            size--;
+        } else {
+            int h = k.threadLocalHashCode &amp; (len - 1);
+            if (h != i) {
+                tab[i] = null;
+
+                // Unlike Knuth 6.4 Algorithm R, we must scan until
+                // null because multiple entries could have been stale.
+                while (tab[h] != null)
+                    h = nextIndex(h, len);
+                tab[h] = e;
+            }
+        }
+    }
+    return i;
+}
+</code></pre>
+<h5 id="整理一下ThreadLocalMap的getEntry函数的流程："><a href="#整理一下ThreadLocalMap的getEntry函数的流程：" class="headerlink" title="整理一下ThreadLocalMap的getEntry函数的流程："></a>整理一下ThreadLocalMap的<code>getEntry</code>函数的流程：</h5><ol>
+<li>首先从ThreadLocal的直接索引位置(通过ThreadLocal.threadLocalHashCode &amp; (len-1)运算得到)获取Entry e，如果e不为null并且key相同则返回e；</li>
+<li>如果e为null或者key不一致则向下一个位置查询，如果下一个位置的key和当前需要查询的key相等，则返回对应的Entry，否则，如果key值为null，则擦除该位置的Entry，否则继续向下一个位置查询</li>
+</ol>
+<h5 id="在这个过程中遇到的key为null的Entry都会被擦除，那么Entry内的value也就没有强引用链，自然会被回收。仔细研究代码可以发现，set操作也有类似的思想，将key为null的这些Entry都删除，防止内存泄露。"><a href="#在这个过程中遇到的key为null的Entry都会被擦除，那么Entry内的value也就没有强引用链，自然会被回收。仔细研究代码可以发现，set操作也有类似的思想，将key为null的这些Entry都删除，防止内存泄露。" class="headerlink" title="在这个过程中遇到的key为null的Entry都会被擦除，那么Entry内的value也就没有强引用链，自然会被回收。仔细研究代码可以发现，set操作也有类似的思想，将key为null的这些Entry都删除，防止内存泄露。"></a>在这个过程中遇到的key为null的Entry都会被擦除，那么Entry内的value也就没有强引用链，自然会被回收。仔细研究代码可以发现，<code>set</code>操作也有类似的思想，将key为null的这些Entry都删除，防止内存泄露。</h5><h5 id="但是光这样还是不够的，上面的设计思路依赖一个前提条件：-要调用ThreadLocalMap的getEntry函数或者set函数。-这当然是不可能任何情况都成立的，所以很多情况下需要使用者手动调用ThreadLocal的remove函数，手动删除不再需要的ThreadLocal，防止内存泄露。所以JDK建议将ThreadLocal变量定义成private-static的，这样的话ThreadLocal的生命周期就更长，由于一直存在ThreadLocal的强引用，所以ThreadLocal也就不会被回收，也就能保证任何时候都能根据ThreadLocal的弱引用访问到Entry的value值，然后remove它，防止内存泄露。"><a href="#但是光这样还是不够的，上面的设计思路依赖一个前提条件：-要调用ThreadLocalMap的getEntry函数或者set函数。-这当然是不可能任何情况都成立的，所以很多情况下需要使用者手动调用ThreadLocal的remove函数，手动删除不再需要的ThreadLocal，防止内存泄露。所以JDK建议将ThreadLocal变量定义成private-static的，这样的话ThreadLocal的生命周期就更长，由于一直存在ThreadLocal的强引用，所以ThreadLocal也就不会被回收，也就能保证任何时候都能根据ThreadLocal的弱引用访问到Entry的value值，然后remove它，防止内存泄露。" class="headerlink" title="但是光这样还是不够的，上面的设计思路依赖一个前提条件： 要调用ThreadLocalMap的getEntry函数或者set函数。 这当然是不可能任何情况都成立的，所以很多情况下需要使用者手动调用ThreadLocal的remove函数，手动删除不再需要的ThreadLocal，防止内存泄露。所以JDK建议将ThreadLocal变量定义成private static的，这样的话ThreadLocal的生命周期就更长，由于一直存在ThreadLocal的强引用，所以ThreadLocal也就不会被回收，也就能保证任何时候都能根据ThreadLocal的弱引用访问到Entry的value值，然后remove它，防止内存泄露。"></a>但是光这样还是不够的，上面的设计思路依赖一个前提条件： 要调用ThreadLocalMap的<code>getEntry</code>函数或者<code>set</code>函数。 这当然是不可能任何情况都成立的，所以很多情况下需要使用者手动调用ThreadLocal的<code>remove</code>函数，手动删除不再需要的ThreadLocal，防止内存泄露。所以JDK建议将ThreadLocal变量定义成<code>private static</code>的，这样的话ThreadLocal的生命周期就更长，由于一直存在ThreadLocal的强引用，所以ThreadLocal也就不会被回收，也就能保证任何时候都能根据ThreadLocal的弱引用访问到Entry的value值，然后remove它，防止内存泄露。</h5></div>
+    </article>
+</section>
+
+<div class="clear"></div>
+
+
+
+    <footer id="footer">
+  <div class="foot">
+    <!-- <a id="gotop">TOP</a> -->
+    <!-- <div id="copyright">Copyright &copy; 2016 <a href="#" target="_blank">WangWenXiang</a><br>
+       Power by <a href="https://github.com/winx402" target="_blank">Github Pages</a> |
+      <a href="https://hexo.io/" target="_blank">HEXO</a></div> -->
+      <div id="copyright">还没想好要写什么</div>
+  </div>
+</footer>
+
+</div>
+<div class="img-view">
+    <span><img src="/img/guide.jpeg"></span>
+</div>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

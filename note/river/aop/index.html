@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+    <title>winx&#39;blog</title>
+</head>
+<body>
+<div class="animated" id="info-min">
+    <div id="guide">
+    <div class="guide-button " _href="/tags/index/">首页</div>
+    <div class="guide-button " _href="/tags/tech/">技术</div>
+    <!--<div class="guide-button " _href="/tags/life/">生活</div>-->
+    <div class="guide-button " _href="/categories/read/">阅读</div>
+    <img src="/img/photo.png">
+</div>
+</div>
+<div id="wrap">
+    
+  
+    
+      <div id="big-title" style="color:#E30D23">
+    
+
+  <div id="title-name">Aop</div><br>
+  <div id="something">2017/06/04</div>
+</div>
+  <section id="content-specific">
+    <article class="post">
+        <div class="con"><h5 id="aop是一个比较典型的例子，aop实现在目标方法之前、之后、异常等情况下的代码插入。这些插入的代码可以做类似于日志记录，流量统计等工作。也可以在before代码中修改目标方法参数，在after中修改目标方法返回值。但是没有办法控制目标方法是否继续（除非抛出异常）。"><a href="#aop是一个比较典型的例子，aop实现在目标方法之前、之后、异常等情况下的代码插入。这些插入的代码可以做类似于日志记录，流量统计等工作。也可以在before代码中修改目标方法参数，在after中修改目标方法返回值。但是没有办法控制目标方法是否继续（除非抛出异常）。" class="headerlink" title="aop是一个比较典型的例子，aop实现在目标方法之前、之后、异常等情况下的代码插入。这些插入的代码可以做类似于日志记录，流量统计等工作。也可以在before代码中修改目标方法参数，在after中修改目标方法返回值。但是没有办法控制目标方法是否继续（除非抛出异常）。"></a>aop是一个比较典型的例子，aop实现在目标方法之前、之后、异常等情况下的代码插入。这些插入的代码可以做类似于日志记录，流量统计等工作。也可以在before代码中修改目标方法参数，在after中修改目标方法返回值。但是没有办法控制目标方法是否继续（除非抛出异常）。</h5><a id="more"></a>
+<h3 id="实例代码"><a href="#实例代码" class="headerlink" title="实例代码"></a>实例代码</h3><h4 id="首先需要实现一个继承自AopPoint的类。"><a href="#首先需要实现一个继承自AopPoint的类。" class="headerlink" title="首先需要实现一个继承自AopPoint的类。"></a>首先需要实现一个继承自<code>AopPoint</code>的类。</h4><pre><code class="lang-java">public class AopTest extends AopPoint {
+
+    public void before() {
+        System.out.println(&quot;before....params:&quot; + Arrays.toString(getParams()));
+        setParams(new Object[]{&quot;change params&quot;});
+    }
+
+    public void after() {
+        System.out.println(&quot;after...result:&quot; + getResult());
+    }
+
+    public void afterReturing() {
+    }
+
+    public void afterThrowing() {
+    }
+}
+</code></pre>
+<h4 id="在目标方法中加入Aop注解-在Aop注解中设置自己实现的AopPoint类Class"><a href="#在目标方法中加入Aop注解-在Aop注解中设置自己实现的AopPoint类Class" class="headerlink" title="在目标方法中加入Aop注解,在Aop注解中设置自己实现的AopPoint类Class"></a>在目标方法中加入<code>Aop</code>注解,在Aop注解中设置自己实现的<code>AopPoint</code>类Class</h4><pre><code class="lang-java">@Aop(AopTest.class)
+public String aop(String param){
+    System.out.println(&quot;aop param : &quot; + param);
+    return param + &quot; success&quot;;
+}
+</code></pre>
+<h4 id="获取目标方法类的代理实例，然后执行"><a href="#获取目标方法类的代理实例，然后执行" class="headerlink" title="获取目标方法类的代理实例，然后执行"></a>获取目标方法类的代理实例，然后执行</h4><pre><code class="lang-java">CrudServiceImpl proxy = ProxyFactory.getSingleProxy(CrudServiceImpl.class);
+proxy.aop(&quot;test&quot;);
+</code></pre>
+<h4 id="执行结果"><a href="#执行结果" class="headerlink" title="执行结果"></a>执行结果</h4><pre><code class="lang-none">before....params:[test]
+aop param : change params
+after...result:change params success
+</code></pre>
+<h3 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h3><h4 id="继承自AopPoint的类-需要实现4个方法："><a href="#继承自AopPoint的类-需要实现4个方法：" class="headerlink" title="继承自AopPoint的类,需要实现4个方法："></a>继承自<code>AopPoint</code>的类,需要实现4个方法：</h4><h5 id="before：在目标方法之前执行；"><a href="#before：在目标方法之前执行；" class="headerlink" title="before：在目标方法之前执行；"></a><code>before</code>：在目标方法之前执行；</h5><h5 id="after：在目标方法之后执行，无论目标执行是否成功；"><a href="#after：在目标方法之后执行，无论目标执行是否成功；" class="headerlink" title="after：在目标方法之后执行，无论目标执行是否成功；"></a><code>after</code>：在目标方法之后执行，无论目标执行是否成功；</h5><h5 id="afterReturing：在目标方法执行之后执行；"><a href="#afterReturing：在目标方法执行之后执行；" class="headerlink" title="afterReturing：在目标方法执行之后执行；"></a><code>afterReturing</code>：在目标方法执行之后执行；</h5><h5 id="afterThrowing：在目标方法抛出异常后调用执行。"><a href="#afterThrowing：在目标方法抛出异常后调用执行。" class="headerlink" title="afterThrowing：在目标方法抛出异常后调用执行。"></a><code>afterThrowing</code>：在目标方法抛出异常后调用执行。</h5><h4 id="在AopPoint的子类中，设置了一些对目标方法的操作："><a href="#在AopPoint的子类中，设置了一些对目标方法的操作：" class="headerlink" title="在AopPoint的子类中，设置了一些对目标方法的操作："></a>在<code>AopPoint</code>的子类中，设置了一些对目标方法的操作：</h4><pre><code class="lang-java">/**
+ * 获取目标方法Method对象
+ */
+protected Method getMethod() {}
+
+/**
+ * 获取入参
+ */
+protected Object[] getParams() {}
+
+/**
+ * 修改入参
+ */
+protected void setParams(Object[] objects) {}
+
+/**
+ * 获取返回结果
+ * 在before中调用这个方法将返回null
+ */
+protected Object getResult() {}
+
+/**
+ * 修改返回结果
+ * 在before中设置的返回结果将被正真的结果覆盖
+ */
+protected void setResult(Object result) {}
+</code></pre>
+<h4 id="AopPoint的实现类会使用单例模式，所以当你Aop多个方法的时候，调用的都是将是同一个实例。因此下面这种代码将会出现线程安全问题"><a href="#AopPoint的实现类会使用单例模式，所以当你Aop多个方法的时候，调用的都是将是同一个实例。因此下面这种代码将会出现线程安全问题" class="headerlink" title="AopPoint的实现类会使用单例模式，所以当你Aop多个方法的时候，调用的都是将是同一个实例。因此下面这种代码将会出现线程安全问题"></a><code>AopPoint</code>的实现类会使用单例模式，所以当你Aop多个方法的时候，调用的都是将是同一个实例。因此下面这种代码将会出现线程安全问题</h4><pre><code class="lang-java">public class AopTest extends AopPoint {
+
+    private int i = 0;
+
+    public void before() {
+        System.out.println(++i);
+    }
+
+    ...
+}
+</code></pre>
+<h5 id="这种线程安全问题只能自己保证共享对象的安全。现在还不能通过参数改变aop的实例类是否单例。"><a href="#这种线程安全问题只能自己保证共享对象的安全。现在还不能通过参数改变aop的实例类是否单例。" class="headerlink" title="这种线程安全问题只能自己保证共享对象的安全。现在还不能通过参数改变aop的实例类是否单例。"></a>这种线程安全问题只能自己保证共享对象的安全。现在还不能通过参数改变aop的实例类是否单例。</h5><pre><code class="lang-java">public class AopTest extends AopPoint {
+
+    private AtomicInteger i = new AtomicInteger(0);
+
+    public void before() {
+        System.out.println(i.incrementAndGet());
+    }
+
+    ...
+}
+</code></pre>
+<h4 id="aop大法好，但是也有一些局限性，说一说还能实现的一些细节点："><a href="#aop大法好，但是也有一些局限性，说一说还能实现的一些细节点：" class="headerlink" title="aop大法好，但是也有一些局限性，说一说还能实现的一些细节点："></a>aop大法好，但是也有一些局限性，说一说还能实现的一些细节点：</h4><ol>
+<li>目前代理对象还是需要手动的去获取，这个在后期接入spring逻辑后，可以使用spring注入。</li>
+<li>没有办法做到流程控制，是否可以在<code>AopPoint</code>中加入流程控制，当发现参数不对时，阻止流程的继续。</li>
+<li>当目标方法比较多时，需要添加注解的地方比较多，这点Spring使用的是切面的解决方法，个人认为这种方法会使得使用的学习成本变高，因为每次我想要使用的时候需要翻看笔记。是否可以使得<code>Aop</code>支持类的注解，以减轻这种现象。</li>
+<li>是否应该控制<code>AopPoint</code>实现类的单例与否。</li>
+</ol>
+</div>
+    </article>
+</section>
+
+<div class="clear"></div>
+
+
+
+    <footer id="footer">
+  <div class="foot">
+    <!-- <a id="gotop">TOP</a> -->
+    <!-- <div id="copyright">Copyright &copy; 2016 <a href="#" target="_blank">WangWenXiang</a><br>
+       Power by <a href="https://github.com/winx402" target="_blank">Github Pages</a> |
+      <a href="https://hexo.io/" target="_blank">HEXO</a></div> -->
+      <div id="copyright">还没想好要写什么</div>
+  </div>
+</footer>
+
+</div>
+<div class="img-view">
+    <span><img src="/img/guide.jpeg"></span>
+</div>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

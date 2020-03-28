@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+    <title>winx&#39;blog</title>
+</head>
+<body>
+<div class="animated" id="info-min">
+    <div id="guide">
+    <div class="guide-button " _href="/tags/index/">首页</div>
+    <div class="guide-button " _href="/tags/tech/">技术</div>
+    <!--<div class="guide-button " _href="/tags/life/">生活</div>-->
+    <div class="guide-button " _href="/categories/read/">阅读</div>
+    <img src="/img/photo.png">
+</div>
+</div>
+<div id="wrap">
+    
+  
+    
+      <div id="big-title" style="color: #666">
+    
+
+  <div id="title-name">妇女节快乐，字符串包含</div><br>
+  <div id="something">2017/03/08</div>
+</div>
+  <section id="content-specific">
+    <article class="post">
+        <div class="con"><h2 id="题目要求："><a href="#题目要求：" class="headerlink" title="题目要求："></a>题目要求：</h2><h5 id="给定两个分别由字母组成的字符串A和字符串B，字符串B的长度比字符串A短。请问，如何最快地判断字符串B中所有字母是否都在字符串A里？"><a href="#给定两个分别由字母组成的字符串A和字符串B，字符串B的长度比字符串A短。请问，如何最快地判断字符串B中所有字母是否都在字符串A里？" class="headerlink" title="给定两个分别由字母组成的字符串A和字符串B，字符串B的长度比字符串A短。请问，如何最快地判断字符串B中所有字母是否都在字符串A里？"></a>给定两个分别由字母组成的字符串A和字符串B，字符串B的长度比字符串A短。请问，如何最快地判断字符串B中所有字母是否都在字符串A里？</h5><h5 id="为了简单起见，我们规定输入的字符串只包含大写英文字母"><a href="#为了简单起见，我们规定输入的字符串只包含大写英文字母" class="headerlink" title="为了简单起见，我们规定输入的字符串只包含大写英文字母"></a>为了简单起见，我们规定输入的字符串只包含大写英文字母</h5><a id="more"></a>
+<h4 id="比如"><a href="#比如" class="headerlink" title="比如"></a>比如</h4><h5 id="String-1：ABCD"><a href="#String-1：ABCD" class="headerlink" title="String 1：ABCD"></a>String 1：ABCD</h5><h5 id="String-2：BAD"><a href="#String-2：BAD" class="headerlink" title="String 2：BAD"></a>String 2：BAD</h5><h5 id="答案是true，即String2里的字母在String1里也都有，或者说String2是String1的真子集。"><a href="#答案是true，即String2里的字母在String1里也都有，或者说String2是String1的真子集。" class="headerlink" title="答案是true，即String2里的字母在String1里也都有，或者说String2是String1的真子集。"></a>答案是true，即String2里的字母在String1里也都有，或者说String2是String1的真子集。</h5><h5 id="如果是下面两个字符串："><a href="#如果是下面两个字符串：" class="headerlink" title="如果是下面两个字符串："></a>如果是下面两个字符串：</h5><h5 id="String-1：ABCD-1"><a href="#String-1：ABCD-1" class="headerlink" title="String 1：ABCD"></a>String 1：ABCD</h5><h5 id="String-2：BCE"><a href="#String-2：BCE" class="headerlink" title="String 2：BCE"></a>String 2：BCE</h5><h5 id="答案是false，因为字符串String2里的E字母不在字符串String1里。"><a href="#答案是false，因为字符串String2里的E字母不在字符串String1里。" class="headerlink" title="答案是false，因为字符串String2里的E字母不在字符串String1里。"></a>答案是false，因为字符串String2里的E字母不在字符串String1里。</h5><h2 id="分析过程："><a href="#分析过程：" class="headerlink" title="分析过程："></a>分析过程：</h2><h5 id="题目可以简单理解成集合A，集合B。判断集合B是否为集合A的真子集。只是与集合不同的是，在本题中，字符串中是允许存在相同的字符的，这无疑是增加了题目的难度。"><a href="#题目可以简单理解成集合A，集合B。判断集合B是否为集合A的真子集。只是与集合不同的是，在本题中，字符串中是允许存在相同的字符的，这无疑是增加了题目的难度。" class="headerlink" title="题目可以简单理解成集合A，集合B。判断集合B是否为集合A的真子集。只是与集合不同的是，在本题中，字符串中是允许存在相同的字符的，这无疑是增加了题目的难度。"></a>题目可以简单理解成集合A，集合B。判断集合B是否为集合A的真子集。只是与集合不同的是，在本题中，字符串中是允许存在相同的字符的，这无疑是增加了题目的难度。</h5><h3 id="最简单的解法"><a href="#最简单的解法" class="headerlink" title="最简单的解法"></a>最简单的解法</h3><h5 id="最容易想到的也就是最简单的解决方法当然是依次比较。利用两层循环，遍历字符串B，将字符串B中每一个字符在字符串A中依次比较，看是否存在于字符串A中。"><a href="#最容易想到的也就是最简单的解决方法当然是依次比较。利用两层循环，遍历字符串B，将字符串B中每一个字符在字符串A中依次比较，看是否存在于字符串A中。" class="headerlink" title="最容易想到的也就是最简单的解决方法当然是依次比较。利用两层循环，遍历字符串B，将字符串B中每一个字符在字符串A中依次比较，看是否存在于字符串A中。"></a>最容易想到的也就是最简单的解决方法当然是依次比较。利用两层循环，遍历字符串B，将字符串B中每一个字符在字符串A中依次比较，看是否存在于字符串A中。</h5><h5 id="假设字符串A的长度为n，字符串B的长度为m，则该方法的时间复杂度为O-n-m-。"><a href="#假设字符串A的长度为n，字符串B的长度为m，则该方法的时间复杂度为O-n-m-。" class="headerlink" title="假设字符串A的长度为n，字符串B的长度为m，则该方法的时间复杂度为O(n*m)。"></a>假设字符串A的长度为n，字符串B的长度为m，则该方法的时间复杂度为O(n*m)。</h5><h3 id="利用排序优化算法时间"><a href="#利用排序优化算法时间" class="headerlink" title="利用排序优化算法时间"></a>利用排序优化算法时间</h3><h5 id="上一种解法的时间复杂度无疑是最长的。我们当然可以利用排序对算法进行优化。方法是先将字符串A进行堆排序，其时间复杂度为O-n-log-n-。之后再将字符串B中的每个字符在排序后的堆中查找，则时间复杂度为O-m-log-n-。相加后的时间复杂度O-m-n-log-n"><a href="#上一种解法的时间复杂度无疑是最长的。我们当然可以利用排序对算法进行优化。方法是先将字符串A进行堆排序，其时间复杂度为O-n-log-n-。之后再将字符串B中的每个字符在排序后的堆中查找，则时间复杂度为O-m-log-n-。相加后的时间复杂度O-m-n-log-n" class="headerlink" title="上一种解法的时间复杂度无疑是最长的。我们当然可以利用排序对算法进行优化。方法是先将字符串A进行堆排序，其时间复杂度为O(n log n)。之后再将字符串B中的每个字符在排序后的堆中查找，则时间复杂度为O(m log n)。相加后的时间复杂度O((m+n) log n)"></a>上一种解法的时间复杂度无疑是最长的。我们当然可以利用排序对算法进行优化。方法是先将字符串A进行堆排序，其时间复杂度为O(n log n)。之后再将字符串B中的每个字符在排序后的堆中查找，则时间复杂度为O(m log n)。相加后的时间复杂度O((m+n) log n)</h5><h3 id="最优解法，时间复杂度O-m-n"><a href="#最优解法，时间复杂度O-m-n" class="headerlink" title="最优解法，时间复杂度O(m+n)"></a>最优解法，时间复杂度O(m+n)</h3><h5 id="题目到这好像没有办法解决下去，两个字符串的长度分别为n和m。只遍历一遍就得出结果，这种算法真的存在吗？其实这个题目就可以简化成集合元素存在的判断。"><a href="#题目到这好像没有办法解决下去，两个字符串的长度分别为n和m。只遍历一遍就得出结果，这种算法真的存在吗？其实这个题目就可以简化成集合元素存在的判断。" class="headerlink" title="题目到这好像没有办法解决下去，两个字符串的长度分别为n和m。只遍历一遍就得出结果，这种算法真的存在吗？其实这个题目就可以简化成集合元素存在的判断。"></a>题目到这好像没有办法解决下去，两个字符串的长度分别为n和m。只遍历一遍就得出结果，这种算法真的存在吗？其实这个题目就可以简化成集合元素存在的判断。</h5><h5 id="这里又要用到二进制的概念，二进制的一些属性完美的解决了题目中的一些问题。"><a href="#这里又要用到二进制的概念，二进制的一些属性完美的解决了题目中的一些问题。" class="headerlink" title="这里又要用到二进制的概念，二进制的一些属性完美的解决了题目中的一些问题。"></a>这里又要用到二进制的概念，二进制的一些属性完美的解决了题目中的一些问题。</h5><h4 id="1-相同字符的处理"><a href="#1-相同字符的处理" class="headerlink" title="1.相同字符的处理"></a>1.相同字符的处理</h4><h5 id="“或”操作指的是，两个相应的二进位中只要有一个为1，该位的结果值为1。"><a href="#“或”操作指的是，两个相应的二进位中只要有一个为1，该位的结果值为1。" class="headerlink" title="“或”操作指的是，两个相应的二进位中只要有一个为1，该位的结果值为1。"></a>“或”操作指的是，两个相应的二进位中只要有一个为1，该位的结果值为1。</h5><h5 id="0101-OR-0011-0111"><a href="#0101-OR-0011-0111" class="headerlink" title="0101 OR 0011 = 0111"></a>0101 OR 0011 = 0111</h5><h5 id="所以当两个相同字符存在时，用或操作，还是得到一个字符的值。"><a href="#所以当两个相同字符存在时，用或操作，还是得到一个字符的值。" class="headerlink" title="所以当两个相同字符存在时，用或操作，还是得到一个字符的值。"></a>所以当两个相同字符存在时，用或操作，还是得到一个字符的值。</h5><h4 id="2-字符的存在问题，如何判断一个字符存在于字符集"><a href="#2-字符的存在问题，如何判断一个字符存在于字符集" class="headerlink" title="2.字符的存在问题，如何判断一个字符存在于字符集"></a>2.字符的存在问题，如何判断一个字符存在于字符集</h4><h5 id="“与”操作指的是，两个相应的二进位都为1，该位的结果值才为1"><a href="#“与”操作指的是，两个相应的二进位都为1，该位的结果值才为1" class="headerlink" title="“与”操作指的是，两个相应的二进位都为1，该位的结果值才为1"></a>“与”操作指的是，两个相应的二进位都为1，该位的结果值才为1</h5><h5 id="0101-AND-0011-0001"><a href="#0101-AND-0011-0001" class="headerlink" title="0101 AND 0011 = 0001"></a>0101 AND 0011 = 0001</h5><h5 id="也就是只有两边都存在同一个字符时，才会得出1"><a href="#也就是只有两边都存在同一个字符时，才会得出1" class="headerlink" title="也就是只有两边都存在同一个字符时，才会得出1"></a>也就是只有两边都存在同一个字符时，才会得出1</h5><h5 id="因此我们可以将所有字符都进行二进制的编码，因为每一个字符都有两种状态（存在和不存在），所以对应在二进制中，每一个字符都占用一位。"><a href="#因此我们可以将所有字符都进行二进制的编码，因为每一个字符都有两种状态（存在和不存在），所以对应在二进制中，每一个字符都占用一位。" class="headerlink" title="因此我们可以将所有字符都进行二进制的编码，因为每一个字符都有两种状态（存在和不存在），所以对应在二进制中，每一个字符都占用一位。"></a>因此我们可以将所有字符都进行二进制的编码，因为每一个字符都有两种状态（存在和不存在），所以对应在二进制中，每一个字符都占用一位。</h5><pre><code class="lang-c">bool StringContain(string &amp;a,string &amp;b)
+{
+    int hash = 0;
+    for (int i = 0; i &lt; a.length(); ++i)
+    {
+        hash |= (1 &lt;&lt; (a[i] - &#39;A&#39;));
+    }
+    for (int i = 0; i &lt; b.length(); ++i)
+    {
+        if ((hash &amp; (1 &lt;&lt; (b[i] - &#39;A&#39;))) == 0)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+</code></pre>
+<h2 id="最后再说一些："><a href="#最后再说一些：" class="headerlink" title="最后再说一些："></a>最后再说一些：</h2><h5 id="最后的算法和之前的切金条算法有一些相似之处。这是这里对二进制的理解和运用更加灵活。只有对此很熟悉，才能想到这种方法。否则会比较困难。"><a href="#最后的算法和之前的切金条算法有一些相似之处。这是这里对二进制的理解和运用更加灵活。只有对此很熟悉，才能想到这种方法。否则会比较困难。" class="headerlink" title="最后的算法和之前的切金条算法有一些相似之处。这是这里对二进制的理解和运用更加灵活。只有对此很熟悉，才能想到这种方法。否则会比较困难。"></a>最后的算法和之前的<a href="http://localhost:4000/arithmetic/glodBars/" target="_blank" rel="external">切金条</a>算法有一些相似之处。这是这里对二进制的理解和运用更加灵活。只有对此很熟悉，才能想到这种方法。否则会比较困难。</h5></div>
+    </article>
+</section>
+
+<div class="clear"></div>
+
+
+
+    <footer id="footer">
+  <div class="foot">
+    <!-- <a id="gotop">TOP</a> -->
+    <!-- <div id="copyright">Copyright &copy; 2016 <a href="#" target="_blank">WangWenXiang</a><br>
+       Power by <a href="https://github.com/winx402" target="_blank">Github Pages</a> |
+      <a href="https://hexo.io/" target="_blank">HEXO</a></div> -->
+      <div id="copyright">还没想好要写什么</div>
+  </div>
+</footer>
+
+</div>
+<div class="img-view">
+    <span><img src="/img/guide.jpeg"></span>
+</div>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

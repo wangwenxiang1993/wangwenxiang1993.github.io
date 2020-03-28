@@ -1,0 +1,206 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+    <title>winx&#39;blog</title>
+</head>
+<body>
+<div class="animated" id="info-min">
+    <div id="guide">
+    <div class="guide-button " _href="/tags/index/">首页</div>
+    <div class="guide-button " _href="/tags/tech/">技术</div>
+    <!--<div class="guide-button " _href="/tags/life/">生活</div>-->
+    <div class="guide-button " _href="/categories/read/">阅读</div>
+    <img src="/img/photo.png">
+</div>
+</div>
+<div id="wrap">
+    
+  
+    
+      <div id="big-title" style="color: #666">
+    
+
+  <div id="title-name">BitMap在Mysql中的实际应用</div><br>
+  <div id="something">2018/12/23</div>
+</div>
+  <section id="content-specific">
+    <article class="post">
+        <div class="con"><h3 id="这是一个实际开发中遇到的问题："><a href="#这是一个实际开发中遇到的问题：" class="headerlink" title="这是一个实际开发中遇到的问题："></a>这是一个实际开发中遇到的问题：</h3><h5 id="仓库中存在多种物料，每种物料都有其适配的车型。比如A物料适配1、2、3车型；B物料适配2、4车型。数据存储在mysql中，如果需要将适配车型作为一种筛选条件。那么mysql中应该如何存储呢？"><a href="#仓库中存在多种物料，每种物料都有其适配的车型。比如A物料适配1、2、3车型；B物料适配2、4车型。数据存储在mysql中，如果需要将适配车型作为一种筛选条件。那么mysql中应该如何存储呢？" class="headerlink" title="仓库中存在多种物料，每种物料都有其适配的车型。比如A物料适配1、2、3车型；B物料适配2、4车型。数据存储在mysql中，如果需要将适配车型作为一种筛选条件。那么mysql中应该如何存储呢？"></a>仓库中存在多种物料，每种物料都有其适配的车型。比如A物料适配1、2、3车型；B物料适配2、4车型。数据存储在mysql中，如果需要将适配车型作为一种筛选条件。那么mysql中应该如何存储呢？</h5><a id="more"></a>
+<h3 id="1、实际中的存储方式"><a href="#1、实际中的存储方式" class="headerlink" title="1、实际中的存储方式"></a>1、实际中的存储方式</h3><h5 id="在实际开发中，常常因为需求比较急，或者是前瞻性不够，导致没有充分考虑到后面的需求变化情况。在这个例子中，我们的实际存储结构是车型之间使用逗号分隔，存储在一个数据字段中："><a href="#在实际开发中，常常因为需求比较急，或者是前瞻性不够，导致没有充分考虑到后面的需求变化情况。在这个例子中，我们的实际存储结构是车型之间使用逗号分隔，存储在一个数据字段中：" class="headerlink" title="在实际开发中，常常因为需求比较急，或者是前瞻性不够，导致没有充分考虑到后面的需求变化情况。在这个例子中，我们的实际存储结构是车型之间使用逗号分隔，存储在一个数据字段中："></a>在实际开发中，常常因为需求比较急，或者是前瞻性不够，导致没有充分考虑到后面的需求变化情况。在这个例子中，我们的实际存储结构是车型之间使用逗号分隔，存储在一个数据字段中：</h5><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>物料</th>
+<th>车型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>1,2,3</td>
+</tr>
+<tr>
+<td>B</td>
+<td>2,4</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h5 id="这样做最大的好处就是使用方便，在存储功能上没有任何问题。"><a href="#这样做最大的好处就是使用方便，在存储功能上没有任何问题。" class="headerlink" title="这样做最大的好处就是使用方便，在存储功能上没有任何问题。"></a>这样做最大的好处就是使用方便，在存储功能上没有任何问题。</h5><h4 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h4><ol>
+<li>存储结果简单，直观明了；</li>
+<li>在一定范围内不用考虑数据量的问题，不用关心数据之间的关联关系爆炸。</li>
+</ol>
+<h4 id="缺点："><a href="#缺点：" class="headerlink" title="缺点："></a>缺点：</h4><ol>
+<li>耦合严重，如果需要修改物料和车型之间的关系。通常需要程序处理，而不是mysql自处理。</li>
+<li>关系方向单一，这里是物料-&gt;车型。如果需求中出现了车型-&gt;物料，就会使得这种结构不适用。</li>
+</ol>
+<h5 id="实际中我们就是这样存储的，并且出现了车型筛选物料的需求，而且这种关系的依赖越来越重。刚开始时，我们使用JAVA程序内过滤。不考虑车型，将其他条件符合的数据都筛选出来，然后在程序内将车型不符合数据过滤掉。"><a href="#实际中我们就是这样存储的，并且出现了车型筛选物料的需求，而且这种关系的依赖越来越重。刚开始时，我们使用JAVA程序内过滤。不考虑车型，将其他条件符合的数据都筛选出来，然后在程序内将车型不符合数据过滤掉。" class="headerlink" title="实际中我们就是这样存储的，并且出现了车型筛选物料的需求，而且这种关系的依赖越来越重。刚开始时，我们使用JAVA程序内过滤。不考虑车型，将其他条件符合的数据都筛选出来，然后在程序内将车型不符合数据过滤掉。"></a>实际中我们就是这样存储的，并且出现了车型筛选物料的需求，而且这种关系的依赖越来越重。刚开始时，我们使用JAVA程序内过滤。不考虑车型，将其他条件符合的数据都筛选出来，然后在程序内将车型不符合数据过滤掉。</h5><h5 id="但是这样就产生了新的问题，就是分页。之前可以用mysql做逻辑分页，使用这种处理方式之后，mysql的分页就很不适用。需要转换成内存中的物理分页。"><a href="#但是这样就产生了新的问题，就是分页。之前可以用mysql做逻辑分页，使用这种处理方式之后，mysql的分页就很不适用。需要转换成内存中的物理分页。" class="headerlink" title="但是这样就产生了新的问题，就是分页。之前可以用mysql做逻辑分页，使用这种处理方式之后，mysql的分页就很不适用。需要转换成内存中的物理分页。"></a>但是这样就产生了新的问题，就是<strong><font color="#2d7788">分页</font></strong>。之前可以用mysql做逻辑分页，使用这种处理方式之后，mysql的分页就很不适用。需要转换成内存中的物理分页。</h5><h3 id="2、最常见的存储方式"><a href="#2、最常见的存储方式" class="headerlink" title="2、最常见的存储方式"></a>2、最常见的存储方式</h3><h5 id="对于多对多的数据存储，mysql最常见的存储方式就是产生关系表，两两绑定其关系。在上面的实际例子中就是增加物料-车型关系表。表的结构大致如下："><a href="#对于多对多的数据存储，mysql最常见的存储方式就是产生关系表，两两绑定其关系。在上面的实际例子中就是增加物料-车型关系表。表的结构大致如下：" class="headerlink" title="对于多对多的数据存储，mysql最常见的存储方式就是产生关系表，两两绑定其关系。在上面的实际例子中就是增加物料-车型关系表。表的结构大致如下："></a>对于多对多的数据存储，mysql最常见的存储方式就是产生关系表，两两绑定其关系。在上面的实际例子中就是增加物料-车型关系表。表的结构大致如下：</h5><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>物料</th>
+<th>车型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>1</td>
+</tr>
+<tr>
+<td>A</td>
+<td>2</td>
+</tr>
+<tr>
+<td>A</td>
+<td>3</td>
+</tr>
+<tr>
+<td>B</td>
+<td>2</td>
+</tr>
+<tr>
+<td>B</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="优点：-1"><a href="#优点：-1" class="headerlink" title="优点："></a>优点：</h4><ol>
+<li>关系解耦，不在是一个整体，我们可以单独处理物料A和车型1的关系，而不用影响其他的关系；</li>
+<li>双向选择，物料适配车型的选择，和按照车型选择物料。</li>
+<li>关系拓展，如果需要记录关系的绑定或者解除时间，或者绑定关系有多种。显然这种存储结果更易于扩展</li>
+</ol>
+<h4 id="缺点：-1"><a href="#缺点：-1" class="headerlink" title="缺点："></a>缺点：</h4><ol>
+<li>相对于上面的存储，结构更加复杂。插入一条物料数据，需要写入多个数据表。</li>
+<li>按照车型筛选物料时，会用到关联查询，这个在实际开发中是不太推荐的。</li>
+</ol>
+<h3 id="3、最终的方案"><a href="#3、最终的方案" class="headerlink" title="3、最终的方案"></a>3、最终的方案</h3><h5 id="如果做出一定的牺牲（容忍一定程度的关联查询），上面介绍的关系表是一种可以接受的方案。但是在我们的需求中，改动点实在有点多，做出这种数据结构的改动是我们不太愿意其发生的。于是产生了我们的最终方案-bitMap筛选方案。关于bitMap的一些思想，可以参考我的另一篇文章：BloomFilter"><a href="#如果做出一定的牺牲（容忍一定程度的关联查询），上面介绍的关系表是一种可以接受的方案。但是在我们的需求中，改动点实在有点多，做出这种数据结构的改动是我们不太愿意其发生的。于是产生了我们的最终方案-bitMap筛选方案。关于bitMap的一些思想，可以参考我的另一篇文章：BloomFilter" class="headerlink" title="如果做出一定的牺牲（容忍一定程度的关联查询），上面介绍的关系表是一种可以接受的方案。但是在我们的需求中，改动点实在有点多，做出这种数据结构的改动是我们不太愿意其发生的。于是产生了我们的最终方案-bitMap筛选方案。关于bitMap的一些思想，可以参考我的另一篇文章：BloomFilter"></a>如果做出一定的牺牲（容忍一定程度的关联查询），上面介绍的关系表是一种可以接受的方案。但是在我们的需求中，改动点实在有点多，做出这种数据结构的改动是我们不太愿意其发生的。于是产生了我们的最终方案-bitMap筛选方案。关于bitMap的一些思想，可以参考我的另一篇文章：<a href="../bloomfilter">BloomFilter</a></h5><h4 id="首先我们定义每种车型对应的bit位："><a href="#首先我们定义每种车型对应的bit位：" class="headerlink" title="首先我们定义每种车型对应的bit位："></a>首先我们定义每种车型对应的bit位：</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>车型</th>
+<th>bit位</th>
+<th>十进制表示</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>0001</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0010</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0100</td>
+<td>4</td>
+</tr>
+<tr>
+<td>4</td>
+<td>1000</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="在原物料表中增加一列表示所有车型的bit表示"><a href="#在原物料表中增加一列表示所有车型的bit表示" class="headerlink" title="在原物料表中增加一列表示所有车型的bit表示"></a>在原物料表中增加一列表示所有车型的bit表示</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>物料</th>
+<th>车型</th>
+<th>车型bit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>1,2,3</td>
+<td>7</td>
+</tr>
+<tr>
+<td>B</td>
+<td>2,4</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="那么到这就很简单了。首先我们计算出需要查询的几种车型的bit总和，比如查询条件是车型2和3，那么bitSum-6。常见的两种车型过滤条件示例："><a href="#那么到这就很简单了。首先我们计算出需要查询的几种车型的bit总和，比如查询条件是车型2和3，那么bitSum-6。常见的两种车型过滤条件示例：" class="headerlink" title="那么到这就很简单了。首先我们计算出需要查询的几种车型的bit总和，比如查询条件是车型2和3，那么bitSum=6。常见的两种车型过滤条件示例："></a>那么到这就很简单了。首先我们计算出需要查询的几种车型的bit总和，比如查询条件是车型2和3，那么bitSum=6。常见的两种车型过滤条件示例：</h4><ol>
+<li>多种车型筛选，任一车型匹配则符合：<pre><code>where `车型bit` &amp; #{bitSum} &gt; 0
+</code></pre></li>
+<li>多种车型筛选，全部车型匹配则符合：<pre><code>where `车型bit` &amp; #{bitSum} = #{bitSum}
+</code></pre></li>
+</ol>
+<h4 id="使用这种方式，很好的解决了方案1中的某些弊端，使得车型-gt-物料的选择变的清晰。当然这种方式也有很多弊端："><a href="#使用这种方式，很好的解决了方案1中的某些弊端，使得车型-gt-物料的选择变的清晰。当然这种方式也有很多弊端：" class="headerlink" title="使用这种方式，很好的解决了方案1中的某些弊端，使得车型-&gt;物料的选择变的清晰。当然这种方式也有很多弊端："></a>使用这种方式，很好的解决了方案1中的某些弊端，使得车型-&gt;物料的选择变的清晰。当然这种方式也有很多弊端：</h4><ol>
+<li>增加mysql的计算逻辑。</li>
+<li>因为有位运算，使得车型bit的索引是不会生效的。</li>
+<li>直接修改数据库（当然我们需要避免这种情况）的时候，通常不会联动修改<code>车型bit</code>。因此所有操作都得经过程序的处理，或者增加程序入口，重新计算所有。</li>
+</ol>
+</div>
+    </article>
+</section>
+
+<div class="clear"></div>
+
+
+
+    <footer id="footer">
+  <div class="foot">
+    <!-- <a id="gotop">TOP</a> -->
+    <!-- <div id="copyright">Copyright &copy; 2016 <a href="#" target="_blank">WangWenXiang</a><br>
+       Power by <a href="https://github.com/winx402" target="_blank">Github Pages</a> |
+      <a href="https://hexo.io/" target="_blank">HEXO</a></div> -->
+      <div id="copyright">还没想好要写什么</div>
+  </div>
+</footer>
+
+</div>
+<div class="img-view">
+    <span><img src="/img/guide.jpeg"></span>
+</div>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>

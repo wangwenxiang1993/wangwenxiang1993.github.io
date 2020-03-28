@@ -1,0 +1,311 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.min.css"/>
+    <script src="/js/jquery-1.7.1.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+    <title>winx&#39;blog</title>
+</head>
+<body>
+<div class="animated" id="info-min">
+    <div id="guide">
+    <div class="guide-button " _href="/tags/index/">首页</div>
+    <div class="guide-button " _href="/tags/tech/">技术</div>
+    <!--<div class="guide-button " _href="/tags/life/">生活</div>-->
+    <div class="guide-button " _href="/categories/read/">阅读</div>
+    <img src="/img/photo.png">
+</div>
+</div>
+<div id="wrap">
+    
+  
+    
+      <div id="big-title" style="color: #666">
+    
+
+  <div id="title-name">java动态代理实现</div><br>
+  <div id="something">2018/01/08</div>
+</div>
+  <section id="content-specific">
+    <article class="post">
+        <div class="con"><h3 id="什么是java代理"><a href="#什么是java代理" class="headerlink" title="什么是java代理"></a>什么是java代理</h3><h4 id="为其他对象提供一种代理以控制对这个对象的访问。"><a href="#为其他对象提供一种代理以控制对这个对象的访问。" class="headerlink" title="为其他对象提供一种代理以控制对这个对象的访问。"></a>为其他对象提供一种代理以控制对这个对象的访问。</h4><h5 id="代理是一种常见的设计模式，通过代理层这一中间层，有效的控制对于真实委托类对象的直接访问，同时可以实现自定义的控制策略，设计上获得更大的灵活性。"><a href="#代理是一种常见的设计模式，通过代理层这一中间层，有效的控制对于真实委托类对象的直接访问，同时可以实现自定义的控制策略，设计上获得更大的灵活性。" class="headerlink" title="代理是一种常见的设计模式，通过代理层这一中间层，有效的控制对于真实委托类对象的直接访问，同时可以实现自定义的控制策略，设计上获得更大的灵活性。"></a>代理是一种常见的设计模式，通过代理层这一中间层，有效的控制对于真实委托类对象的直接访问，同时可以实现自定义的控制策略，设计上获得更大的灵活性。</h5><a id="more"></a>
+<h4 id="java代理模型"><a href="#java代理模型" class="headerlink" title="java代理模型"></a>java代理模型</h4><p><img src="/img/note/proxy.png" alt="java代理"> <div class="img-note">java代理</div></p>
+<h3 id="java中常见的的代理实现"><a href="#java中常见的的代理实现" class="headerlink" title="java中常见的的代理实现"></a>java中常见的的代理实现</h3><ol>
+<li>spring aop (@Transactional)</li>
+<li>dubbo</li>
+</ol>
+<h3 id="对目标方法的增强"><a href="#对目标方法的增强" class="headerlink" title="对目标方法的增强"></a>对目标方法的增强</h3><ol>
+<li>缓存</li>
+<li>流量控制、筛选、统计</li>
+<li>线程池</li>
+<li>失败重试</li>
+<li>权限验证</li>
+</ol>
+<h2 id="静态代理"><a href="#静态代理" class="headerlink" title="静态代理"></a>静态代理</h2><h5 id="实现java代理相对简单的一种方式"><a href="#实现java代理相对简单的一种方式" class="headerlink" title="实现java代理相对简单的一种方式"></a>实现java代理相对简单的一种方式</h5><h5 id="接口类："><a href="#接口类：" class="headerlink" title="接口类："></a>接口类：</h5><pre><code class="lang-java">public interface A {
+    void doIt();
+}
+</code></pre>
+<h5 id="接口实现类："><a href="#接口实现类：" class="headerlink" title="接口实现类："></a>接口实现类：</h5><pre><code class="lang-java">public class AImpl implements A{
+
+    public void doIt() {
+        System.out.println(&quot;I am a impl class&quot;);
+    }
+}
+</code></pre>
+<h5 id="代理类："><a href="#代理类：" class="headerlink" title="代理类："></a>代理类：</h5><pre><code class="lang-java">public class AProxy implements A{
+
+    //被代理的对象实例
+    private A a;
+
+    public AProxy(A a) {
+        this.a = a;
+    }
+
+    public void doIt() {
+        //do something
+        System.out.println(&quot;I am a proxy class&quot;);
+        //调用真正的实现类
+        a.doIt();
+        //do something
+    }
+}
+</code></pre>
+<h5 id="Main："><a href="#Main：" class="headerlink" title="Main："></a>Main：</h5><pre><code class="lang-java">public static void main(String[] args) {
+        //获取目标类
+        A a = new AImpl();
+
+        //通过目标类生成代理类
+        A a1 = new AProxy(a);
+
+        //调用目标方法
+        a1.doIt();
+}
+</code></pre>
+<h5 id="输出结果："><a href="#输出结果：" class="headerlink" title="输出结果："></a>输出结果：</h5><pre><code>I am a proxy class
+I am a impl class
+</code></pre><h5 id="假如需要在接口A、接口B、接口C的某个方法前后加上相同的逻辑（方法的耗时监控）。则需要分别实现AProxy、BProxy、CProxy。"><a href="#假如需要在接口A、接口B、接口C的某个方法前后加上相同的逻辑（方法的耗时监控）。则需要分别实现AProxy、BProxy、CProxy。" class="headerlink" title="假如需要在接口A、接口B、接口C的某个方法前后加上相同的逻辑（方法的耗时监控）。则需要分别实现AProxy、BProxy、CProxy。"></a>假如需要在接口A、接口B、接口C的某个方法前后加上相同的逻辑（方法的耗时监控）。则需要分别实现AProxy、BProxy、CProxy。</h5><h5 id="因此这种静态的实现方式很不通用，也很不好扩展"><a href="#因此这种静态的实现方式很不通用，也很不好扩展" class="headerlink" title="因此这种静态的实现方式很不通用，也很不好扩展"></a>因此这种静态的实现方式很不通用，也很不好扩展</h5><h2 id="JDK动态代理"><a href="#JDK动态代理" class="headerlink" title="JDK动态代理"></a>JDK动态代理</h2><h5 id="动态代理避免了开发人员编写各个繁锁的静态代理类，只需简单地指定一组接口及目标类对象就能动态的获得代理对象。"><a href="#动态代理避免了开发人员编写各个繁锁的静态代理类，只需简单地指定一组接口及目标类对象就能动态的获得代理对象。" class="headerlink" title="动态代理避免了开发人员编写各个繁锁的静态代理类，只需简单地指定一组接口及目标类对象就能动态的获得代理对象。"></a>动态代理避免了开发人员编写各个繁锁的静态代理类，只需简单地指定一组接口及目标类对象就能动态的获得代理对象。</h5><pre><code class="lang-java">public interface A {
+    void doIt();
+
+    void doItAgain();
+}
+</code></pre>
+<h5 id="接口实现类：-1"><a href="#接口实现类：-1" class="headerlink" title="接口实现类："></a>接口实现类：</h5><pre><code class="lang-java">public class AImpl implements A{
+
+    public void doIt() {
+        System.out.println(&quot;I am a impl class&quot;);
+    }
+
+    public void doItAgain(){
+        System.out.println(&quot;I am a impl class 2&quot;);
+    }
+}
+</code></pre>
+<h5 id="代理类植入方法："><a href="#代理类植入方法：" class="headerlink" title="代理类植入方法："></a>代理类植入方法：</h5><pre><code class="lang-java">public class HWInvocationHandler implements InvocationHandler {
+
+    //目标对象
+    private Object target;
+
+    public HWInvocationHandler(Object target){
+        this.target = target;
+    }
+
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        System.out.println(&quot;------插入前置通知代码-------------&quot;);
+        //执行相应的目标方法
+        Object rs = method.invoke(target,args);
+        System.out.println(&quot;------插入后置处理代码-------------&quot;);
+        return rs;
+    }
+}
+</code></pre>
+<h5 id="Main：-1"><a href="#Main：-1" class="headerlink" title="Main："></a>Main：</h5><pre><code class="lang-java">public static void main(String[] args)
+    {
+        //代理的真实对象
+        A a = new AImpl();
+
+        /**
+         * InvocationHandlerImpl 实现了 InvocationHandler 接口，并能实现方法调用从代理类到委托类的分派转发
+         */
+        InvocationHandler handler = new HWInvocationHandler(a);
+
+        ClassLoader loader = a.getClass().getClassLoader();
+        Class[] interfaces = a.getClass().getInterfaces();
+        /**
+         * 该方法用于为指定类装载器、一组接口及调用处理器生成动态代理类实例
+         */
+        A proxy = (A) Proxy.newProxyInstance(loader, interfaces, handler);
+
+        proxy.doIt();
+
+        proxy.doItAgain();
+    }
+</code></pre>
+<h5 id="输出结果：-1"><a href="#输出结果：-1" class="headerlink" title="输出结果："></a>输出结果：</h5><pre><code>------插入前置通知代码-------------
+I am a impl class
+------插入后置处理代码-------------
+------插入前置通知代码-------------
+I am a impl class 2
+------插入后置处理代码-------------
+</code></pre><h5 id="那么，可看到实现过程都是围绕着接口类来的，如果一个类没有定义接口。或者需要代理的方法不属于接口方法时。就没有办法进行代理"><a href="#那么，可看到实现过程都是围绕着接口类来的，如果一个类没有定义接口。或者需要代理的方法不属于接口方法时。就没有办法进行代理" class="headerlink" title="那么，可看到实现过程都是围绕着接口类来的，如果一个类没有定义接口。或者需要代理的方法不属于接口方法时。就没有办法进行代理"></a>那么，可看到实现过程都是围绕着接口类来的，如果一个类没有定义接口。或者需要代理的方法不属于接口方法时。就没有办法进行代理</h5><h2 id="CGLIB动态代理实现"><a href="#CGLIB动态代理实现" class="headerlink" title="CGLIB动态代理实现"></a>CGLIB动态代理实现</h2><h5 id="CGLib采用了底层的字节码技术，利用asm开源包，通过字节码为一个类创建子类，并在子类中采用方法拦截的技术拦截所有父类方法的调用"><a href="#CGLib采用了底层的字节码技术，利用asm开源包，通过字节码为一个类创建子类，并在子类中采用方法拦截的技术拦截所有父类方法的调用" class="headerlink" title="CGLib采用了底层的字节码技术，利用asm开源包，通过字节码为一个类创建子类，并在子类中采用方法拦截的技术拦截所有父类方法的调用"></a>CGLib采用了底层的字节码技术，利用asm开源包，通过字节码为一个类创建子类，并在子类中采用方法拦截的技术拦截所有父类方法的调用</h5><h4 id="结构原理示例"><a href="#结构原理示例" class="headerlink" title="结构原理示例"></a>结构原理示例</h4><h5 id="目标类："><a href="#目标类：" class="headerlink" title="目标类："></a>目标类：</h5><pre><code class="lang-java">public class B{
+    void doIt(){
+        System.out.println(&quot;I am B&quot;);
+    }
+}
+</code></pre>
+<h5 id="代理类：-1"><a href="#代理类：-1" class="headerlink" title="代理类："></a>代理类：</h5><pre><code class="lang-java">class BProxy extends B{
+    void doIt(){
+        System.out.println(&quot;I am a proxy&quot;);
+        //do something
+        super.doIt();
+        //do something
+    }
+}
+</code></pre>
+<h5 id="Main：-2"><a href="#Main：-2" class="headerlink" title="Main："></a>Main：</h5><pre><code class="lang-java">public static void main(String[] args) {
+    //返回对象依然为目标类。但是实际拿到的对象是代理类
+    B b = new BProxy();
+
+    b.doIt();
+}
+</code></pre>
+<h5 id="输出结果：-2"><a href="#输出结果：-2" class="headerlink" title="输出结果："></a>输出结果：</h5><pre><code>I am a proxy
+I am B
+</code></pre><h5 id="以上是CGLIB的基本实现原理。CGLIB需要做的就是用字节码实现BProxy类。以及找到那些方法是需要被代理的，然后重写代理方法。"><a href="#以上是CGLIB的基本实现原理。CGLIB需要做的就是用字节码实现BProxy类。以及找到那些方法是需要被代理的，然后重写代理方法。" class="headerlink" title="以上是CGLIB的基本实现原理。CGLIB需要做的就是用字节码实现BProxy类。以及找到那些方法是需要被代理的，然后重写代理方法。"></a>以上是CGLIB的基本实现原理。CGLIB需要做的就是用字节码实现BProxy类。以及找到那些方法是需要被代理的，然后重写代理方法。</h5><h4 id="CGLIB语法"><a href="#CGLIB语法" class="headerlink" title="CGLIB语法"></a>CGLIB语法</h4><h5 id="目标类：-1"><a href="#目标类：-1" class="headerlink" title="目标类："></a>目标类：</h5><pre><code class="lang-java">public class B{
+    void doIt(){
+        System.out.println(&quot;I am B&quot;);
+    }
+}
+</code></pre>
+<h5 id="代理实现："><a href="#代理实现：" class="headerlink" title="代理实现："></a>代理实现：</h5><pre><code class="lang-java">class CglibProxy implements MethodInterceptor {
+    public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+        System.out.println(&quot;I am a proxy&quot;);
+        //do something
+        Object result = proxy.invokeSuper(obj, args);
+        //do something
+        return result;
+    }
+}
+</code></pre>
+<h5 id="Main：-3"><a href="#Main：-3" class="headerlink" title="Main："></a>Main：</h5><pre><code class="lang-java">public static void main(String[] args) {
+    //创建CGLIB代理对象
+    CglibProxy proxy = new CglibProxy();
+    Enhancer enhancer = new Enhancer();
+    //设置父类
+    enhancer.setSuperclass(B.class);
+    enhancer.setCallback(proxy);
+    //创建子类实例
+    B b = (B) enhancer.create();
+    b.doIt();
+}
+</code></pre>
+<h4 id="输出结果：-3"><a href="#输出结果：-3" class="headerlink" title="输出结果："></a>输出结果：</h4><pre><code>I am a proxy
+I am B
+</code></pre><h5 id="以上两种方案就是spring-aop的代理实现原理。CGLIB的实现范围几乎包含了JDK动态代理的访问。为什么spring还需要实现两种方式，而不是直接使用CGLIB："><a href="#以上两种方案就是spring-aop的代理实现原理。CGLIB的实现范围几乎包含了JDK动态代理的访问。为什么spring还需要实现两种方式，而不是直接使用CGLIB：" class="headerlink" title="以上两种方案就是spring aop的代理实现原理。CGLIB的实现范围几乎包含了JDK动态代理的访问。为什么spring还需要实现两种方式，而不是直接使用CGLIB："></a>以上两种方案就是spring aop的代理实现原理。CGLIB的实现范围几乎包含了JDK动态代理的访问。为什么spring还需要实现两种方式，而不是直接使用CGLIB：</h5><ol>
+<li>性能：CGLIB毕竟是第三方的实现，在优化方面是没有JDK的优势。按照非官方测试，从jdk6到jdk7再到jdk8。JDK动态代理的效率有质的飞跃。而CGLIB几乎没有变化。</li>
+<li>安全：CGLIB毕竟是第三方的实现，虽然通过了JVM的语法检测，但是其实现方式比较底层。仍然有可能会有安全问题，比如内存泄漏。</li>
+</ol>
+<h4 id="之前遇到的一个问题："><a href="#之前遇到的一个问题：" class="headerlink" title="之前遇到的一个问题："></a>之前遇到的一个问题：</h4><h5 id="实现类："><a href="#实现类：" class="headerlink" title="实现类："></a>实现类：</h5><pre><code class="lang-java">public class Impl {
+    public void m1(){
+        m2();
+    }
+
+    @Transactional
+    public void m2(){
+        //do something
+    }
+}
+</code></pre>
+<h5 id="接口A："><a href="#接口A：" class="headerlink" title="接口A："></a>接口A：</h5><pre><code class="lang-java">public interface A {
+    void m1();
+}
+</code></pre>
+<h5 id="接口B："><a href="#接口B：" class="headerlink" title="接口B："></a>接口B：</h5><pre><code class="lang-java">public interface B {
+    void m2();
+}
+</code></pre>
+<h5 id="接口C："><a href="#接口C：" class="headerlink" title="接口C："></a>接口C：</h5><pre><code class="lang-java">public interface C {
+    void m1();
+    void m2();
+}
+</code></pre>
+<h5 id="以及一些其他问题："><a href="#以及一些其他问题：" class="headerlink" title="以及一些其他问题："></a>以及一些其他问题：</h5><ol>
+<li>private</li>
+<li>final</li>
+<li>static</li>
+</ol>
+<h2 id="JAVASSIST"><a href="#JAVASSIST" class="headerlink" title="JAVASSIST"></a>JAVASSIST</h2><h5 id="Javassist是一个执行字节码操作的强而有力的驱动代码库。它允许开发者自由的在一个已经编译好的类中添加新的方法，或者是修改已有的方法"><a href="#Javassist是一个执行字节码操作的强而有力的驱动代码库。它允许开发者自由的在一个已经编译好的类中添加新的方法，或者是修改已有的方法" class="headerlink" title="Javassist是一个执行字节码操作的强而有力的驱动代码库。它允许开发者自由的在一个已经编译好的类中添加新的方法，或者是修改已有的方法"></a>Javassist是一个执行字节码操作的强而有力的驱动代码库。它允许开发者自由的在一个已经编译好的类中添加新的方法，或者是修改已有的方法</h5><pre><code class="lang-java">public class Test {
+
+    protected String get(String s){
+        System.out.println(s);
+        return null;
+    }
+}
+</code></pre>
+<pre><code class="lang-java">public static void main(String[] args) throws Exception {
+        ClassPool aDefault = ClassPool.getDefault();
+        aDefault.insertClassPath(new ClassClassPath(JavassistTest.class));
+        CtClass ctClass = aDefault.get(&quot;com.river.Test&quot;);
+        CtMethod get = ctClass.getDeclaredMethod(&quot;get&quot;);
+        get.insertBefore(&quot;System.out.println(\&quot;s\&quot;);&quot;);
+//        Class&lt;Test&gt; testClass = Test.class;
+        Class aClass = ctClass.toClass();
+        Test o = (Test)aClass.newInstance();
+        o.get(&quot;a&quot;);
+        Test test = new Test();
+        test.get(&quot;b&quot;);
+        System.out.println(o.getClass());
+        System.out.println(test.getClass());
+    }
+</code></pre>
+<pre><code>s
+a
+s
+b
+class com.river.Test
+class com.river.Test
+</code></pre><h4 id="一些问题："><a href="#一些问题：" class="headerlink" title="一些问题："></a>一些问题：</h4><ol>
+<li>一个类可以被修改吗</li>
+<li>不同类加载器加载的类还是同一个类吗</li>
+<li>类在什么时候被加载</li>
+<li>一个类可以被加载多少次</li>
+</ol>
+<h5 id="实现的大致过程如下"><a href="#实现的大致过程如下" class="headerlink" title="实现的大致过程如下"></a>实现的大致过程如下</h5><p><img src="/img/note/javassist.png" alt=""></p>
+</div>
+    </article>
+</section>
+
+<div class="clear"></div>
+
+
+
+    <footer id="footer">
+  <div class="foot">
+    <!-- <a id="gotop">TOP</a> -->
+    <!-- <div id="copyright">Copyright &copy; 2016 <a href="#" target="_blank">WangWenXiang</a><br>
+       Power by <a href="https://github.com/winx402" target="_blank">Github Pages</a> |
+      <a href="https://hexo.io/" target="_blank">HEXO</a></div> -->
+      <div id="copyright">还没想好要写什么</div>
+  </div>
+</footer>
+
+</div>
+<div class="img-view">
+    <span><img src="/img/guide.jpeg"></span>
+</div>
+<script type="text/javascript" src="/js/base.js"></script>
+<script type="text/javascript" async
+            src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+<link rel="stylesheet" href="//cdn.bootcss.com/highlight.js/9.2.0/styles/github.min.css">
+<script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>
